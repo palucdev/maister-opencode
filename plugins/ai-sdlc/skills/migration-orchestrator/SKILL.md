@@ -360,15 +360,22 @@ This phase is executed by the gap-analyzer subagent for complex analysis workflo
 **What the Subagent Does**:
 - Defines target system goals and requirements
 - Compares current vs target (gap analysis)
+- **Performs external research** (WebSearch) for version upgrades, technology migrations, and API integrations
 - Classifies migration type based on keywords and technologies
 - Recommends migration strategy based on complexity and risk
-- Identifies breaking changes and compatibility issues
+- Identifies breaking changes and compatibility issues (enhanced by external research)
 - Assesses rollback complexity
 - Documents migration phases if incremental approach needed
 
+**External Research** (automatic):
+The gap-analyzer automatically performs web research when it detects version upgrades, technology migrations, or external API integrations. This enriches the analysis with:
+- Official migration guides and breaking changes documentation
+- Current best practices from authoritative sources
+- Known issues and workarounds from community resources
+
 **Outputs**:
 - `analysis/target-state-plan.md` - Target system and gap analysis (500-700 lines)
-- Structured result passed back to orchestrator
+- Structured result passed back to orchestrator (includes `external_research` field)
 
 **Auto-Fix Strategy**:
 - If target unclear: Subagent re-prompts user for target details (max 2 attempts)
@@ -667,6 +674,15 @@ orchestrator:
   risk_level: low|medium|high
   rollback_plan_created: false
   dual_run_configured: false
+
+  # External research results (from Phase 1 gap-analyzer)
+  external_research:
+    performed: false
+    category: null  # version_upgrade|technology_migration|external_standards|auth_security|api_integration|architecture
+    depth: null     # essential|expanded
+    breaking_changes: []
+    migration_guide_url: null
+    confidence: null  # high|medium|low
 
   options:
     docs_enabled: false
@@ -1006,7 +1022,8 @@ Before completing workflow:
 - ✓ `analysis/target-state-plan.md` created
 - ✓ Migration type detected and confirmed
 - ✓ Migration strategy recommended
-- ✓ State file contains `migration_type`, `target_system`, `migration_strategy`, `risk_level`
+- ✓ External research performed (if version upgrade or technology migration)
+- ✓ State file contains `migration_type`, `target_system`, `migration_strategy`, `risk_level`, `external_research`
 
 **Phase 2 (Migration Strategy Specification)**:
 - ✓ `implementation/spec.md` created with migration details

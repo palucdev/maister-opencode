@@ -373,6 +373,55 @@ Terms: "refactor to", "architecture", "pattern", "system design", "restructure"
 
 ---
 
+## Web Research Requirements by Type
+
+External research is automatically triggered by the gap-analyzer during Phase 1 (Target State Planning). The level of research depends on migration type.
+
+| Migration Type | External Research | Query Focus | Priority Sources |
+|---------------|-------------------|-------------|------------------|
+| **Code** (Version Upgrade) | **Required** | Migration guides, breaking changes, API changes | Official docs, release notes, upgrade guides |
+| **Code** (Library Swap) | **Required** | Comparison guides, migration paths, compatibility | Official docs, community migration stories |
+| **Data** (Platform Change) | **Recommended** | Compatibility, data transformation, tooling | Official docs, DBA resources, cloud provider docs |
+| **Data** (Schema Change) | **Optional** | Best practices only | Internal docs preferred |
+| **Architecture** | **Recommended** | Pattern implementation, migration strategies | Architecture blogs, official docs |
+| **General** | **Optional** | Clarification research | N/A |
+
+### When to Skip External Research
+
+- Pure internal refactoring (no external technology change)
+- Schema changes within same database platform
+- Minor version upgrades (patch versions only)
+- When offline mode required
+- User explicitly requests `--no-web-research`
+
+### Research Depth by Complexity
+
+| Complexity | Research Depth | Queries | Focus |
+|------------|---------------|---------|-------|
+| Simple (<10 files) | Essential | 2-3 | Official migration guide only |
+| Moderate (10-30 files) | Essential | 2-3 | Migration guide + breaking changes |
+| Complex (>30 files) | Expanded | 4-6 | Guide + breaking changes + community experiences |
+| Data migration (any size) | Expanded | 4-6 | Guide + compatibility + data transformation |
+
+### Example Research Queries
+
+**Code Migration (Vue 2 → Vue 3)**:
+- Primary: "Vue 2 to Vue 3 migration guide"
+- Secondary: "Vue 3 breaking changes 2024"
+- Expanded: "Vue 3 composition API migration examples"
+
+**Data Migration (MySQL → PostgreSQL)**:
+- Primary: "MySQL to PostgreSQL migration guide"
+- Secondary: "PostgreSQL migration tools 2024"
+- Expanded: "MySQL PostgreSQL syntax differences"
+
+**Architecture Migration (REST → GraphQL)**:
+- Primary: "REST to GraphQL migration guide"
+- Secondary: "GraphQL migration best practices"
+- Expanded: "REST GraphQL coexistence patterns"
+
+---
+
 ## Summary
 
 **Key Takeaways**:
@@ -384,5 +433,5 @@ Terms: "refactor to", "architecture", "pattern", "system design", "restructure"
 **References in SKILL.md**:
 - Initialization (Step 2): Type detection algorithm
 - Phase 0 (Analysis): Type-specific analysis focus
-- Phase 1 (Target Planning): Type-specific gap analysis
+- Phase 1 (Target Planning): Type-specific gap analysis + external research
 - Phase 5 (Verification): Type-specific verification requirements

@@ -1,7 +1,7 @@
 ---
 name: gap-analyzer
 description: Compares current vs desired state, identifies gaps, classifies enhancement type, performs user journey impact assessment, and conducts data entity lifecycle analysis with three-layer verification. Detects orphaned operations and ensures complete, usable, discoverable features.
-tools: Read, Write, Glob, Grep, Bash, AskUserQuestion
+tools: Read, Write, Glob, Grep, Bash, AskUserQuestion, WebSearch, WebFetch
 model: inherit
 color: blue
 ---
@@ -255,6 +255,120 @@ Compatibility: Strict (behavior must NOT change)
 2. If `behavior_changes` exist → Modificative
 3. If only `new_capabilities` → Additive
 4. If only internal changes → Refactor-based
+
+---
+
+### Phase 3.5: External Research
+
+**Purpose**: Gather up-to-date information from official sources when the task involves external technologies, standards, or version upgrades.
+
+**When to Execute** (Smart Detection):
+
+External research is triggered when the task description matches any of these patterns:
+
+| Category | Detection Pattern | Examples |
+|----------|-------------------|----------|
+| **Version Upgrade** | `"[Tech] X to Y"`, `"upgrade to"`, `"migrate from X to Y"` | Vue 2→3, React 17→18, Python 2→3 |
+| **Technology Migration** | Two different technologies/libraries mentioned | Express→Fastify, MySQL→PostgreSQL |
+| **External Standards** | WCAG, OWASP, RFC, ISO, HIPAA, GDPR mentioned | "WCAG 2.1 AA compliance", "OWASP top 10" |
+| **Auth/Security** | OAuth, JWT, SSO, SAML, MFA, OpenID | "Add OAuth2 authentication", "implement MFA" |
+| **API Integration** | Third-party service/API names | "Stripe integration", "Twilio API", "SendGrid" |
+| **Architecture Patterns** | REST, GraphQL, gRPC, Microservices transitions | "Convert REST to GraphQL" |
+
+**Skip external research when**:
+- Internal refactor (same technology, no external reference)
+- UI-only changes (styling, layout adjustments)
+- Pure business logic changes
+- Bug fixes without external technology context
+- Schema changes within same database platform
+
+**Research Depth Strategy**:
+
+| Depth | When | Queries | Focus |
+|-------|------|---------|-------|
+| **Essential** | Default when triggered | 2-3 queries | Official migration guide, breaking changes, current best practices |
+| **Expanded** | High complexity OR >20 files OR data migration OR standards compliance | 4-6 queries | Community experiences, workarounds, compatibility, implementation examples |
+
+**Query Construction by Category**:
+
+| Category | Primary Query | Secondary Query |
+|----------|--------------|-----------------|
+| Version Upgrade | `{tech} {old} to {new} migration guide` | `{tech} {new} breaking changes {year}` |
+| Technology Migration | `migrate from {source} to {target}` | `{target} best practices {year}` |
+| External Standards | `{standard} guidelines {year}` | `{standard} implementation checklist` |
+| Auth/Security | `{auth_method} implementation guide {year}` | `{auth_method} security best practices` |
+| API Integration | `{service} API documentation official` | `{service} integration examples` |
+| Architecture | `{pattern} implementation guide` | `{pattern} migration best practices` |
+
+**Note**: Include current year (`{year}`) in queries to prioritize recent documentation.
+
+**MCP Tool Handling**:
+
+```
+IF mcp__context7 or similar MCP documentation tool available:
+    PREFER MCP tool for official framework/library documentation
+    USE WebSearch for community content, blogs, migration experiences
+ELSE:
+    USE WebSearch + WebFetch for all external research
+```
+
+**Execution Steps**:
+
+1. **Detect research need** using patterns above
+2. **Determine research category** (version upgrade, standards, auth, etc.)
+3. **Set research depth** based on complexity indicators
+4. **Construct queries** using category-specific templates
+5. **Execute WebSearch** with constructed queries
+6. **Fetch key results** using WebFetch for detailed content (top 2-3 results)
+7. **Extract actionable information**:
+   - Breaking changes list
+   - Migration steps or implementation guide
+   - Known issues with workarounds
+   - Current best practices
+   - Compatibility notes
+8. **Document findings** in report with source URLs
+
+**Error Handling**:
+
+| Scenario | Action | Report Note |
+|----------|--------|-------------|
+| WebSearch fails | Continue with local analysis | "External research unavailable - proceeding with built-in knowledge" |
+| No relevant results | Note in report | "External documentation not found for {topic} - manual research recommended" |
+| Rate limited | Reduce to primary query only | "Limited external results due to rate limiting" |
+
+**Key Principle**: External research is OPTIONAL and ADDITIVE - failures never block the workflow.
+
+**Output Section** (add to gap-analysis.md if research performed):
+
+```markdown
+## External Research Findings
+
+### Research Category
+[version_upgrade | technology_migration | external_standards | auth_security | api_integration | architecture]
+
+### Research Depth
+[essential | expanded]
+
+### Official Documentation
+**Source**: [URL]
+**Key Findings**:
+- [Finding 1]
+- [Finding 2]
+
+### Breaking Changes / Migration Steps
+- [Step/change 1]
+- [Step/change 2]
+
+### Known Issues & Workarounds
+- [Issue with workaround if available]
+
+### Best Practices
+- [Practice 1]
+- [Practice 2]
+
+### Research Confidence
+[High: Official docs found | Medium: Community sources | Low: Limited info - manual research recommended]
+```
 
 ---
 
@@ -1155,15 +1269,16 @@ Gap analysis is successful when:
 
 1. ✅ **All gaps identified** - Missing, incomplete, and behavioral changes found
 2. ✅ **Type classified correctly** - Additive, Modificative, or Refactor-based
-3. ✅ **User journey assessed** - Reachability, discoverability, flow integration verified
-4. ✅ **Data lifecycle analyzed** (if applicable) - **ALL searches executed** (no "needs verification")
-5. ✅ **Orphaned operations detected** - Display without input, input without display
-6. ✅ **Critical touchpoints discovered** - ALL relevant locations found
-7. ✅ **Scope recommendations made** - Expansion advised for ANY gaps (critical or non-critical)
-8. ✅ **UI-heavy detection complete** - Mockup trigger flag set appropriately
-9. ✅ **Compatibility requirements defined** - Clear backward compatibility rules
-10. ✅ **Risk assessed** - Risk level, effort estimated
-11. ✅ **Report generated** - Comprehensive gap-analysis.md created
+3. ✅ **External research performed** (if applicable) - Version upgrades, external standards, API integrations researched
+4. ✅ **User journey assessed** - Reachability, discoverability, flow integration verified
+5. ✅ **Data lifecycle analyzed** (if applicable) - **ALL searches executed** (no "needs verification")
+6. ✅ **Orphaned operations detected** - Display without input, input without display
+7. ✅ **Critical touchpoints discovered** - ALL relevant locations found
+8. ✅ **Scope recommendations made** - Expansion advised for ANY gaps (critical or non-critical)
+9. ✅ **UI-heavy detection complete** - Mockup trigger flag set appropriately
+10. ✅ **Compatibility requirements defined** - Clear backward compatibility rules
+11. ✅ **Risk assessed** - Risk level, effort estimated
+12. ✅ **Report generated** - Comprehensive gap-analysis.md created
 
 ---
 
@@ -1200,11 +1315,18 @@ Output:
 - risk_level: "low" | "medium" | "high"
 - effort_estimate: "3-5 hours"
 - ui_heavy: true | false
-- gaps_identified: true | false                    # NEW: True if ANY gaps found (critical or non-critical)
-- gap_count: 5                                      # NEW: Total number of gaps detected
-- scope_expansion_needed: true | false              # EXISTING: Recommended scope expansion (true if gaps_identified)
-- critical_issues: ["orphaned display", "missing from prescription workflow"]  # EXISTING: Critical gaps only
-- non_critical_issues: ["incomplete feature X", "missing touchpoint Y"]        # NEW: Non-critical gaps
+- gaps_identified: true | false                    # True if ANY gaps found (critical or non-critical)
+- gap_count: 5                                      # Total number of gaps detected
+- scope_expansion_needed: true | false              # Recommended scope expansion (true if gaps_identified)
+- critical_issues: ["orphaned display", "missing from prescription workflow"]  # Critical gaps only
+- non_critical_issues: ["incomplete feature X", "missing touchpoint Y"]        # Non-critical gaps
+- external_research:                               # External research results (Phase 3.5)
+    performed: true | false                        # Whether research was triggered
+    category: "version_upgrade" | "technology_migration" | "external_standards" | "auth_security" | "api_integration" | "architecture" | null
+    depth: "essential" | "expanded" | null         # Research depth level
+    breaking_changes: ["change 1", "change 2"]     # Key breaking changes found
+    migration_guide_url: "https://..." | null      # Primary documentation URL
+    confidence: "high" | "medium" | "low"          # Research confidence level
 ```
 
 ---

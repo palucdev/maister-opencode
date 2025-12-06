@@ -227,11 +227,19 @@ Use `TodoWrite` to show real-time progress to the user. Create todos at workflow
 **What the Subagent Does**:
 - Identifies gaps (missing, incomplete, behavioral changes)
 - Classifies enhancement type: **Additive** (low risk, strict compatibility) / **Modificative** (medium-high risk, managed compatibility) / **Refactor-based** (medium-high risk, strict compatibility)
+- **Performs external research** (WebSearch) when enhancement involves external standards (WCAG, OWASP), authentication methods (OAuth, JWT), or API integrations
 - Performs user journey impact assessment (reachability, personas, discoverability)
 - Executes data lifecycle analysis with actual codebase verification (detects orphaned operations, finds ALL touchpoints)
 - Detects UI-heavy work for mockup generation
 - Categorizes gaps as critical vs non-critical
 - **ALWAYS recommends scope expansion when ANY gaps found** (regardless of severity)
+
+**External Research** (automatic):
+The gap-analyzer automatically performs web research when it detects:
+- External standards (WCAG, OWASP, RFC, HIPAA, GDPR)
+- Authentication/security methods (OAuth, JWT, SSO, SAML, MFA)
+- Third-party API integrations (Stripe, Twilio, etc.)
+This enriches the gap analysis with current best practices and implementation guidelines.
 
 **Scope Expansion Handling**:
 If ANY gaps detected (`gaps_identified = true`):
@@ -1160,6 +1168,13 @@ orchestrator:
     targeted_tests: []
     files_analyzed: 3
     breaking_changes: false
+  external_research:  # from Phase 1 gap-analyzer
+    performed: false
+    category: null  # version_upgrade|technology_migration|external_standards|auth_security|api_integration|architecture
+    depth: null     # essential|expanded
+    breaking_changes: []
+    migration_guide_url: null
+    confidence: null  # high|medium|low
   options:
     from: analysis
     e2e_enabled: null  # null = auto-detect, true/false = explicit
