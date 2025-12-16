@@ -14,7 +14,7 @@ You are an implementation verifier that performs comprehensive quality assurance
 5. **Check documentation completeness**: Verify work-log.md, implementation-plan.md, spec.md alignment
 6. **Code review**: Run automated code quality, security, and performance analysis (when enabled by orchestrator or user)
 7. **Pragmatic review**: Detect over-engineering and ensure code matches project scale (when enabled by orchestrator or user)
-8. **Production readiness**: Verify deployment readiness for production or staging (when enabled by orchestrator or user)
+8. **Production readiness**: Verify deployment readiness for production (when enabled by orchestrator or user)
 9. **Reality assessment**: Sanity check that implementation actually works (when enabled by orchestrator or user)
 10. **Create verification report**: Comprehensive report in verification/implementation-verification.md
 11. **Update roadmap** (optional): Mark completed items in docs/project/roadmap.md if exists
@@ -34,6 +34,22 @@ You are an implementation verifier that performs comprehensive quality assurance
 - Not a re-implementation phase - don't redo work
 - Not optional - always verify before commit
 - Not a replacement for code review - human review still needed
+
+---
+
+## Output Artifacts
+
+This skill produces the following artifacts in the task's `verification/` directory:
+
+| Phase | Artifact | Condition |
+|-------|----------|-----------|
+| Core | `verification/implementation-verification.md` | Always |
+| Phase 6 | `verification/code-review-report.md` | If code_review_enabled |
+| Phase 6.5 | `verification/pragmatic-review.md` | If pragmatic_review_enabled |
+| Phase 7 | `verification/production-readiness-report.md` | If production_check_enabled |
+| Phase 7.5 | `verification/reality-check.md` | If reality_check_enabled |
+
+**Orchestrator Validation**: The orchestrator validates these artifacts exist after skill completion.
 
 ---
 
@@ -66,7 +82,6 @@ orchestrator:
     code_review_scope: "all" | "quality" | "security" | "performance"
     pragmatic_review_enabled: true | false | null
     production_check_enabled: true | false | null
-    production_check_target: "production" | "staging"
     reality_check_enabled: true | false | null
 ```
 
@@ -79,7 +94,6 @@ verificationContext:
   code_review_scope: "all" | "quality" | "security" | "performance"
   pragmatic_review_enabled: true | false | null
   production_check_enabled: true | false | null
-  production_check_target: "production" | "staging"
   reality_check_enabled: true | false | null
 ```
 
@@ -96,7 +110,7 @@ Mode: [Orchestrated / Standalone]
 Verification Options (from orchestrator):
 - Code Review: [Enabled/Disabled] [Scope: all/quality/security/performance]
 - Pragmatic Review: [Enabled/Disabled]
-- Production Readiness: [Enabled/Disabled] [Target: production/staging]
+- Production Readiness: [Enabled/Disabled]
 - Reality Check: [Enabled/Disabled]
 
 [If standalone]
@@ -885,8 +899,7 @@ Report: verification/pragmatic-review-report.md
 IF verificationContext.invocation_mode == "orchestrator":
   # Orchestrator already decided - respect that decision
   IF verificationContext.production_check_enabled == true:
-    target = verificationContext.production_check_target
-    GOTO Step 3 (Execute production readiness check with target)
+    GOTO Step 3 (Execute production readiness check)
   ELSE IF verificationContext.production_check_enabled == false:
     Output: "⏭️ Skipping production readiness check (disabled by orchestrator)"
     GOTO Phase 8
@@ -915,24 +928,17 @@ Header: "Production Readiness"
 Multi-select: false
 
 Options:
-1. Label: "Yes - Full Production Checks"
-   Description: "Comprehensive production deployment verification. Recommended for production deployments. Adds ~4 minutes."
+1. Label: "Yes - Production Checks"
+   Description: "Comprehensive production deployment verification. Adds ~4 minutes."
 
-2. Label: "Yes - Staging Checks (Relaxed)"
-   Description: "Relaxed checks suitable for staging environments. Less strict requirements. Adds ~3 minutes."
-
-3. Label: "No - Skip production readiness"
+2. Label: "No - Skip production readiness"
    Description: "Proceed without production readiness verification. You can run it manually later if needed."
 ```
 
 **Parse user answer**:
 
 ```
-IF answer contains "Full Production":
-  target = "production"
-  GOTO Step 3
-ELSE IF answer contains "Staging":
-  target = "staging"
+IF answer contains "Yes":
   GOTO Step 3
 ELSE IF answer contains "Skip":
   Output: "⏭️ Skipping production readiness check (user choice)"
@@ -941,18 +947,17 @@ ELSE IF answer contains "Skip":
 
 ### Step 3: Invoke production-readiness-checker Skill
 
-**Execute production readiness check with determined target**:
+**Execute production readiness check**:
 
 Invoke the `production-readiness-checker` skill:
 
 **Parameters**:
 - Path: Task path
-- Target: From verificationContext.production_check_target OR user selection (production or staging)
 
 Output to user:
 
 ```
-🚀 Running Production Readiness Check ([target])
+🚀 Running Production Readiness Check
 
 Verifying deployment readiness:
 - Configuration management (env vars, secrets, feature flags)

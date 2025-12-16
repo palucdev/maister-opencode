@@ -1,11 +1,13 @@
 ---
 name: ai-sdlc:feature:new
-description: Start a new feature development workflow with guided orchestration through all phases
+description: Start a new feature development workflow (alias for /ai-sdlc:development:new --type=feature)
 ---
 
 # New Feature Development Workflow
 
-Start comprehensive feature development from specification through implementation and verification.
+**This command is an alias for the unified development workflow.**
+
+Equivalent to: `/ai-sdlc:development:new [description] --type=feature [options]`
 
 ## Usage
 
@@ -24,8 +26,8 @@ Start comprehensive feature development from specification through implementatio
 - `--yolo`: Run in YOLO mode (continuous without pauses)
   - Default: Interactive mode (pause between phases)
 - `--from=PHASE`: Start from specific phase
-  - Values: `spec`, `plan`, `implement`, `verify`
-  - Default: `spec`
+  - Values: `analysis`, `gap`, `spec`, `plan`, `implement`, `verify`
+  - Default: `analysis`
 - `--e2e`: Auto-enable E2E testing (don't prompt)
 - `--user-docs`: Auto-enable user documentation generation (don't prompt)
 
@@ -47,44 +49,24 @@ Start comprehensive feature development from specification through implementatio
 
 ## What This Does
 
-**Invoke the feature-orchestrator skill** which guides through 6-7 phases:
+Routes to `development-orchestrator` skill with `task_type=feature`, which includes:
 
-**Phase 1: Specification**
-- Gather requirements via structured questions
-- Research codebase for existing patterns
-- Create comprehensive spec.md
-- Verify spec quality
-
-**Phase 2: Implementation Planning**
-- Break spec into task groups by specialty
-- Create implementation-plan.md with dependencies
-- Test-driven approach (2-8 tests per group)
-
-**Phase 3: Implementation**
-- Execute plan with continuous standards discovery
-- Run only affected tests after each group
-- Adaptive complexity based on plan size
-
-**Phase 4: Verification**
-- Run full test suite
-- Check standards compliance
-- Create verification report
-
-**Phase 5: E2E Testing** (optional)
-- Playwright browser automation
-- Test user workflows end-to-end
-
-**Phase 6: User Documentation** (optional)
-- Generate non-technical guides
-- Include screenshots via Playwright
-
-**Phase 7: Finalization**
-- Create summary and commit guidance
+- **Phase 0**: Codebase Analysis (3 parallel Explore agents - patterns, integration points)
+- **Phase 1**: Gap Analysis (no feature vs integrated feature)
+- **Phase 2**: UI Mockup Generation (if UI-heavy)
+- **Phase 3**: Specification
+- **Phase 4**: Implementation Planning
+- **Phase 5**: Implementation
+- **Phase 7**: Verification
+- **Phase 8**: E2E Testing (optional)
+- **Phase 9**: User Documentation (optional)
 
 ## Outputs
 
 Task directory: `.ai-sdlc/tasks/new-features/YYYY-MM-DD-name/`
 
+- `analysis/codebase-analysis.md` - Codebase patterns and integration points
+- `analysis/gap-analysis.md` - What to build and where
 - `implementation/spec.md` - Feature specification
 - `implementation/implementation-plan.md` - Task breakdown
 - `implementation/work-log.md` - Activity log
@@ -97,34 +79,6 @@ Task directory: `.ai-sdlc/tasks/new-features/YYYY-MM-DD-name/`
 
 **YOLO** (`--yolo`): Runs continuously. Auto-decides on optional phases.
 
-```
-Example YOLO output:
-[1/6] Specification... done (15m)
-[2/6] Planning... done (10m)
-[3/6] Implementation... done (120m, 2 auto-fixes)
-[4/6] Verification... done (45m)
-[5/6] E2E Testing... skipped (non-UI feature)
-[6/6] User Docs... skipped (internal feature)
-
-Feature Complete!
-```
-
-## Auto-Recovery
-
-The orchestrator handles common failures:
-- **Specification**: Re-generates if verification fails (max 2 attempts)
-- **Planning**: Regenerates if incomplete (max 2 attempts)
-- **Implementation**: Fixes syntax errors, imports, tests (max 5 attempts)
-- **Verification**: Fixes failing tests (max 2 attempts)
-- **E2E Testing**: Fixes UI issues (max 2 attempts)
-
-## Prerequisites
-
-- `.ai-sdlc/docs/` structure initialized (use `/init-sdlc` first)
-- Git repository (for commits)
-- For E2E: `playwright-mcp` server configured, app running
-- For User Docs: `playwright-mcp` server configured, app running
-
 ## Resume
 
 If interrupted:
@@ -132,6 +86,11 @@ If interrupted:
 /ai-sdlc:feature:resume .ai-sdlc/tasks/new-features/2025-10-26-user-auth
 ```
 
+Or use the unified command:
+```bash
+/ai-sdlc:development:resume .ai-sdlc/tasks/new-features/2025-10-26-user-auth
+```
+
 ---
 
-**Invoke**: feature-orchestrator skill
+**Invoke**: development-orchestrator skill with task_type=feature

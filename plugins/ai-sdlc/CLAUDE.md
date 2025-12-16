@@ -151,7 +151,7 @@ For UI-heavy features/enhancements, the plugin can generate ASCII mockups:
 **When Used**:
 - Optional phase in feature/enhancement workflows
 - Auto-triggered for UI-heavy work (based on keyword detection)
-- Invoked automatically by orchestrators (enhancement-orchestrator, feature-orchestrator)
+- Invoked automatically by development-orchestrator (for enhancements and features)
 
 **Output**: `analysis/ui-mockups.md` with ASCII diagrams
 
@@ -451,6 +451,121 @@ Before finalizing reference documentation:
 - Instructions show every step, every turn
 - Skills/agents follow the map to create their own path
 
+## Orchestrator Creation Guidelines
+
+When creating new workflow orchestrators, ensure ALL of these elements are included. This checklist prevents incomplete orchestrators.
+
+### Required Structural Elements
+
+1. **State File Creation**
+   - MUST create `orchestrator-state.yml` in initialization (explicit STEP)
+   - Include: task_type, mode, current_phase, completed_phases, failed_phases, auto_fix_attempts, options
+   - State file is source of truth for resume logic
+
+2. **Phase Execution Loop**
+   Every phase MUST follow this 7-step pattern:
+   - STEP 1: Check if phase already completed (read state)
+   - STEP 2: Update state to current phase
+   - STEP 3: Pre-phase announcement
+   - STEP 4: Execute phase
+   - STEP 5: Handle errors (with retry limits)
+   - STEP 6: Update state on success
+   - STEP 7: Post-phase review (interactive mode only)
+
+3. **Explicit Tool Invocations**
+   - **AskUserQuestion**: Every user decision point must have explicit tool call pattern
+   - **Task tool**: Every subagent invocation must have explicit Task tool parameters
+   - **Skill invocations**: Clearly state which skill to invoke and with what parameters
+
+### Required Interactive Mode Features
+
+4. **Post-Phase Review Pattern**
+   In interactive mode, after each phase MUST use AskUserQuestion:
+   ```
+   Use AskUserQuestion tool:
+     Question: "Phase [N] complete. How would you like to proceed?"
+     Header: "Phase Complete"
+     Options:
+     1. "Continue to next phase" - Proceed with workflow
+     2. "Review outputs in detail" - Open phase artifacts
+     3. "Restart this phase" - Re-execute this phase
+     4. "Stop workflow" - Pause and resume later
+   ```
+
+5. **User Decision Points**
+   Any place requiring user input MUST use AskUserQuestion:
+   - Optional phase enablement (E2E, user docs, code review)
+   - Scope decisions (expand scope, critical only, minimal)
+   - Error recovery (retry, skip, rollback, stop)
+   - Verification check selection
+
+6. **Inline STOP Reminders in Phase Definitions**
+   **CRITICAL**: Each phase definition MUST end with an inline STOP reminder:
+   ```markdown
+   **⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, you MUST use AskUserQuestion before proceeding to Phase [N+1].
+   ```
+
+   **Why this is critical**:
+   - Orchestration logic at the end of files often gets missed
+   - Claude reads phase definitions first and executes immediately
+   - Inline reminders ensure the STOP instruction is seen when executing each phase
+   - Without inline reminders, Claude runs through all phases continuously
+
+### Required Standards Integration
+
+7. **Standards Discovery**
+   Reference `.ai-sdlc/docs/INDEX.md` in these phases:
+   - Phase 5 (Spec): Read INDEX.md before creating spec
+   - Phase 7 (Plan): Ensure plan follows project conventions
+   - Phase 8 (Implement): Continuous standards discovery
+   - Phase 11 (Verify): Verify against documented standards
+
+   Include reminder before these phases:
+   ```
+   📋 Standards Discovery
+   Reading .ai-sdlc/docs/INDEX.md to check applicable standards...
+   ```
+
+### Required Verification Elements
+
+8. **Comprehensive Verification**
+   Verification phase must include:
+   - Plan completion check
+   - Full test suite execution
+   - Standards compliance verification
+   - Task-type-specific checks
+   - **Reality check**: Invoke `reality-assessor` subagent via Task tool
+   - **Pragmatic review**: Invoke `code-quality-pragmatist` subagent via Task tool
+
+### Orchestrator Completeness Checklist
+
+Before considering an orchestrator complete, verify ALL items:
+
+| Element | Required | Verification |
+|---------|----------|--------------|
+| State file creation in initialization | ✓ | Does STEP 3 explicitly CREATE orchestrator-state.yml? |
+| Phase Execution Loop pattern | ✓ | Are all 7 STEPs documented? |
+| Post-phase review with AskUserQuestion | ✓ | Is STEP 7 implemented with explicit tool call? |
+| **Inline STOP reminders** | ✓ | Does EACH phase end with "⏸️ INTERACTIVE MODE: STOP HERE"? |
+| Explicit AskUserQuestion for all decisions | ✓ | Do ALL user prompts have tool call examples? |
+| Explicit Task tool for subagents | ✓ | Do ALL subagent invocations show Task parameters? |
+| Standards discovery in Phases 5,7,8,11 | ✓ | Is INDEX.md referenced in each? |
+| Reality check (Phase 11) | ✓ | Is reality-assessor invoked via implementation-verifier? |
+| Pragmatic review (Phase 11) | ✓ | Is code-quality-pragmatist invoked via implementation-verifier? |
+| TodoWrite initialization | ✓ | Are todos created at workflow start? |
+| Error handling with retry limits | ✓ | Does each phase have max attempts? |
+
+### Anti-Patterns to Avoid
+
+❌ **Structure without orchestration**: Defining phases without Phase Execution Loop
+❌ **Implicit user prompts**: Describing prompts without explicit AskUserQuestion tool calls
+❌ **Missing inline STOP reminders**: Phase definitions without "⏸️ INTERACTIVE MODE: STOP HERE" at the end
+❌ **Orchestration logic at file end only**: Relying on instructions at the end of the file (often missed during execution)
+❌ **Vague subagent calls**: Saying "invoke X" without Task tool parameters
+❌ **Missing standards**: Not referencing INDEX.md in relevant phases
+❌ **Incomplete verification**: Running tests without reality check and pragmatic review
+❌ **No state management**: Not creating/updating orchestrator-state.yml
+
 ## Available Skills
 
 Skills are automatically invoked by Claude when appropriate. Details live in each skill's `skill.md` file.
@@ -459,6 +574,7 @@ Skills are automatically invoked by Claude when appropriate. Details live in eac
 
 | Skill | Purpose | Details |
 |-------|---------|---------|
+| `codebase-analyzer` | Phase 1 analysis using 3 parallel Explore subagents (file discovery, code analysis, context discovery) | `skills/codebase-analyzer/SKILL.md` |
 | `specification-creator` | Creates specs through 4 phases: initialize → research → write → verify | `skills/specification-creator/skill.md` |
 | `implementation-planner` | Breaks specs into task groups with test-driven steps | `skills/implementation-planner/skill.md` |
 | `implementer` | Executes plans with continuous standards discovery from INDEX.md | `skills/implementer/skill.md` |
@@ -473,9 +589,7 @@ Orchestrators manage complete workflows with state management, auto-recovery, an
 
 | Skill | Purpose | Details |
 |-------|---------|---------|
-| `feature-orchestrator` | New feature development with optional E2E/docs phases | `skills/feature-orchestrator/skill.md` |
-| `enhancement-orchestrator` | Existing feature improvements with backward compatibility | `skills/enhancement-orchestrator/skill.md` |
-| `bug-fix-orchestrator` | TDD Red→Green discipline: test fails → fix → test passes | `skills/bug-fix-orchestrator/skill.md` |
+| `development-orchestrator` | **Unified workflow** (17 phases: 0-14 + 1.5, 5.5) for bug fixes, enhancements, and new features. Includes clarifying questions (1.5), architecture decision (5.5), TDD gates for bugs (3, 9), gap analysis for all. | `skills/development-orchestrator/SKILL.md` |
 | `performance-orchestrator` | Profiling, benchmarking, load testing with metrics | `skills/performance-orchestrator/skill.md` |
 | `security-orchestrator` | CVSS-scored vulnerability remediation, compliance audit | `skills/security-orchestrator/skill.md` |
 | `documentation-orchestrator` | User docs with Playwright screenshots, readability validation | `skills/documentation-orchestrator/skill.md` |
@@ -483,6 +597,11 @@ Orchestrators manage complete workflows with state management, auto-recovery, an
 | `initiative-orchestrator` | Epic-level coordination of 3-15 tasks with dependencies | `skills/initiative-orchestrator/skill.md` |
 | `refactoring-orchestrator` | Safe refactoring with git checkpoints, behavior preservation | `skills/refactoring-orchestrator/skill.md` |
 | `research-orchestrator` | Multi-source research with synthesis and citations | `skills/research-orchestrator/skill.md` |
+
+**Deprecated Orchestrators** (now aliases to `development-orchestrator`):
+- `feature-orchestrator` → Use `development-orchestrator` with `task_type=feature`
+- `enhancement-orchestrator` → Use `development-orchestrator` with `task_type=enhancement`
+- `bug-fix-orchestrator` → Use `development-orchestrator` with `task_type=bug`
 
 ## Available Commands
 
@@ -498,14 +617,32 @@ Commands invoke orchestrators and utilities. All orchestrators support `--yolo` 
 
 ### Workflow Commands
 
+#### Unified Development Command (Recommended)
+
+| Command | Usage | Description |
+|---------|-------|-------------|
+| `/ai-sdlc:development:new` | `[desc] [--type=TYPE] [--yolo] [--e2e] [--user-docs]` | Start bug fix, enhancement, or new feature (auto-detected or `--type=bug\|enhancement\|feature`) |
+| `/ai-sdlc:development:resume` | `[path] [--from=PHASE] [--reset-attempts]` | Resume interrupted development workflow |
+
+**Task directories by type**: `.ai-sdlc/tasks/bug-fixes/`, `.ai-sdlc/tasks/enhancements/`, `.ai-sdlc/tasks/new-features/`
+
+#### Legacy Commands (Aliases)
+
+These commands still work but route to `development-orchestrator`:
+
+| Command | Equivalent |
+|---------|------------|
+| `/ai-sdlc:feature:new` | `/ai-sdlc:development:new --type=feature` |
+| `/ai-sdlc:feature:resume` | `/ai-sdlc:development:resume` |
+| `/ai-sdlc:enhancement:new` | `/ai-sdlc:development:new --type=enhancement` |
+| `/ai-sdlc:enhancement:resume` | `/ai-sdlc:development:resume` |
+| `/ai-sdlc:bug-fix:new` | `/ai-sdlc:development:new --type=bug` |
+| `/ai-sdlc:bug-fix:resume` | `/ai-sdlc:development:resume` |
+
+#### Other Workflow Commands
+
 | Command | Usage | Task Directory |
 |---------|-------|----------------|
-| `/ai-sdlc:feature:new` | `[desc] [--yolo] [--e2e] [--user-docs]` | `.ai-sdlc/tasks/new-features/` |
-| `/ai-sdlc:feature:resume` | `[path] [--from=phase] [--reset-attempts]` | |
-| `/ai-sdlc:enhancement:new` | `[desc] [--yolo] [--e2e] [--user-docs]` | `.ai-sdlc/tasks/enhancements/` |
-| `/ai-sdlc:enhancement:resume` | `[path] [--from=phase]` | |
-| `/ai-sdlc:bug-fix:new` | `[desc] [--yolo]` | `.ai-sdlc/tasks/bug-fixes/` |
-| `/ai-sdlc:bug-fix:resume` | `[path] [--from=phase]` | |
 | `/ai-sdlc:performance:new` | `[desc] [--yolo]` | `.ai-sdlc/tasks/performance/` |
 | `/ai-sdlc:performance:resume` | `[path] [--from=phase]` | |
 | `/ai-sdlc:security:new` | `[desc] [--yolo]` | `.ai-sdlc/tasks/security/` |
@@ -556,8 +693,10 @@ Subagents are specialized AI agents invoked by skills and orchestrators. All age
 |-------|---------|------------|---------|
 | `project-analyzer` | Deep codebase analysis for tech stack, architecture, conventions | `/init-sdlc` | `agents/project-analyzer.md` |
 | `task-classifier` | Classifies task descriptions into 9 types with confidence scoring | `/work` command | `agents/task-classifier.md` |
-| `existing-feature-analyzer` | Multi-strategy search to locate existing features for enhancement | enhancement-orchestrator | `agents/existing-feature-analyzer.md` |
-| `gap-analyzer` | Compares current vs desired state with user journey impact analysis | enhancement-orchestrator | `agents/gap-analyzer.md` |
+| `gap-analyzer` | Compares current vs desired state with task-type support (bug/enhancement/feature) | development-orchestrator | `agents/gap-analyzer.md` |
+
+**Deprecated Agent**:
+- `existing-feature-analyzer` → Replaced by `codebase-analyzer` skill (uses 3 parallel Explore subagents)
 
 ### UI & Documentation Agents
 

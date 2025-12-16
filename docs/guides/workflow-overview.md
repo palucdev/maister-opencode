@@ -10,16 +10,19 @@ Use specialized orchestrator skills for guided, automated workflows. Best for mo
 
 | Task Type | Command | Best For |
 |-----------|---------|----------|
+| **Development** (Unified) | `/ai-sdlc:development:new` | Bugs, enhancements, or new features (auto-detects type) |
 | **Initiative** | `/ai-sdlc:initiative:new` | Multi-week projects, feature sets (3-15 related tasks) |
-| **New Feature** | `/ai-sdlc:feature:new` | Adding completely new capabilities |
-| **Enhancement** | `/ai-sdlc:enhancement:new` | Improving existing features |
-| **Bug Fix** | `/ai-sdlc:bug-fix:new` | Fixing defects with TDD discipline |
 | **Migration** | `/ai-sdlc:migration:new` | Technology/platform migrations |
 | **Refactoring** | `/ai-sdlc:refactoring:new` | Safe code improvements |
 | **Performance** | `/ai-sdlc:performance:new` | Optimization with benchmarks |
 | **Security** | `/ai-sdlc:security:new` | Vulnerability remediation |
 | **Documentation** | `/ai-sdlc:documentation:new` | User-facing docs with screenshots |
 | **Research** | `/ai-sdlc:research:new` | Pre-development investigation |
+
+**Legacy Commands** (still work as aliases):
+- `/ai-sdlc:feature:new` → `/ai-sdlc:development:new --type=feature`
+- `/ai-sdlc:enhancement:new` → `/ai-sdlc:development:new --type=enhancement`
+- `/ai-sdlc:bug-fix:new` → `/ai-sdlc:development:new --type=bug`
 
 **All orchestrators provide:**
 - Interactive mode (pause between phases) or YOLO mode (continuous)
@@ -44,7 +47,21 @@ Features:
 - Shows confidence score and proposed workflow
 - Requests confirmation before proceeding
 
-### Option B: Manual Workflow (Phase-by-Phase)
+### Option B: Quick Commands (Low-Friction)
+
+For smaller tasks that don't need full orchestration:
+
+```bash
+/ai-sdlc:quick:plan "Add pagination to user list"   # Planning mode with standards
+/ai-sdlc:quick:dev "Add email validation"           # Direct implementation
+```
+
+**Features**:
+- Automatically discovers standards from `.ai-sdlc/docs/INDEX.md`
+- No state files or task folders created
+- Best for well-defined, smaller tasks
+
+### Option C: Manual Workflow (Phase-by-Phase)
 
 Execute each phase individually for more control:
 - **More control**: Run each skill/command manually
@@ -143,10 +160,12 @@ Some orchestrators include optional phases based on task characteristics:
 All orchestrators support resume via `*:resume` commands:
 
 ```bash
-/ai-sdlc:feature:resume .ai-sdlc/tasks/new-features/2025-01-15-my-feature/
-/ai-sdlc:feature:resume --from=implementation  # Resume from specific phase
-/ai-sdlc:feature:resume --reset-attempts       # Reset auto-fix attempts
+/ai-sdlc:development:resume .ai-sdlc/tasks/new-features/2025-01-15-my-feature/
+/ai-sdlc:development:resume --from=8    # Resume from specific phase (0-14)
+/ai-sdlc:development:resume --reset-attempts  # Reset auto-fix attempts
 ```
+
+Legacy resume commands (`feature:resume`, `enhancement:resume`, `bug-fix:resume`) still work.
 
 State is stored in `orchestrator-state.yml` within each task directory.
 

@@ -8,63 +8,40 @@ Skills are autonomous workflows that orchestrate complex tasks. There are two ty
 - **Orchestrator Skills**: Multi-phase workflows for complete task execution
 - **Utility Skills**: Specialized capabilities invoked by orchestrators
 
-## Orchestrator Skills (10)
+## Orchestrator Skills (8)
 
-### feature-orchestrator
-**Purpose**: Complete new feature development workflow
+### development-orchestrator
+**Purpose**: Unified workflow for bug fixes, enhancements, and new features
 
-**Phases**: 7 (Spec → Plan → Implement → Verify → E2E → User Docs → Finalize)
+**Phases**: 15 adaptive phases (0-14) that adjust based on task type
 
 **Key Features**:
-- Dual execution modes (Interactive/YOLO)
-- Auto-recovery from failures
+- Auto-detects task type from description keywords (or use `--type=bug|enhancement|feature`)
+- TDD Red→Green gates mandatory for bugs (Phases 3, 9)
+- Gap analysis and codebase analysis for all task types
+- Optional UI mockup generation for UI-heavy work
 - Optional E2E testing and user documentation
+- Dual execution modes (Interactive/YOLO)
 - State management for pause/resume
+- Auto-recovery from failures
 
-**Use When**: Building completely new capabilities
+**Use When**: Building new features, improving existing features, or fixing bugs
 
-**Command**: `/ai-sdlc:feature:new`
+**Commands**:
+- `/ai-sdlc:development:new` - Start unified workflow (recommended)
+- `/ai-sdlc:development:resume` - Resume interrupted workflow
 
-[Detailed Guide](../guides/feature-development.md) | [Skill Documentation](../../skills/feature-orchestrator/SKILL.md)
+**Legacy Commands** (still work as aliases):
+- `/ai-sdlc:feature:new` → `/ai-sdlc:development:new --type=feature`
+- `/ai-sdlc:enhancement:new` → `/ai-sdlc:development:new --type=enhancement`
+- `/ai-sdlc:bug-fix:new` → `/ai-sdlc:development:new --type=bug`
 
----
+**Task Directories**:
+- Features: `.ai-sdlc/tasks/new-features/`
+- Enhancements: `.ai-sdlc/tasks/enhancements/`
+- Bug fixes: `.ai-sdlc/tasks/bug-fixes/`
 
-### bug-fix-orchestrator
-**Purpose**: Systematic bug fixing with TDD Red→Green discipline
-
-**Phases**: 4 (Bug Analysis → Fix Implementation → Testing → Documentation)
-
-**Key Features**:
-- Mandatory TDD Red→Green gates (test fails before fix, passes after)
-- Exact reproduction data capture
-- Root cause analysis
-- Regression prevention
-
-**Use When**: Fixing bugs, errors, crashes
-
-**Command**: `/ai-sdlc:bug-fix:new`
-
-[Detailed Guide](../guides/bug-fixing.md) | [Skill Documentation](../../skills/bug-fix-orchestrator/SKILL.md)
-
----
-
-### enhancement-orchestrator
-**Purpose**: Improve existing features with backward compatibility
-
-**Phases**: 6 (Existing Analysis → Gap Analysis → Spec → Plan → Implement → Compatibility Verification)
-
-**Key Features**:
-- Analyzes existing feature first
-- Gap detection with user journey impact
-- Data lifecycle completeness checks
-- Targeted regression testing (30-70% of suite)
-- Backward compatibility verification
-
-**Use When**: Improving or extending existing features
-
-**Command**: `/ai-sdlc:enhancement:new`
-
-[Detailed Guide](../guides/enhancement-workflow.md) | [Skill Documentation](../../skills/enhancement-orchestrator/SKILL.md)
+[Skill Documentation](../../plugins/ai-sdlc/skills/development-orchestrator/SKILL.md)
 
 ---
 
@@ -202,7 +179,27 @@ Skills are autonomous workflows that orchestrate complex tasks. There are two ty
 
 ---
 
-## Utility Skills (8)
+## Utility Skills (9)
+
+### codebase-analyzer
+**Purpose**: Deep codebase analysis using parallel exploration agents
+
+**Process**: Launch 3 parallel Explore subagents → Aggregate findings → Generate analysis report
+
+**Subagents**:
+- **File Discovery Agent**: Locate relevant files by patterns and keywords
+- **Code Analysis Agent**: Deep dive into file implementations
+- **Context Discovery Agent**: Build integration patterns and dependencies
+
+**Key Feature**: Task-type aware prompts (bug vs enhancement vs feature focus)
+
+**Invoked By**: development-orchestrator (Phase 0), other orchestrators
+
+**Output**: `analysis/codebase-analysis.md`
+
+[Skill Documentation](../../plugins/ai-sdlc/skills/codebase-analyzer/SKILL.md)
+
+---
 
 ### specification-creator
 **Purpose**: Create comprehensive specifications

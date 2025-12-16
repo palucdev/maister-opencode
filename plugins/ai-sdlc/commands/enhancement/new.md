@@ -1,11 +1,13 @@
 ---
 name: ai-sdlc:enhancement:new
-description: Start a new enhancement workflow with complete orchestration through all phases
+description: Start a new enhancement workflow (alias for /ai-sdlc:development:new --type=enhancement)
 ---
 
 # Enhancement Workflow: New
 
-Start enhancement development from existing feature analysis through implementation to verified code.
+**This command is an alias for the unified development workflow.**
+
+Equivalent to: `/ai-sdlc:development:new [description] --type=enhancement [options]`
 
 ## Usage
 
@@ -47,34 +49,17 @@ Start enhancement development from existing feature analysis through implementat
 
 ## What This Does
 
-**Invoke the enhancement-orchestrator skill** which guides through 8-9 phases:
+Routes to `development-orchestrator` skill with `task_type=enhancement`, which includes:
 
-**Phase 0: Existing Feature Analysis** → `existing-feature-analyzer` agent
-- Auto-locate and analyze current implementation
-- Identify affected components and test coverage
-
-**Phase 1: Gap Analysis** → `gap-analyzer` agent
-- Compare current vs desired state
-- Classify type: additive, modificative, refactor-based
-- User journey impact assessment
-
-**Phase 2: UI Mockup Generation** (optional for UI changes)
-- ASCII mockups showing layout integration
-
-**Phase 3: Enhanced Specification**
-- Create spec with compatibility requirements
-
-**Phase 4: Implementation Planning**
-- Task groups with targeted testing (30-70% of suite)
-
-**Phase 5: Implementation**
-- Execute plan with continuous standards discovery
-
-**Phase 6: Verification + Compatibility**
-- Full test suite + backward compatibility checks
-
-**Phase 7: E2E Testing** (optional)
-**Phase 8: User Documentation** (optional)
+- **Phase 0**: Codebase Analysis (3 parallel Explore agents)
+- **Phase 1**: Gap Analysis (current vs improved state, user journey impact)
+- **Phase 2**: UI Mockup Generation (if UI-heavy)
+- **Phase 3**: Specification
+- **Phase 4**: Implementation Planning
+- **Phase 5**: Implementation
+- **Phase 7**: Verification + Compatibility
+- **Phase 8**: E2E Testing (optional)
+- **Phase 9**: User Documentation (optional)
 
 ## Enhancement Types
 
@@ -88,32 +73,6 @@ Start enhancement development from existing feature analysis through implementat
 
 Task directory: `.ai-sdlc/tasks/enhancements/YYYY-MM-DD-name/`
 
-- `analysis/existing-feature-analysis.md` - Current implementation
-- `analysis/gap-analysis.md` - Current vs desired comparison
-- `implementation/spec.md` - Enhanced specification
-- `implementation/implementation-plan.md` - Task breakdown
-- `verification/implementation-verification.md` - Quality report
-
-## Execution Modes
-
-**Interactive** (default): Pauses after each phase. Prompts for optional phases.
-
-**YOLO** (`--yolo`): Runs continuously. Auto-decides on optional phases (runs E2E if UI changes detected).
-
-## Auto-Recovery
-
-The orchestrator handles common failures:
-- **Analysis**: Expands search if feature not found (max 2)
-- **Gap Analysis**: Re-analyzes with clarification (max 2)
-- **Implementation**: Fixes syntax, imports, tests (max 5)
-- **Verification**: Fixes failing tests (max 2)
-
-## Prerequisites
-
-- `.ai-sdlc/docs/` structure initialized (use `/init-sdlc` first)
-- For E2E: `playwright-mcp` server configured, app running
-- For User Docs: `playwright-mcp` server configured, app running
-
 ## Resume
 
 If interrupted:
@@ -121,6 +80,11 @@ If interrupted:
 /ai-sdlc:enhancement:resume .ai-sdlc/tasks/enhancements/2025-10-27-add-sorting
 ```
 
+Or use the unified command:
+```bash
+/ai-sdlc:development:resume .ai-sdlc/tasks/enhancements/2025-10-27-add-sorting
+```
+
 ---
 
-**Invoke**: enhancement-orchestrator skill
+**Invoke**: development-orchestrator skill with task_type=enhancement

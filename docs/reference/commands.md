@@ -63,27 +63,95 @@ Sets up `.ai-sdlc/` directory structure with intelligent, elastic documentation 
 
 ---
 
+### /ai-sdlc:development:new (Recommended)
+
+**Unified development workflow for bugs, enhancements, and features**
+
+```bash
+/ai-sdlc:development:new [description] [options]
+```
+
+The recommended way to start any development task. Auto-detects task type from description or use `--type` flag.
+
+**Options**:
+- `--type=TYPE` - Task type: `bug`, `enhancement`, or `feature` (auto-detected if omitted)
+- `--yolo` - Run in continuous mode without pausing
+- `--from=PHASE` - Start from specific phase (0-14)
+- `--e2e` - Auto-enable E2E testing
+- `--user-docs` - Auto-enable user documentation
+
+**Phases**: 15 adaptive phases (0-14) that adjust based on task type
+
+**Task Directories**:
+- Features: `.ai-sdlc/tasks/new-features/`
+- Enhancements: `.ai-sdlc/tasks/enhancements/`
+- Bug fixes: `.ai-sdlc/tasks/bug-fixes/`
+
+**Examples**:
+```bash
+/ai-sdlc:development:new "Add user profile page"              # auto-detects as feature
+/ai-sdlc:development:new "Fix login timeout" --type=bug       # explicit bug fix
+/ai-sdlc:development:new "Add sorting to table" --type=enhancement --yolo
+```
+
+[Skill Documentation](../../plugins/ai-sdlc/skills/development-orchestrator/SKILL.md)
+
+---
+
+### /ai-sdlc:quick:plan
+
+**Enter planning mode with standards awareness**
+
+```bash
+/ai-sdlc:quick:plan [task description]
+```
+
+Low-friction entry point that enters Claude Code's planning mode while automatically discovering and applying project standards from `.ai-sdlc/docs/INDEX.md`.
+
+**Best For**: Well-understood tasks needing planning but not full orchestration
+
+**Example**:
+```bash
+/ai-sdlc:quick:plan "Add pagination to user list"
+```
+
+---
+
+### /ai-sdlc:quick:dev
+
+**Direct implementation with standards awareness**
+
+```bash
+/ai-sdlc:quick:dev [task description]
+```
+
+Immediately starts implementation (no planning mode) while automatically discovering and applying project standards from `.ai-sdlc/docs/INDEX.md`.
+
+**Best For**: Small, well-defined tasks where requirements are clear
+
+**Example**:
+```bash
+/ai-sdlc:quick:dev "Add email validation to signup form"
+```
+
+---
+
+## Legacy Development Commands
+
+These commands still work but route to the unified `development-orchestrator`:
+
 ### /ai-sdlc:feature:new
 
-**Start new feature development**
+**Alias for**: `/ai-sdlc:development:new --type=feature`
 
 ```bash
 /ai-sdlc:feature:new [description] [options]
 ```
 
-**Options**:
-- `--yolo` - Run in continuous mode without pausing
-- `--from=PHASE` - Start from specific phase (spec/plan/implement/verify)
-- `--e2e` - Auto-enable E2E testing
-- `--user-docs` - Auto-enable user documentation
-
-**Phases**: 7 phases (Spec → Plan → Implement → Verify → E2E → User Docs → Finalize)
-
 **Examples**:
 ```bash
 /ai-sdlc:feature:new "Add user profile page with avatar upload"
 /ai-sdlc:feature:new "Build admin dashboard" --e2e --user-docs
-/ai-sdlc:feature:new "Add export to PDF" --yolo
 ```
 
 [Detailed Guide](../guides/feature-development.md)
@@ -92,17 +160,11 @@ Sets up `.ai-sdlc/` directory structure with intelligent, elastic documentation 
 
 ### /ai-sdlc:bug-fix:new
 
-**Start bug fixing workflow**
+**Alias for**: `/ai-sdlc:development:new --type=bug`
 
 ```bash
 /ai-sdlc:bug-fix:new [description] [options]
 ```
-
-**Options**:
-- `--yolo` - Run in continuous mode
-- `--from=PHASE` - Start from specific phase (analysis/implementation/testing/documentation)
-
-**Phases**: 4 phases (Bug Analysis → Fix Implementation [TDD] → Testing & Verification → Documentation)
 
 **Key Feature**: Mandatory TDD Red→Green discipline (test must fail before fix, pass after)
 
@@ -118,19 +180,11 @@ Sets up `.ai-sdlc/` directory structure with intelligent, elastic documentation 
 
 ### /ai-sdlc:enhancement:new
 
-**Start enhancement workflow**
+**Alias for**: `/ai-sdlc:development:new --type=enhancement`
 
 ```bash
 /ai-sdlc:enhancement:new [description] [options]
 ```
-
-**Options**:
-- `--yolo` - Run in continuous mode
-- `--from=PHASE` - Start from specific phase
-- `--e2e` - Auto-enable E2E testing
-- `--user-docs` - Auto-enable user documentation
-
-**Phases**: 6 phases (Existing Feature Analysis → Gap Analysis → Spec → Plan → Implement → Compatibility Verification)
 
 **Key Feature**: Analyzes existing feature first, ensures backward compatibility
 
@@ -327,33 +381,45 @@ Sets up `.ai-sdlc/` directory structure with intelligent, elastic documentation 
 
 Commands to resume interrupted workflows.
 
-### /ai-sdlc:feature:resume
+### /ai-sdlc:development:resume (Recommended)
 
 ```bash
-/ai-sdlc:feature:resume [task-path] [options]
+/ai-sdlc:development:resume [task-path] [options]
 ```
 
+Resume interrupted development workflows (bugs, enhancements, or features).
+
 **Options**:
-- `--from=PHASE` - Override resume point
+- `--from=PHASE` - Override resume point (0-14)
 - `--reset-attempts` - Reset auto-fix attempt counters
 - `--clear-failures` - Clear failure history
 - `--reconstruct` - Reconstruct state from artifacts if state file lost
 
 **Example**:
 ```bash
-/ai-sdlc:feature:resume .ai-sdlc/tasks/new-features/2025-11-17-user-profile
-/ai-sdlc:feature:resume [path] --from=implementation --reset-attempts
+/ai-sdlc:development:resume .ai-sdlc/tasks/new-features/2025-11-17-user-profile
+/ai-sdlc:development:resume [path] --from=8 --reset-attempts
+```
+
+---
+
+### Legacy Resume Commands
+
+These still work but route to the unified development-orchestrator:
+
+```bash
+/ai-sdlc:feature:resume [task-path] [options]
+/ai-sdlc:bug-fix:resume [task-path] [options]
+/ai-sdlc:enhancement:resume [task-path] [options]
 ```
 
 ---
 
 ### Other Resume Commands
 
-All workflows support resume with similar syntax:
+All other workflows support resume with similar syntax:
 
 ```bash
-/ai-sdlc:bug-fix:resume [task-path] [options]
-/ai-sdlc:enhancement:resume [task-path] [options]
 /ai-sdlc:initiative:resume [initiative-path] [options]
 /ai-sdlc:performance:resume [task-path] [options]
 /ai-sdlc:security:resume [task-path] [options]
@@ -613,10 +679,8 @@ Comprehensive reality assessment. Ensures work solves actual problem and is prod
 
 | Task Type | New Command | Resume Command |
 |-----------|-------------|----------------|
+| **Development** (Unified) | `/ai-sdlc:development:new` | `/ai-sdlc:development:resume` |
 | Initiative | `/ai-sdlc:initiative:new` | `/ai-sdlc:initiative:resume` |
-| New Feature | `/ai-sdlc:feature:new` | `/ai-sdlc:feature:resume` |
-| Bug Fix | `/ai-sdlc:bug-fix:new` | `/ai-sdlc:bug-fix:resume` |
-| Enhancement | `/ai-sdlc:enhancement:new` | `/ai-sdlc:enhancement:resume` |
 | Refactoring | `/ai-sdlc:refactoring:new` | `/ai-sdlc:refactoring:resume` |
 | Performance | `/ai-sdlc:performance:new` | `/ai-sdlc:performance:resume` |
 | Security | `/ai-sdlc:security:new` | `/ai-sdlc:security:resume` |
@@ -624,14 +688,28 @@ Comprehensive reality assessment. Ensures work solves actual problem and is prod
 | Documentation | `/ai-sdlc:documentation:new` | `/ai-sdlc:documentation:resume` |
 | Research | `/ai-sdlc:research:new` | `/ai-sdlc:research:resume` |
 
+**Legacy Commands** (aliases to development):
+
+| Task Type | Legacy Command | Equivalent |
+|-----------|----------------|------------|
+| New Feature | `/ai-sdlc:feature:new` | `/ai-sdlc:development:new --type=feature` |
+| Bug Fix | `/ai-sdlc:bug-fix:new` | `/ai-sdlc:development:new --type=bug` |
+| Enhancement | `/ai-sdlc:enhancement:new` | `/ai-sdlc:development:new --type=enhancement` |
+
 ### By Purpose
 
 **Starting Work**:
 - `/work` - Auto-route to best workflow
-- `/ai-sdlc:[workflow]:new` - Start specific workflow
+- `/ai-sdlc:development:new` - Unified workflow for bugs/enhancements/features (recommended)
+- `/ai-sdlc:[workflow]:new` - Start other specific workflows
+
+**Quick Development** (low-friction):
+- `/ai-sdlc:quick:plan` - Planning mode with standards awareness
+- `/ai-sdlc:quick:dev` - Direct implementation with standards awareness
 
 **Managing Work**:
-- `/ai-sdlc:[workflow]:resume` - Resume interrupted work
+- `/ai-sdlc:development:resume` - Resume interrupted development work
+- `/ai-sdlc:[workflow]:resume` - Resume other workflows
 - `/ai-sdlc:initiative:status` - Check progress
 
 **Quality Assurance**:

@@ -94,7 +94,7 @@ Mode: [Interactive/YOLO]
 
 Workflow Phases:
 0.5. [ ] Dependency Check (if part of initiative)
-0. [ ] Current State Analysis → existing-feature-analyzer subagent
+0. [ ] Current State Analysis → codebase-analyzer skill
 1. [ ] Target State Planning & Gap Analysis → gap-analyzer subagent
 2. [ ] Migration Strategy Planning
 3. [ ] Implementation Planning → implementation-planner skill
@@ -169,56 +169,35 @@ After completing Steps 1 and 2, proceed to Phase 0 (Current State Analysis).
 - Ensures migration only starts when prerequisites complete (critical for sequential migrations)
 
 ### Phase 0: Current State Analysis
-**Agent**: `ai-sdlc:existing-feature-analyzer` (subagent)
+**Skill**: `codebase-analyzer`
 
-**Purpose**: Locate and analyze existing system before migration
+**Purpose**: Locate and analyze existing system before migration using parallel Explore subagents
 
 **Delegation Pattern**:
-This phase is executed by the ai-sdlc:existing-feature-analyzer subagent to prevent context pollution in the main orchestrator.
+This phase uses the codebase-analyzer skill which orchestrates 3 parallel Explore subagents for comprehensive codebase analysis. This approach is faster and more thorough than sequential analysis.
 
 **Your Task for Phase 0**:
-1. **Invoke Subagent**: Use Task tool to invoke existing-feature-analyzer
+1. **Invoke Skill**: Invoke codebase-analyzer skill
    ```
-   Task tool parameters:
-   - subagent_type: "ai-sdlc:existing-feature-analyzer"
-   - description: "Analyze current system for migration"
-   - prompt: "Analyze the existing system for this migration.
-
-   Migration Description: [insert migration description]
-   Task Path: [.ai-sdlc/tasks/migrations/YYYY-MM-DD-name/]
-   Mode: [interactive or yolo]
-
-   Follow your 7-phase workflow:
-   1. Initialization & Validation
-   2. Feature Context Extraction
-   3. Multi-Strategy Search (filename, keyword, code patterns)
-   4. File Scoring & Ranking
-   5. Match Presentation & User Confirmation
-   6. Feature Analysis (functionality, dependencies, tests, patterns)
-   7. Generate Analysis Report
-
-   Create comprehensive current state analysis at:
-   analysis/current-state-analysis.md
-
-   Return structured result with:
-   - status: success|failed|partial
-   - report_path: analysis/current-state-analysis.md
-   - summary: [2-3 sentence overview]
-   - files_found: [array of {path, confidence, lines, consumers}]
-   - technologies: [array of current tech stack items]
-   - complexity: simple|moderate|complex
-   - effort_estimate: [time estimate]"
+   Invoke codebase-analyzer skill with:
+   - task_type: "enhancement" (migration is analyzing existing code like an enhancement)
+   - description: [migration description]
+   - task_path: [.ai-sdlc/tasks/migrations/YYYY-MM-DD-name/]
+   - artifact_name: "current-state-analysis.md" (override default name)
    ```
 
-2. **Wait for Completion**: Subagent executes 7-phase analysis workflow
+2. **Wait for Completion**: Skill executes 3 parallel Explore subagents:
+   - Agent 1: File Discovery (locates relevant files by patterns)
+   - Agent 2: Code Analysis (analyzes structure and patterns)
+   - Agent 3: Context Discovery (finds tests, dependencies, consumers)
 
 3. **Parse Result**: Extract report path, summary, technologies, complexity
 
 4. **Store in State**: Update orchestrator-state.yml with current system info:
    ```yaml
    current_system:
-     description: [summary from subagent]
-     technologies: [technologies array from subagent]
+     description: [summary from skill]
+     technologies: [technologies array from skill]
    ```
 
 5. **Present to User** (if interactive mode):
@@ -241,7 +220,8 @@ This phase is executed by the ai-sdlc:existing-feature-analyzer subagent to prev
    - n: Exit workflow
    - review: Show report contents, then ask again
 
-**What the Subagent Does**:
+**What the Skill Does**:
+- Launches 3 parallel Explore subagents for faster analysis
 - Auto-detects current system files using multi-strategy search
 - Analyzes current technologies, dependencies, and complexity
 - Documents current architecture patterns
@@ -253,12 +233,12 @@ This phase is executed by the ai-sdlc:existing-feature-analyzer subagent to prev
 - Structured result passed back to orchestrator
 
 **Auto-Fix Strategy**:
-- If system files not found: Subagent expands search or prompts user (max 2 attempts)
-- If low confidence: Subagent requests manual path
-- If analysis fails: Subagent reports partial results
-- Orchestrator retry: If subagent fails completely, orchestrator can re-invoke once with adjusted prompt
+- If system files not found: Skill expands search or prompts user (max 2 attempts)
+- If low confidence: Skill requests manual path
+- If analysis fails: Skill reports partial results
+- Orchestrator retry: If skill fails completely, orchestrator can re-invoke once with adjusted prompt
 
-**Reference**: `agents/existing-feature-analyzer.md`
+**Reference**: `skills/codebase-analyzer/SKILL.md`
 
 ---
 
@@ -841,8 +821,8 @@ write_yaml(state)
 - `implementer` (Phase 4) - Invoked with implementation-plan.md
 - `implementation-verifier` (Phase 5) - Invoked with migration verification requirements
 
-**Reusing Existing Agents** (via Task tool with subagent delegation):
-- `existing-feature-analyzer` (Phase 0) - Analyzes current system
+**Reusing Existing Skills/Agents** (via Task tool with subagent delegation):
+- `codebase-analyzer` (Phase 0) - Analyzes current system using 3 parallel Explore subagents
 - `gap-analyzer` (Phase 1) - Compares current vs target, classifies migration
 - `user-docs-generator` (Phase 6, optional) - Generates migration guide
 
