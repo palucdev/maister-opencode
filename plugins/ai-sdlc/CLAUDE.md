@@ -309,7 +309,7 @@ Task types can add specialized subdirectories as needed (e.g., `analysis/bug-ana
 
 ## Plugin Documentation Principles
 
-These principles guide how we document skills, commands, and orchestrators in this plugin to avoid verbosity and duplication while trusting Claude to reason effectively.
+These principles guide how we document skills, commands, orchestrators, and agents in this plugin to avoid verbosity and duplication while trusting Claude to reason effectively.
 
 ### Philosophy
 
@@ -334,6 +334,7 @@ Target lengths for different documentation types:
 | Command descriptions (in CLAUDE.md) | 3-8 lines | What it does, when to use |
 | Orchestrator sections (in CLAUDE.md) | 20-30 lines | Overview, key features, reference skill |
 | Reference files (in skills/) | <1,000 lines | Conceptual patterns, not implementations |
+| Agent files (in agents/) | 300-450 lines | Core mission, decision frameworks, workflow principles |
 
 ### When Adding New Content
 
