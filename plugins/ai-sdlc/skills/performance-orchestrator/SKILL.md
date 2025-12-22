@@ -169,7 +169,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 - Update `performance_context.baseline_p95` from output p95 response time (milliseconds)
 - Update `performance_context.target_p95` from output optimization target (if specified)
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 1.
+---
+
+## 🚦 GATE: Phase 0 → Phase 1
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 0 (Performance Baseline & Profiling) complete. Ready to proceed to Phase 1 (Bottleneck Analysis & Optimization Planning)?"
+     - Options: ["Continue to Phase 1", "Review Phase 0 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 1 (Bottleneck Analysis & Optimization Planning)..."
+   - Proceed to Phase 1
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -229,7 +245,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 **State Update**: After bottleneck-analyzer completes:
 - Update `performance_context.optimizations_planned` from output total optimization count
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 2.
+---
+
+## 🚦 GATE: Phase 1 → Phase 2
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 1 (Bottleneck Analysis & Optimization Planning) complete. Ready to proceed to Phase 2 (Implementation with Benchmarking)?"
+     - Options: ["Continue to Phase 2", "Review Phase 1 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 2 (Implementation with Benchmarking)..."
+   - Proceed to Phase 2
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -290,7 +322,23 @@ Parameters:
 
 **Success**: All optimizations implemented (or attempted), benchmarked, documented
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 3.
+---
+
+## 🚦 GATE: Phase 2 → Phase 3
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 2 (Implementation with Benchmarking) complete. Ready to proceed to Phase 3 (Performance Verification)?"
+     - Options: ["Continue to Phase 3", "Review Phase 2 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 3 (Performance Verification)..."
+   - Proceed to Phase 3
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -357,7 +405,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 - Update `performance_context.verification_verdict` from output verdict ("PASS", "PASS with Concerns", or "FAIL")
 - Update `performance_context.overall_improvement` from output percentage (e.g., "65%")
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 4.
+---
+
+## 🚦 GATE: Phase 3 → Phase 4
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 3 (Performance Verification) complete. Ready to proceed to Phase 4 (Load Testing & Production Readiness)?"
+     - Options: ["Continue to Phase 4", "Review Phase 3 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 4 (Load Testing & Production Readiness)..."
+   - Proceed to Phase 4
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 

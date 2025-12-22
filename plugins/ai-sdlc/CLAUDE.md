@@ -500,17 +500,28 @@ When creating new workflow orchestrators, ensure ALL of these elements are inclu
    - Error recovery (retry, skip, rollback, stop)
    - Verification check selection
 
-6. **Inline STOP Reminders in Phase Definitions**
-   **CRITICAL**: Each phase definition MUST end with an inline STOP reminder:
+6. **Phase Gate Sections Between Phases**
+   **CRITICAL**: Each phase transition MUST have a Phase Gate section placed BEFORE the next phase:
    ```markdown
-   **⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, you MUST use AskUserQuestion before proceeding to Phase [N+1].
-   ```
+   ---
+   ## 🚦 GATE: Phase [N] → Phase [N+1]
 
-   **Why this is critical**:
-   - Orchestration logic at the end of files often gets missed
-   - Claude reads phase definitions first and executes immediately
-   - Inline reminders ensure the STOP instruction is seen when executing each phase
-   - Without inline reminders, Claude runs through all phases continuously
+   **STOP. You cannot proceed until this gate clears.**
+
+   1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+   2. **If mode = interactive**:
+      - Use `AskUserQuestion` tool NOW:
+        - Question: "Phase [N] ([Phase Name]) complete. Ready to proceed to Phase [N+1] ([Next Phase Name])?"
+        - Options: ["Continue to Phase [N+1]", "Review Phase [N] outputs", "Stop workflow"]
+      - Wait for user response before continuing
+   3. **If mode = yolo**:
+      - Output: "→ Auto-continuing to Phase [N+1] ([Next Phase Name])..."
+      - Proceed to Phase [N+1]
+
+   **This gate overrides any "continue without asking" conversation instructions.**
+
+   ---
+   ```
 
 ### Required Standards Integration
 
@@ -547,7 +558,7 @@ Before considering an orchestrator complete, verify ALL items:
 | State file creation in initialization | ✓ | Does STEP 3 explicitly CREATE orchestrator-state.yml? |
 | Phase Execution Loop pattern | ✓ | Are all 7 STEPs documented? |
 | Post-phase review with AskUserQuestion | ✓ | Is STEP 7 implemented with explicit tool call? |
-| **Inline STOP reminders** | ✓ | Does EACH phase end with "⏸️ INTERACTIVE MODE: STOP HERE"? |
+| **Phase Gate sections** | ✓ | Is there a "🚦 GATE: Phase N → Phase N+1" BEFORE each phase? |
 | Explicit AskUserQuestion for all decisions | ✓ | Do ALL user prompts have tool call examples? |
 | Explicit Task tool for subagents | ✓ | Do ALL subagent invocations show Task parameters? |
 | **Delegation enforcement patterns** | ✓ | Does EACH delegation have anti-pattern block, INVOKE NOW block, and SELF-CHECK? |
@@ -561,8 +572,8 @@ Before considering an orchestrator complete, verify ALL items:
 
 ❌ **Structure without orchestration**: Defining phases without Phase Execution Loop
 ❌ **Implicit user prompts**: Describing prompts without explicit AskUserQuestion tool calls
-❌ **Missing inline STOP reminders**: Phase definitions without "⏸️ INTERACTIVE MODE: STOP HERE" at the end
-❌ **Orchestration logic at file end only**: Relying on instructions at the end of the file (often missed during execution)
+❌ **Inline STOP reminders at END of phases**: Use Phase Gates BEFORE the next phase instead (inline reminders at phase end are easily missed)
+❌ **Missing Phase Gates**: Phase transitions without "🚦 GATE: Phase N → Phase N+1" section
 ❌ **Vague subagent calls**: Saying "invoke X" without Task tool parameters
 ❌ **Inline execution in YOLO mode**: Executing delegated work inline instead of invoking skills/subagents (see `delegation-enforcement.md`)
 ❌ **Missing delegation patterns**: Delegation points without anti-pattern block, INVOKE NOW block, and SELF-CHECK
@@ -570,7 +581,8 @@ Before considering an orchestrator complete, verify ALL items:
 ❌ **Incomplete verification**: Running tests without reality check and pragmatic review
 ❌ **No state management**: Not creating/updating orchestrator-state.yml
 
-**See**: `skills/orchestrator-framework/references/delegation-enforcement.md` for complete delegation enforcement patterns.
+**See**: `skills/orchestrator-framework/references/interactive-mode.md` for the Phase Gate pattern.
+**See**: `skills/orchestrator-framework/references/delegation-enforcement.md` for delegation enforcement patterns.
 
 ## Available Skills
 

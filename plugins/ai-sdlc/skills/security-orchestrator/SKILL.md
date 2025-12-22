@@ -174,7 +174,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 - Update `security_context.baseline_vulnerabilities` from output total vulnerability count
 - Update `security_context.critical_vulnerabilities` from output critical/high count
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 1.
+---
+
+## 🚦 GATE: Phase 0 → Phase 1
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 0 (Vulnerability Analysis & Security Baseline) complete. Ready to proceed to Phase 1 (Security Planning & Remediation Strategy)?"
+     - Options: ["Continue to Phase 1", "Review Phase 0 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 1 (Security Planning & Remediation Strategy)..."
+   - Proceed to Phase 1
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -235,7 +251,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 **State Update**: After security-planner completes:
 - Update `security_context.fixes_planned` from output total fix count
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 2.
+---
+
+## 🚦 GATE: Phase 1 → Phase 2
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 1 (Security Planning & Remediation Strategy) complete. Ready to proceed to Phase 2 (Security Implementation with Testing)?"
+     - Options: ["Continue to Phase 2", "Review Phase 1 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 2 (Security Implementation with Testing)..."
+   - Proceed to Phase 2
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -296,7 +328,23 @@ Parameters:
 
 **Success**: All fixes implemented (or attempted), scanned, documented
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 3.
+---
+
+## 🚦 GATE: Phase 2 → Phase 3
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 2 (Security Implementation with Testing) complete. Ready to proceed to Phase 3 (Security Verification)?"
+     - Options: ["Continue to Phase 3", "Review Phase 2 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 3 (Security Verification)..."
+   - Proceed to Phase 3
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -365,7 +413,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 - Update `security_context.risk_reduction` from output percentage (e.g., "75%")
 - Update `security_context.vulnerabilities_fixed` from output fixed count
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 4.
+---
+
+## 🚦 GATE: Phase 3 → Phase 4
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 3 (Security Verification) complete. Ready to proceed to Phase 4 (Compliance Audit)?"
+     - Options: ["Continue to Phase 4", "Review Phase 3 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 4 (Compliance Audit)..."
+   - Proceed to Phase 4
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 

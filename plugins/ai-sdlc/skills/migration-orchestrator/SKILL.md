@@ -158,7 +158,23 @@ Read these during relevant phases:
 
 **Success**: All dependencies satisfied or not part of initiative
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 0.
+---
+
+## 🚦 GATE: Phase 0.5 → Phase 0
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 0.5 (Dependency Check) complete. Ready to proceed to Phase 0 (Current State Analysis)?"
+     - Options: ["Continue to Phase 0", "Review Phase 0.5 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 0 (Current State Analysis)..."
+   - Proceed to Phase 0
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -198,7 +214,23 @@ If NO to any: STOP - go back and invoke the Skill tool.
 
 **Success**: Current system files identified, technologies documented, complexity assessed
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 1.
+---
+
+## 🚦 GATE: Phase 0 → Phase 1
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 0 (Current State Analysis) complete. Ready to proceed to Phase 1 (Target State Planning & Gap Analysis)?"
+     - Options: ["Continue to Phase 1", "Review Phase 0 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 1 (Target State Planning & Gap Analysis)..."
+   - Proceed to Phase 1
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -265,7 +297,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 - Update `migration_context.breaking_changes` from output
 - If external research performed, update `external_research` block (performed, category, breaking_changes, migration_guide_url)
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 2.
+---
+
+## 🚦 GATE: Phase 1 → Phase 2
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 1 (Target State Planning & Gap Analysis) complete. Ready to proceed to Phase 2 (Migration Strategy Specification)?"
+     - Options: ["Continue to Phase 2", "Review Phase 1 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 2 (Migration Strategy Specification)..."
+   - Proceed to Phase 2
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -310,7 +358,23 @@ If NO to any: STOP - go back and invoke the Skill tool.
 - Set `migration_context.rollback_plan_created: true` (if rollback-plan.md created)
 - Set `migration_context.dual_run_configured: true` (if dual-run-plan.md created)
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 3.
+---
+
+## 🚦 GATE: Phase 2 → Phase 3
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 2 (Migration Strategy Specification) complete. Ready to proceed to Phase 3 (Implementation Planning)?"
+     - Options: ["Continue to Phase 3", "Review Phase 2 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 3 (Implementation Planning)..."
+   - Proceed to Phase 3
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -350,7 +414,23 @@ If NO to any: STOP - go back and invoke the Skill tool.
 
 **Success**: Plan complete with rollback steps, dependencies correct
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 4.
+---
+
+## 🚦 GATE: Phase 3 → Phase 4
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 3 (Implementation Planning) complete. Ready to proceed to Phase 4 (Migration Execution)?"
+     - Options: ["Continue to Phase 4", "Review Phase 3 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 4 (Migration Execution)..."
+   - Proceed to Phase 4
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -395,7 +475,23 @@ If NO to any: STOP - go back and invoke the Skill tool.
 
 **Success**: All migration steps complete, tests pass after each task group
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 5.
+---
+
+## 🚦 GATE: Phase 4 → Phase 5
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 4 (Migration Execution) complete. Ready to proceed to Phase 5 (Verification + Compatibility Testing)?"
+     - Options: ["Continue to Phase 5", "Review Phase 4 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 5 (Verification + Compatibility Testing)..."
+   - Proceed to Phase 5
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -444,7 +540,23 @@ If NO to any: STOP - go back and invoke the Skill tool.
 
 **Gate**: Cannot complete if data integrity issues in data migration
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 6.
+---
+
+## 🚦 GATE: Phase 5 → Phase 6
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 5 (Verification + Compatibility Testing) complete. Ready to proceed to Phase 6 (Documentation)?"
+     - Options: ["Continue to Phase 6", "Review Phase 5 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 6 (Documentation)..."
+   - Proceed to Phase 6
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 

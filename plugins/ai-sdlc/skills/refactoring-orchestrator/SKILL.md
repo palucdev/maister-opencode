@@ -185,7 +185,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 **State Update**: After refactoring-analyzer completes:
 - If structured output includes `risk_level`, update `refactoring_context.risk_level`
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 1.
+---
+
+## 🚦 GATE: Phase 0 → Phase 1
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 0 (Code Quality Baseline Analysis) complete. Ready to proceed to Phase 1 (Refactoring Planning)?"
+     - Options: ["Continue to Phase 1", "Review Phase 0 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 1 (Refactoring Planning)..."
+   - Proceed to Phase 1
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -246,7 +262,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 - Update `refactoring_context.total_increments` from output (number of planned increments)
 - Update `refactoring_context.risk_level` from output (if not already set)
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 2.
+---
+
+## 🚦 GATE: Phase 1 → Phase 2
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 1 (Refactoring Planning) complete. Ready to proceed to Phase 2 (Behavioral Snapshot Capture)?"
+     - Options: ["Continue to Phase 2", "Review Phase 1 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 2 (Behavioral Snapshot Capture)..."
+   - Proceed to Phase 2
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -308,7 +340,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 **State Update**: After behavioral-snapshot-capturer completes:
 - Update `refactoring_context.baseline_fingerprint` from output fingerprint hash
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 2.5.
+---
+
+## 🚦 GATE: Phase 2 → Phase 2.5
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 2 (Behavioral Snapshot Capture) complete. Ready to proceed to Phase 2.5 (Git Branch Setup)?"
+     - Options: ["Continue to Phase 2.5", "Review Phase 2 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 2.5 (Git Branch Setup)..."
+   - Proceed to Phase 2.5
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -331,7 +379,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 - Set `branch_context.use_dedicated_branch` to user's choice (true/false)
 - If branch created, set `branch_context.refactoring_branch` to branch name
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 3.
+---
+
+## 🚦 GATE: Phase 2.5 → Phase 3
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 2.5 (Git Branch Setup) complete. Ready to proceed to Phase 3 (Refactoring Execution)?"
+     - Options: ["Continue to Phase 3", "Review Phase 2.5 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 3 (Refactoring Execution)..."
+   - Proceed to Phase 3
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -400,7 +464,23 @@ Parameters:
 
 **Success**: All increments complete, tests pass, checkpoints created
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 4.
+---
+
+## 🚦 GATE: Phase 3 → Phase 4
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 3 (Refactoring Execution) complete. Ready to proceed to Phase 4 (Behavior Verification)?"
+     - Options: ["Continue to Phase 4", "Review Phase 3 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 4 (Behavior Verification)..."
+   - Proceed to Phase 4
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -471,7 +551,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 **State Update**: After behavioral-verifier completes:
 - Update `refactoring_context.behavior_verification_status` from output verdict ("PASS" or "FAIL")
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 5.
+---
+
+## 🚦 GATE: Phase 4 → Phase 5
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 4 (Behavior Verification) complete. Ready to proceed to Phase 5 (Final Quality Verification)?"
+     - Options: ["Continue to Phase 5", "Review Phase 4 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 5 (Final Quality Verification)..."
+   - Proceed to Phase 5
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 

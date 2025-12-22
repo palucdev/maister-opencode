@@ -183,7 +183,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 - ✅ All task IDs unique
 - ✅ All dependency references valid
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 1.
+---
+
+## 🚦 GATE: Phase 0 → Phase 1
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 0 (Initiative Planning) complete. Ready to proceed to Phase 1 (Task Creation)?"
+     - Options: ["Continue to Phase 1", "Review Phase 0 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 1 (Task Creation)..."
+   - Proceed to Phase 1
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -206,7 +222,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 
 **Outputs**: Task directories, metadata.yml files, placeholder specs, initiative-state.yml
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 2.
+---
+
+## 🚦 GATE: Phase 1 → Phase 2
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 1 (Task Creation) complete. Ready to proceed to Phase 2 (Dependency Resolution)?"
+     - Options: ["Continue to Phase 2", "Review Phase 1 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 2 (Dependency Resolution)..."
+   - Proceed to Phase 2
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -227,7 +259,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 
 **Outputs**: Validated dependency graph, execution queue, critical path
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 3.
+---
+
+## 🚦 GATE: Phase 2 → Phase 3
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 2 (Dependency Resolution) complete. Ready to proceed to Phase 3 (Task Execution)?"
+     - Options: ["Continue to Phase 3", "Review Phase 2 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 3 (Task Execution)..."
+   - Proceed to Phase 3
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -306,7 +354,23 @@ If NO to any: STOP - go back and invoke the Skill tool for this task.
 - Options: Skip task (marks dependents as blocked), retry, abort
 - Dependent tasks cannot proceed if dependency failed
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After each task completes, use `AskUserQuestion` before proceeding to the next task.
+---
+
+## 🚦 GATE: Phase 3 → Phase 4
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 3 (Task Execution) complete. Ready to proceed to Phase 4 (Initiative Verification)?"
+     - Options: ["Continue to Phase 4", "Review Phase 3 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 4 (Initiative Verification)..."
+   - Proceed to Phase 4
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -329,7 +393,23 @@ If NO to any: STOP - go back and invoke the Skill tool for this task.
 
 **Gate**: Cannot proceed to Phase 5 if critical issues found
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 5.
+---
+
+## 🚦 GATE: Phase 4 → Phase 5
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 4 (Initiative Verification) complete. Ready to proceed to Phase 5 (Finalization)?"
+     - Options: ["Continue to Phase 5", "Review Phase 4 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 5 (Finalization)..."
+   - Proceed to Phase 5
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 

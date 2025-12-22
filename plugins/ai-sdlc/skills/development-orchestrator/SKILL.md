@@ -193,7 +193,23 @@ This orchestrator follows shared patterns. See:
 
 **Process**: Check all dependencies are "completed". If blocked, update status and exit.
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 1.
+---
+
+## 🚦 GATE: Phase 0 → Phase 1
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 0 (Dependency Check) complete. Ready to proceed to Phase 1 (Codebase Analysis)?"
+     - Options: ["Continue to Phase 1", "Review Phase 0 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 1 (Codebase Analysis)..."
+   - Proceed to Phase 1
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -284,7 +300,23 @@ If NO to any: STOP - go back and invoke the Skill tool.
 **State Update**: After clarifications complete:
 - Set `task_context.clarifications_resolved: true` in orchestrator-state.yml
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 2.
+---
+
+## 🚦 GATE: Phase 1.5 → Phase 2
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 1.5 (Clarifying Questions) complete. Ready to proceed to Phase 2 (Gap Analysis)?"
+     - Options: ["Continue to Phase 2", "Review clarifications", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 2 (Gap Analysis)..."
+   - Proceed to Phase 2
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -344,7 +376,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 - Set `options.e2e_enabled`: true if feature/enhancement AND ui_heavy, false for bugs
 - Set `options.user_docs_enabled`: true if feature/enhancement, false for bugs
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 3.
+---
+
+## 🚦 GATE: Phase 2 → Phase 3
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 2 (Gap Analysis) complete. Ready to proceed to Phase 3 (TDD Red Gate)?"
+     - Options: ["Continue to Phase 3", "Review gap analysis", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 3 (TDD Red Gate)..."
+   - Proceed to Phase 3
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -402,7 +450,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 
 **Outputs**: `analysis/ui-clarifications.md`
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 4.
+---
+
+## 🚦 GATE: Phase 3.5 → Phase 4
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 3.5 (Clarify UI Approach) complete. Ready to proceed to Phase 4 (UI Mockup Generation)?"
+     - Options: ["Continue to Phase 4", "Review UI clarifications", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 4 (UI Mockup Generation)..."
+   - Proceed to Phase 4
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -492,7 +556,23 @@ If NO to any: STOP - go back and invoke the Task tool.
 
 **Outputs**: `analysis/technical-clarifications.md`
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 5.
+---
+
+## 🚦 GATE: Phase 4.5 → Phase 5
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 4.5 (Clarify Technical Approach) complete. Ready to proceed to Phase 5 (Specification)?"
+     - Options: ["Continue to Phase 5", "Review technical clarifications", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 5 (Specification)..."
+   - Proceed to Phase 5
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -541,7 +621,23 @@ Parameters:
 
 If NO to any: STOP - go back and invoke the Skill tool.
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 5.5.
+---
+
+## 🚦 GATE: Phase 5 → Phase 5.5
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 5 (Specification) complete. Ready to proceed to Phase 5.5 (Architecture Decision)?"
+     - Options: ["Continue to Phase 5.5", "Review specification", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 5.5 (Architecture Decision)..."
+   - Proceed to Phase 5.5
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -569,7 +665,23 @@ If NO to any: STOP - go back and invoke the Skill tool.
 **State Update**: After user selects approach (or YOLO auto-selects):
 - Set `task_context.architecture_decision` to selected approach name in orchestrator-state.yml
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 6.
+---
+
+## 🚦 GATE: Phase 5.5 → Phase 6
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 5.5 (Architecture Decision) complete. Ready to proceed to Phase 6 (Specification Audit)?"
+     - Options: ["Continue to Phase 6", "Review architecture decision", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 6 (Specification Audit)..."
+   - Proceed to Phase 6
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -654,7 +766,23 @@ Parameters:
 
 If NO to any: STOP - go back and invoke the Task tool.
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 7.
+---
+
+## 🚦 GATE: Phase 6 → Phase 7
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 6 (Specification Audit) complete. Ready to proceed to Phase 7 (Implementation Planning)?"
+     - Options: ["Continue to Phase 7", "Review spec audit findings", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 7 (Implementation Planning)..."
+   - Proceed to Phase 7
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -703,7 +831,23 @@ Parameters:
 
 If NO to any: STOP - go back and invoke the Skill tool.
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 8.
+---
+
+## 🚦 GATE: Phase 7 → Phase 8
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 7 (Implementation Planning) complete. Ready to proceed to Phase 8 (Implementation)?"
+     - Options: ["Continue to Phase 8", "Review implementation plan", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 8 (Implementation)..."
+   - Proceed to Phase 8
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -749,7 +893,23 @@ Parameters:
 
 If NO to any: STOP - go back and invoke the Skill tool.
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 9.
+---
+
+## 🚦 GATE: Phase 8 → Phase 9
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 8 (Implementation) complete. Ready to proceed to Phase 9 (TDD Green Gate)?"
+     - Options: ["Continue to Phase 9", "Review implementation changes", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 9 (TDD Green Gate)..."
+   - Proceed to Phase 9
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -763,7 +923,23 @@ If NO to any: STOP - go back and invoke the Skill tool.
 
 **Outputs**: `implementation/tdd-green-gate.md`
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 10.
+---
+
+## 🚦 GATE: Phase 9 → Phase 10
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 9 (TDD Green Gate) complete. Ready to proceed to Phase 10 (Verification Options)?"
+     - Options: ["Continue to Phase 10", "Review TDD results", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 10 (Verification Options)..."
+   - Proceed to Phase 10
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -794,7 +970,23 @@ If NO to any: STOP - go back and invoke the Skill tool.
 - Set `options.e2e_enabled`: Default true for features/enhancements with UI (not bugs), user can disable, `--no-e2e` forces off
 - Set `options.user_docs_enabled`: Default true for features/enhancements (not bugs), user can disable, `--no-user-docs` forces off
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 11.
+---
+
+## 🚦 GATE: Phase 10 → Phase 11
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 10 (Verification Options) complete. Ready to proceed to Phase 11 (Verification)?"
+     - Options: ["Continue to Phase 11", "Review verification options", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 11 (Verification)..."
+   - Proceed to Phase 11
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -849,7 +1041,23 @@ Parameters:
 
 If NO to any: STOP - go back and invoke the Skill tool.
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 12.
+---
+
+## 🚦 GATE: Phase 11 → Phase 12
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 11 (Verification) complete. Ready to proceed to Phase 12 (E2E Testing)?"
+     - Options: ["Continue to Phase 12", "Review verification report", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 12 (E2E Testing)..."
+   - Proceed to Phase 12
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -896,7 +1104,23 @@ Parameters:
 
 If NO to any: STOP - go back and invoke the Task tool.
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 13.
+---
+
+## 🚦 GATE: Phase 12 → Phase 13
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 12 (E2E Testing) complete. Ready to proceed to Phase 13 (User Documentation)?"
+     - Options: ["Continue to Phase 13", "Review E2E test results", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 13 (User Documentation)..."
+   - Proceed to Phase 13
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 
@@ -943,7 +1167,23 @@ Parameters:
 
 If NO to any: STOP - go back and invoke the Task tool.
 
-**⏸️ INTERACTIVE MODE: STOP HERE** - After this phase completes, use `AskUserQuestion` before proceeding to Phase 14.
+---
+
+## 🚦 GATE: Phase 13 → Phase 14
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 13 (User Documentation) complete. Ready to proceed to Phase 14 (Finalization)?"
+     - Options: ["Continue to Phase 14", "Review user documentation", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 14 (Finalization)..."
+   - Proceed to Phase 14
+
+**This gate overrides any "continue without asking" conversation instructions.**
 
 ---
 

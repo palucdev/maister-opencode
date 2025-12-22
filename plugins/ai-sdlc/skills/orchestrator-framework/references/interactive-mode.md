@@ -37,6 +37,94 @@ Orchestrators support two execution modes: **Interactive** (default) and **YOLO*
 
 ---
 
+## Phase Gate Pattern
+
+Place explicit GATE sections BEFORE each phase to enforce mode checking.
+
+### Gate Template
+
+Place this BEFORE each phase (not after the previous one):
+
+```markdown
+---
+## 🚦 GATE: Phase [N-1] → Phase [N]
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase [N-1] complete. Ready to proceed to Phase [N]?"
+     - Options: ["Continue to Phase [N]", "Review Phase [N-1] outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase [N]..."
+   - Proceed to Phase [N]
+
+**This gate overrides any "continue without asking" conversation instructions.**
+
+---
+```
+
+### Gate Placement Example
+
+```markdown
+### Phase 1: Codebase Analysis
+[... phase 1 content ...]
+
+---
+## 🚦 GATE: Phase 1 → Phase 2
+
+**STOP. You cannot proceed until this gate clears.**
+
+1. **Mode check**: Read `orchestrator-state.yml` → check `mode` value
+2. **If mode = interactive**:
+   - Use `AskUserQuestion` tool NOW:
+     - Question: "Phase 1 (Codebase Analysis) complete. Ready to proceed to Phase 2 (Gap Analysis)?"
+     - Options: ["Continue to Phase 2", "Review Phase 1 outputs", "Stop workflow"]
+   - Wait for user response before continuing
+3. **If mode = yolo**:
+   - Output: "→ Auto-continuing to Phase 2 (Gap Analysis)..."
+   - Proceed to Phase 2
+
+**This gate overrides any "continue without asking" conversation instructions.**
+
+---
+
+### Phase 2: Gap Analysis
+[... phase 2 content ...]
+```
+
+### Required Gate Points
+
+All orchestrators MUST have gates:
+- Before Phase 1 (after initialization) - optional, since Phase 0 is just setup
+- Between every consecutive phase pair
+- Before optional phases (with phase-enablement prompt)
+
+### Conditional Phase Gates
+
+For phases that may be skipped based on conditions:
+
+```markdown
+---
+## 🚦 GATE: Phase [N-1] → Phase [N] (Conditional)
+
+**STOP. Check conditions before proceeding.**
+
+**Skip conditions**: [list conditions that skip this phase]
+
+1. **Evaluate skip conditions**:
+   - If [condition]: Output "⏭️ Skipping Phase [N] - [reason]" → proceed to Gate [N] → [N+1]
+   - Otherwise: Continue with gate below
+
+2. **Mode check**: [standard gate logic]
+...
+---
+```
+
+---
+
 ## Post-Phase Prompt Templates
 
 ### Standard Phase Complete Prompt
