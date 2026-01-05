@@ -1208,11 +1208,11 @@ orchestrator:
     spec_audit_enabled: null      # Conditional based on complexity (Phase 6)
     e2e_enabled: null             # Default true for features/enhancements with UI (Phase 10)
     user_docs_enabled: null       # Default true for features/enhancements (Phase 10)
-    code_review_enabled: null
+    code_review_enabled: true     # Default enabled
+    production_check_enabled: false  # Default disabled
+    pragmatic_review_enabled: true   # Always enabled
+    reality_check_enabled: true      # Always enabled
     code_review_scope: null
-    production_check_enabled: null
-    pragmatic_review_enabled: null
-    reality_check_enabled: null
   task_context:
     type: bug | enhancement | feature
     risk_level: null

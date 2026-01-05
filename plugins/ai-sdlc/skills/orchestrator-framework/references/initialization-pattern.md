@@ -63,7 +63,8 @@ orchestrator:
   auto_fix_attempts:
     # One entry per phase, all 0
   options:
-    # All null initially
+    # Set sensible defaults per orchestrator (see Domain Context)
+    # Task-dependent options can remain null until determined
   created: [current ISO 8601 timestamp]
   updated: [current ISO 8601 timestamp]
   task_path: [full path]
