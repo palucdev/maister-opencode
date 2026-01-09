@@ -146,6 +146,17 @@ Read these during relevant phases:
 
 **Success**: Research question clear, type classified, scope defined
 
+**POST-PHASE VALIDATION (Phase 0):**
+
+Before proceeding, verify required files exist:
+```bash
+ls -la [task-path]/metadata.yml
+ls -la [task-path]/orchestrator-state.yml
+ls -la [task-path]/planning/research-brief.md
+```
+
+**If any file is missing**: Do NOT proceed. Create the missing file(s) before continuing.
+
 ---
 
 ## 🚦 GATE: Phase 0 → Phase 1
@@ -203,11 +214,16 @@ Parameters:
     4. Create phased research plan
     5. Define success criteria for each phase
 
-    Save to:
+    **MANDATORY FILE CREATION:**
+    You MUST create these files before completing:
     - planning/research-plan.md (methodology, approach)
     - planning/sources.md (data sources with access paths)
 
-    Use only Read, Grep, Glob, and Bash tools. Do NOT modify code.
+    Do NOT consolidate this information into your response only.
+    Do NOT skip file creation even if research question is simple.
+    Write to the files using the Write tool.
+
+    Use only Read, Grep, Glob, Write, and Bash tools. Do NOT modify code.
 
 ⏳ Wait for subagent completion before continuing.
 
@@ -221,6 +237,19 @@ Parameters:
 If NO to any: STOP - go back and invoke the Task tool.
 
 **Success**: Methodology selected, sources identified (at least one), plan documented
+
+**POST-PHASE VALIDATION (Phase 1):**
+
+Before proceeding, verify required files exist:
+```bash
+ls -la [task-path]/planning/research-plan.md
+ls -la [task-path]/planning/sources.md
+```
+
+**If any file is missing**:
+- Do NOT proceed to Phase 2
+- Re-invoke the research-planner agent with explicit instruction: "You MUST create planning/research-plan.md and planning/sources.md files"
+- Only continue when both files exist
 
 ---
 
@@ -291,10 +320,17 @@ Task 1: Codebase Gatherer
     4. Maintain strict source citations for EVERY finding
     5. Save findings to analysis/findings/codebase-*.md files
 
+    **MANDATORY FILE CREATION:**
+    You MUST create at least ONE file: analysis/findings/codebase-findings.md
+    (or multiple files like codebase-auth.md, codebase-api.md if findings are large)
+
+    Do NOT put findings only in your response - they MUST be saved to files.
+    Even if findings are minimal, create the file with whatever you found.
+
     IMPORTANT:
     - Only process codebase sources (file patterns, key files, directories)
     - Do NOT create 00-summary.md or 99-verification.md (orchestrator will merge)
-    - Use only Read, Grep, Glob, and Bash tools. Do NOT modify code.
+    - Use Read, Grep, Glob, Write, and Bash tools. Do NOT modify code.
 
 Task 2: Documentation Gatherer
   subagent_type: "ai-sdlc:information-gatherer"
@@ -316,10 +352,17 @@ Task 2: Documentation Gatherer
     4. Maintain strict source citations for EVERY finding
     5. Save findings to analysis/findings/docs-*.md files
 
+    **MANDATORY FILE CREATION:**
+    You MUST create at least ONE file: analysis/findings/docs-findings.md
+    (or multiple files like docs-architecture.md, docs-readme.md if findings are large)
+
+    Do NOT put findings only in your response - they MUST be saved to files.
+    Even if findings are minimal, create the file with whatever you found.
+
     IMPORTANT:
     - Only process documentation sources (project docs, code docs, inline comments)
     - Do NOT create 00-summary.md or 99-verification.md (orchestrator will merge)
-    - Use only Read, Grep, Glob, and Bash tools. Do NOT modify code.
+    - Use Read, Grep, Glob, Write, and Bash tools. Do NOT modify code.
 
 Task 3: Configuration Gatherer
   subagent_type: "ai-sdlc:information-gatherer"
@@ -341,10 +384,17 @@ Task 3: Configuration Gatherer
     4. Maintain strict source citations for EVERY finding
     5. Save findings to analysis/findings/config-*.md files
 
+    **MANDATORY FILE CREATION:**
+    You MUST create at least ONE file: analysis/findings/config-findings.md
+    (or multiple files like config-dependencies.md, config-environment.md if findings are large)
+
+    Do NOT put findings only in your response - they MUST be saved to files.
+    Even if findings are minimal, create the file with whatever you found.
+
     IMPORTANT:
     - Only process configuration sources (package.json, .env, docker-compose, etc.)
     - Do NOT create 00-summary.md or 99-verification.md (orchestrator will merge)
-    - Use only Read, Grep, Glob, and Bash tools. Do NOT modify code.
+    - Use Read, Grep, Glob, Write, and Bash tools. Do NOT modify code.
 
 Task 4: External Gatherer
   subagent_type: "ai-sdlc:information-gatherer"
@@ -366,11 +416,20 @@ Task 4: External Gatherer
     4. Maintain strict source citations for EVERY finding
     5. Save findings to analysis/findings/external-*.md files
 
+    **MANDATORY FILE CREATION:**
+    If external sources exist in sources.md:
+    - You MUST create at least ONE file: analysis/findings/external-findings.md
+    - Do NOT put findings only in your response - they MUST be saved to files.
+
+    If NO external sources in sources.md:
+    - Create analysis/findings/external-no-sources.md with content:
+      "No external sources identified in research plan."
+    - This confirms you checked but found no external sources to gather.
+
     IMPORTANT:
     - Only process external sources (URLs, web resources, framework docs)
-    - If no external sources in sources.md, report "No external sources to gather"
     - Do NOT create 00-summary.md or 99-verification.md (orchestrator will merge)
-    - Use WebSearch, WebFetch, Read, and Bash tools. Do NOT modify code.
+    - Use WebSearch, WebFetch, Read, Write, and Bash tools. Do NOT modify code.
 ```
 
 ⏳ Wait for ALL 4 agents to complete before continuing.
@@ -391,6 +450,20 @@ If NO to any: STOP - go back and invoke all 4 Task tools in ONE message.
 **Success**: All 4 agents complete, category-specific findings files exist in `analysis/findings/`
 
 **Note**: If a category has no sources in sources.md, that agent completes quickly with a note.
+
+**POST-PHASE VALIDATION (Phase 2):**
+
+Before proceeding, verify at least one findings file exists:
+```bash
+ls -la [task-path]/analysis/findings/
+```
+
+**Required**: At least one file matching `codebase-*.md`, `docs-*.md`, `config-*.md`, or `external-*.md`
+
+**If no findings files exist**:
+- Do NOT proceed to Phase 2.5
+- Re-invoke the information-gatherer agents with explicit instruction: "You MUST create findings files in analysis/findings/ directory"
+- Only continue when at least one findings file exists
 
 **⏸️ DO NOT STOP** - Proceed directly to Phase 2.5 (Merge Findings) after all agents complete.
 
@@ -496,6 +569,16 @@ If NO to any: STOP - go back and invoke all 4 Task tools in ONE message.
 
 **Success**: Summary and verification files created, all findings integrated
 
+**POST-PHASE VALIDATION (Phase 2.5):**
+
+Before proceeding, verify required files exist:
+```bash
+ls -la [task-path]/analysis/findings/00-summary.md
+ls -la [task-path]/analysis/findings/99-verification.md
+```
+
+**If any file is missing**: Do NOT proceed. Create the missing file(s) before continuing to Phase 3.
+
 ---
 
 ## 🚦 GATE: Phase 2.5 → Phase 3
@@ -555,13 +638,18 @@ Parameters:
     6. Mark confidence levels (high/medium/low)
     7. Document gaps and uncertainties
 
-    Save to:
-    - analysis/synthesis.md (patterns, insights)
-    - analysis/research-report.md (comprehensive report)
+    **MANDATORY FILE CREATION:**
+    You MUST create BOTH of these files before completing:
+    - analysis/synthesis.md (patterns, key insights, cross-source analysis)
+    - analysis/research-report.md (comprehensive report answering research question)
+
+    Do NOT consolidate both into one file.
+    Do NOT put content only in your response - it MUST be saved to files.
+    Even if research is simple, create BOTH files.
 
     CRITICAL: Every insight must trace to findings, every conclusion evidence-based.
 
-    Use only Read, Grep, Glob, and Bash tools. Do NOT modify code.
+    Use Read, Grep, Glob, Write, and Bash tools. Do NOT modify code.
 
 ⏳ Wait for subagent completion before continuing.
 
@@ -575,6 +663,19 @@ Parameters:
 If NO to any: STOP - go back and invoke the Task tool.
 
 **Success**: Research question answered, patterns identified, confidence documented
+
+**POST-PHASE VALIDATION (Phase 3):**
+
+Before proceeding, verify required files exist:
+```bash
+ls -la [task-path]/analysis/synthesis.md
+ls -la [task-path]/analysis/research-report.md
+```
+
+**If any file is missing**:
+- Do NOT proceed to Phase 4
+- Re-invoke the research-synthesizer agent with explicit instruction: "You MUST create analysis/synthesis.md and analysis/research-report.md files"
+- Only continue when both files exist
 
 ---
 
@@ -618,6 +719,17 @@ If NO to any: STOP - go back and invoke the Task tool.
 **Outputs**: `outputs/recommendations.md`, `outputs/knowledge-base.md`, `outputs/specifications.md` (conditional)
 
 **Success**: At least research report exists, conditional outputs match context
+
+**POST-PHASE VALIDATION (Phase 4):**
+
+Before proceeding, verify at least one output file exists:
+```bash
+ls -la [task-path]/outputs/
+```
+
+**Required**: At least one of `recommendations.md`, `knowledge-base.md`, or `specifications.md` based on research type
+
+**If no output files exist**: Do NOT proceed. Create at least one output file appropriate for the research type.
 
 ---
 
@@ -750,6 +862,23 @@ options:
 └── verification/
     └── verification-report.md
 ```
+
+---
+
+## Mandatory Files by Phase
+
+**CRITICAL**: These files MUST exist before proceeding to the next phase. Do NOT skip file creation even for simple research tasks.
+
+| Phase | Required Files | Validation Criteria |
+|-------|---------------|---------------------|
+| 0 | `metadata.yml`, `orchestrator-state.yml`, `planning/research-brief.md` | All 3 files must exist |
+| 1 | `planning/research-plan.md`, `planning/sources.md` | Both files must exist with non-empty content |
+| 2 | At least one file in `analysis/findings/` matching `codebase-*.md`, `docs-*.md`, `config-*.md`, or `external-*.md` | Directory contains at least one findings file |
+| 2.5 | `analysis/findings/00-summary.md`, `analysis/findings/99-verification.md` | Both files must exist |
+| 3 | `analysis/synthesis.md`, `analysis/research-report.md` | Both files must exist with substantive content |
+| 4 | At least one file in `outputs/` (`recommendations.md`, `knowledge-base.md`, or `specifications.md`) | At least one output based on research type |
+
+**Why This Matters**: Without intermediate artifacts, research is not traceable, not auditable, and cannot be resumed. Every phase builds on previous outputs.
 
 ---
 

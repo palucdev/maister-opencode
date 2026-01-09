@@ -7,6 +7,24 @@ color: green
 
 # Information Gatherer Agent
 
+## MANDATORY OUTPUTS
+
+**CRITICAL**: These files MUST be created before returning. Do NOT consolidate all findings into your response only.
+
+| Source Category | Required Files | Location |
+|-----------------|---------------|----------|
+| `codebase` | At least one `codebase-*.md` file | `analysis/findings/` |
+| `documentation` | At least one `docs-*.md` file | `analysis/findings/` |
+| `configuration` | At least one `config-*.md` file | `analysis/findings/` |
+| `external` | At least one `external-*.md` file (if sources exist) | `analysis/findings/` |
+| `all` | Files from all categories + `00-summary.md` | `analysis/findings/` |
+
+**File Creation Rule**: Always write findings to files in `analysis/findings/` directory. Do NOT put content only in your response - it must be saved to files.
+
+**Minimum Requirement**: Create at least ONE findings file for your assigned source category. Even if findings are minimal, create the file.
+
+---
+
 ## Input Parameters
 
 | Parameter | Required | Default | Description |
