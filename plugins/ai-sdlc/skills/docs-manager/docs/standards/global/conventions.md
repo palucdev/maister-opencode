@@ -1,12 +1,12 @@
-## General development conventions
+## Development Conventions
 
-- **Consistent Project Structure**: Organize files and directories in a predictable, logical structure that team members can navigate easily
-- **Clear Documentation**: Maintain up-to-date README files with setup instructions, architecture overview, and contribution guidelines
-- **Version Control Best Practices**: Use clear commit messages, feature branches, and meaningful pull/merge requests with descriptions
-- **Environment Configuration**: Use environment variables for configuration; never commit secrets or API keys to version control
-- **Dependency Management**: Keep dependencies up-to-date and minimal; document why major dependencies are used
-- **Code Review Process**: Establish a consistent code review process with clear expectations for reviewers and authors
-- **Testing Requirements**: Define what level of testing is required before merging (unit tests, integration tests, etc.)
-- **Feature Flags**: Consider feature flags for incomplete features rather than long-lived feature branches
-- **Changelog Maintenance**: Keep a changelog or release notes to track significant changes and improvements
-- **Minimal Implementation**: Build only what's needed now; avoid speculative methods and "just in case" code (see minimal-implementation.md)
+- **Predictable Structure**: Organize files and directories in a logical, navigable layout
+- **Up-to-Date Documentation**: Keep README files current with setup steps, architecture overview, and contribution guidelines
+- **Clean Version Control**: Write clear commit messages, use feature branches, and add meaningful descriptions to pull requests
+- **Environment Variables**: Store configuration in environment variables; never commit secrets or API keys
+- **Minimal Dependencies**: Keep dependencies lean and up-to-date; document why major ones are included
+- **Consistent Reviews**: Follow a defined code review process with clear expectations for reviewers and authors
+- **Testing Standards**: Define required test coverage (unit, integration, etc.) before merging
+- **Feature Flags**: Use flags for incomplete features instead of long-lived branches
+- **Changelog Updates**: Maintain a changelog or release notes for significant changes
+- **Build What's Needed**: Avoid speculative code and "just in case" additions (see minimal-implementation.md)

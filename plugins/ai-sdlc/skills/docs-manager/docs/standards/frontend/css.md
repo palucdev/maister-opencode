@@ -1,7 +1,7 @@
-## CSS best practices
+## CSS
 
-- **Consistent Methodology**: Apply and stick to the project's consistent CSS methodology (Tailwind, BEM, utility classes, CSS modules, etc.) across the entire project
-- **Avoid Overriding Framework Styles**: Work with your framework's patterns rather than fighting against them with excessive overrides
-- **Maintain Design System**: Establish and document design tokens (colors, spacing, typography) for consistency
-- **Minimize Custom CSS**: Leverage framework utilities and components to reduce custom CSS maintenance burden
-- **Performance Considerations**: Optimize for production with CSS purging/tree-shaking to remove unused styles
+- **Consistent Methodology**: Stick to the project's chosen approach (Tailwind, BEM, CSS modules, etc.) across the entire codebase
+- **Work With the Framework**: Use framework patterns as intended rather than fighting them with excessive overrides
+- **Design Tokens**: Establish and document consistent values for colors, spacing, and typography
+- **Minimize Custom CSS**: Prefer framework utilities to reduce custom styling maintenance
+- **Production Optimization**: Use CSS purging or tree-shaking to remove unused styles

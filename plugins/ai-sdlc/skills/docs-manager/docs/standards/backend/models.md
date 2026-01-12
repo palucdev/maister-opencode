@@ -1,10 +1,10 @@
-## Database model best practices
+## Models
 
-- **Clear Naming**: Use singular names for models and plural for tables following your framework's conventions
-- **Timestamps**: Include created and updated timestamps on most tables for auditing and debugging
-- **Data Integrity**: Use database constraints (NOT NULL, UNIQUE, foreign keys) to enforce data rules at the database level
-- **Appropriate Data Types**: Choose data types that match the data's purpose and size requirements
-- **Indexes on Foreign Keys**: Index foreign key columns and other frequently queried fields for performance
-- **Validation at Multiple Layers**: Implement validation at both model and database levels for defense in depth
-- **Relationship Clarity**: Define relationships clearly with appropriate cascade behaviors and naming conventions
-- **Avoid Over-Normalization**: Balance normalization with practical query performance needs
+- **Clear Naming**: Use singular names for models and plural for tables (or follow framework conventions)
+- **Timestamps**: Include created and updated timestamps for auditing and debugging
+- **Database Constraints**: Enforce data rules at the database level (NOT NULL, UNIQUE, foreign keys)
+- **Appropriate Types**: Choose data types that match purpose and size requirements
+- **Index Foreign Keys**: Index foreign key columns and frequently queried fields
+- **Multi-Layer Validation**: Validate at both model and database levels for defense in depth
+- **Clear Relationships**: Define relationships with appropriate cascade behaviors and naming
+- **Practical Normalization**: Balance normalization with query performance needs

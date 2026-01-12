@@ -1,9 +1,9 @@
-## Error handling best practices
+## Error Handling
 
-- **User-Friendly Messages**: Provide clear, actionable error messages to users without exposing technical details or security information
-- **Fail Fast and Explicitly**: Validate input and check preconditions early; fail with clear error messages rather than allowing invalid state
-- **Specific Exception Types**: Use specific exception/error types rather than generic ones to enable targeted handling
-- **Centralized Error Handling**: Handle errors at appropriate boundaries (controllers, API layers) rather than scattering try-catch blocks everywhere
-- **Graceful Degradation**: Design systems to degrade gracefully when non-critical services fail rather than breaking entirely
-- **Retry Strategies**: Implement exponential backoff for transient failures in external service calls
-- **Clean Up Resources**: Always clean up resources (file handles, connections) in finally blocks or equivalent mechanisms
+- **Clear User Messages**: Show helpful, actionable messages without exposing internal details or security-sensitive information
+- **Fail Fast**: Validate inputs and check preconditions early; reject invalid data before it causes deeper issues
+- **Typed Exceptions**: Use specific exception types instead of generic ones to enable precise error handling
+- **Centralized Handling**: Catch and process errors at appropriate boundaries (controllers, API layers) rather than scattering try-catch throughout
+- **Graceful Degradation**: When non-critical services fail, continue operating with reduced functionality rather than crashing entirely
+- **Retry with Backoff**: Use exponential backoff for transient failures when calling external services
+- **Resource Cleanup**: Always release resources (file handles, connections) in finally blocks or equivalent cleanup mechanisms
