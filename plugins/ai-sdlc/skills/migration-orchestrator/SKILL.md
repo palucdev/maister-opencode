@@ -148,10 +148,10 @@ Read these during relevant phases:
 
 **Execution**: Main orchestrator (direct)
 
-**When**: Only if task has `initiative_id` in metadata.yml
+**When**: Only if task has `initiative_id` in `orchestrator-state.yml` task section
 
 **Process**:
-1. Read task metadata.yml, check for `initiative_id`
+1. Read `orchestrator-state.yml`, check for `task.initiative_id`
 2. If no initiative_id → Skip to Phase 0
 3. If has initiative_id → Check all dependencies have status="completed"
 4. If dependencies not met → BLOCK with message and exit
@@ -656,8 +656,7 @@ options:
 
 ```
 .ai-sdlc/tasks/migrations/YYYY-MM-DD-migration-name/
-├── metadata.yml
-├── orchestrator-state.yml
+├── orchestrator-state.yml            # Execution state + task metadata
 ├── analysis/
 │   ├── current-state-analysis.md    # Phase 0
 │   ├── target-state-plan.md         # Phase 1

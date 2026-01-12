@@ -267,7 +267,7 @@ Each development task follows a common structure with core directories:
 
 ```
 YYYY-MM-DD-task-name/
-├── metadata.yml                  # Task metadata and tracking
+├── orchestrator-state.yml        # Execution state and task metadata
 ├── analysis/                     # Analysis and planning artifacts
 │   ├── requirements.md          # Gathered requirements
 │   └── visuals/                 # Design mockups and wireframes
@@ -304,7 +304,7 @@ Task types can add specialized subdirectories as needed (e.g., `analysis/bug-ana
 - **Documentation Discovery**: Always read `.ai-sdlc/docs/INDEX.md` before starting work to understand project context
 - **Task Discovery**: Browse `.ai-sdlc/tasks/[type]/` to find development tasks by type
 - **Standards Compliance**: Follow standards from `.ai-sdlc/docs/standards/` during implementation
-- **Task Tracking**: Use `metadata.yml` in each task folder for status, priority, tags, and time tracking
+- **Task Tracking**: Task status, priority, tags, and time tracking are in the `task:` section of `orchestrator-state.yml`
 - **Activity Logging**: Record work in `implementation/work-log.md` for transparency
 
 ## Plugin Documentation Principles

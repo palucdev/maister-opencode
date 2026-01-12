@@ -210,17 +210,18 @@ If NO to any: STOP - go back and invoke the Task tool.
 **Process**:
 1. Read initiative.yml, extract task list
 2. Create task directories in `.ai-sdlc/tasks/[type]/YYYY-MM-DD-task-name/`
-3. Initialize task metadata.yml with initiative fields:
+3. Initialize task `orchestrator-state.yml` with initiative fields in the `task:` section:
    ```yaml
-   initiative_id: YYYY-MM-DD-initiative-name
-   dependencies: [array of task paths]
-   blocks: [array of task paths that depend on this]
-   milestone: Milestone Name
+   task:
+     initiative_id: YYYY-MM-DD-initiative-name
+     dependencies: [array of task paths]
+     blocks: [array of task paths that depend on this]
+     milestone: Milestone Name
    ```
 4. Create placeholder spec.md in each task directory
 5. Create initiative-state.yml with all task tracking
 
-**Outputs**: Task directories, metadata.yml files, placeholder specs, initiative-state.yml
+**Outputs**: Task directories, orchestrator-state.yml files, placeholder specs, initiative-state.yml
 
 ---
 
@@ -329,7 +330,7 @@ For each task in queue where status != "completed":
 
 **Execution Loop**:
 1. Select next task from queue (respecting dependency order)
-2. Read task's metadata.yml to determine type
+2. Read task's `orchestrator-state.yml` to determine type from `task.type`
 3. **Output pre-delegation announcement** (see above)
 4. **Invoke appropriate orchestrator via Skill tool**
 5. **Wait for orchestrator to complete**
@@ -480,9 +481,9 @@ progress:
 
 Task orchestrators (development, migration, etc.) add **Phase 0.5: Dependency Check** when part of an initiative:
 
-1. Read task metadata.yml
-2. If `initiative_id` exists:
-   - Check all dependencies have `status: completed`
+1. Read task `orchestrator-state.yml`
+2. If `task.initiative_id` exists:
+   - Check all dependencies have `task.status: completed`
    - If any dependency not completed: BLOCK task, exit
 3. If no `initiative_id`: Skip check (standalone task)
 
@@ -520,7 +521,7 @@ Task orchestrators (development, migration, etc.) add **Phase 0.5: Dependency Ch
 
 **State Reconstruction** (if initiative-state.yml corrupted):
 1. Read initiative.yml (source of truth for task list)
-2. Poll all task metadata.yml files for current status
+2. Poll all task `orchestrator-state.yml` files for current status
 3. Rebuild dependency graph
 4. Prompt user to confirm reconstructed state
 
@@ -538,7 +539,7 @@ Task orchestrators (development, migration, etc.) add **Phase 0.5: Dependency Ch
 └── summary.md             # Phase 5 output
 
 .ai-sdlc/tasks/[type]/YYYY-MM-DD-task-name/
-├── metadata.yml           # Includes initiative_id, dependencies, blocks
+├── orchestrator-state.yml # Includes initiative_id, dependencies, blocks in task: section
 ├── implementation/spec.md # Task specification (placeholder then full)
 └── ...                    # Standard task structure
 ```

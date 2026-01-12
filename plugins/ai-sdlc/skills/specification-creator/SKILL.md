@@ -31,7 +31,7 @@ You are a specification creator that handles the complete specification lifecycl
    ├── verification/
    └── documentation/
    ```
-4. **Create metadata.yml** with name, type, status (planning), priority, dates, tags
+4. **Create orchestrator-state.yml** with task metadata (name, type, status=planning, priority, dates, tags) in the `task:` section
 5. **Read project context**: INDEX.md, vision.md, roadmap.md, tech-stack.md
 
 ---
@@ -214,7 +214,7 @@ Output summary:
 ## Created Files
 - 📄 Specification: implementation/spec.md
 - 📋 Requirements: analysis/requirements.md
-- 📊 Metadata: metadata.yml
+- 📊 State: orchestrator-state.yml (includes task metadata)
 [- 🎨 Visual Assets: X files]
 
 ## Next Steps

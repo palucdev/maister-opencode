@@ -42,6 +42,27 @@ orchestrator:
 
   # Task reference
   task_path: .ai-sdlc/tasks/[type]/YYYY-MM-DD-task-name
+
+# Task metadata (unified - no separate metadata.yml)
+task:
+  title: [human-readable task title]
+  description: [full task description]
+  type: bug | enhancement | feature | performance | security | migration | refactoring | research | documentation
+  status: pending | in_progress | completed | failed | blocked
+
+  # Initiative coordination (null for standalone tasks)
+  initiative_id: null                  # Path to parent initiative if part of one
+  dependencies: []                     # Paths to tasks this depends on
+  blocks: []                           # Tasks blocked by this one
+
+  # Optional metadata
+  tags: []
+  priority: null                       # high | medium | low
+  milestone: null
+
+  # Time tracking
+  estimated_hours: null
+  actual_hours: null
 ```
 
 ## Extension Pattern
@@ -310,27 +331,3 @@ Use AskUserQuestion tool:
   3. "Exit" - Cancel and resolve manually
 ```
 
----
-
-## metadata.yml (Companion File)
-
-Each task also has `metadata.yml` for high-level tracking:
-
-```yaml
-task:
-  title: [task name]
-  description: [task description]
-  type: [task type]
-  status: in_progress | completed | failed | blocked
-  created: [ISO 8601 timestamp]
-  updated: [ISO 8601 timestamp]
-
-  # Optional fields
-  initiative_id: [if part of initiative]
-  dependencies: []
-  tags: []
-```
-
-**Key Difference**:
-- `orchestrator-state.yml`: Detailed execution state (phases, attempts, options)
-- `metadata.yml`: High-level task metadata (title, status, dependencies)

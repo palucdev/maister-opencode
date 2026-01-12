@@ -69,7 +69,7 @@ Task Type Mapping:
 Provide context to the orchestrator:
 ```
 Task path: [task-path]
-Task type: [type from metadata.yml]
+Task type: [type from orchestrator-state.yml task section]
 
 Initiative context:
 - Part of initiative: [initiative-name]

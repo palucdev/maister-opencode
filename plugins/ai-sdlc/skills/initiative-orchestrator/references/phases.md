@@ -143,15 +143,15 @@ Create directory structure and initialize metadata for all tasks
        - verification/
        - documentation/ (optional)
 
-3. Initialize task metadata.yml
+3. Initialize task orchestrator-state.yml with `task:` section
    - Copy from initiative.yml task definition
-   - Add initiative-specific fields:
+   - Add initiative-specific fields to task section:
      * initiative_id: YYYY-MM-DD-initiative-name
      * dependencies: [array of task paths]
      * blocks: [array of task IDs]
      * milestone: [milestone name]
-   - Set status: pending
-   - Set actual_hours: 0
+   - Set task.status: pending
+   - Set task.actual_hours: 0
 
 4. Create placeholder spec.md
    - Implementation/spec.md with minimal content:
@@ -170,23 +170,20 @@ Create directory structure and initialize metadata for all tasks
 ### Outputs
 
 - Task directories in `.ai-sdlc/tasks/[type]/YYYY-MM-DD-name/`
-- Task `metadata.yml` files with initiative fields
+- Task `orchestrator-state.yml` files with initiative fields in `task:` section
 - Placeholder `spec.md` files
 - Updated `initiative-state.yml` with task registry
 
 ### Decision Points
 
 **Q: Task directory already exists?**
-- Check if part of current initiative (read metadata.yml)
+- Check if part of current initiative (read orchestrator-state.yml task.initiative_id)
 - If yes: Skip, log warning (task already created)
 - If no: Error, name conflict with different initiative/standalone task
 
 **Q: Invalid task type?**
 - Map to closest valid type or prompt user
 - Valid types: new-feature, enhancement, migration, bug-fix, refactoring, performance, security, documentation
-
-**Q: Metadata.yml template not found?**
-- Use built-in default template
 - Log info message
 
 ### Auto-Recovery Strategies
@@ -228,7 +225,7 @@ Validate dependency graph and finalize execution strategy
 ### Inputs
 
 - `initiative.yml` (dependencies array per task)
-- Task metadata.yml files (for validation)
+- Task `orchestrator-state.yml` files (for validation)
 
 ### Process Pattern
 
@@ -351,8 +348,7 @@ Orchestrate task completion with dependency enforcement and parallel execution
 ### Inputs
 
 - `initiative-state.yml` (execution plan, task states)
-- Task metadata.yml files (for status checks)
-- Task orchestrator-state.yml files (for progress monitoring)
+- Task `orchestrator-state.yml` files (for status and progress monitoring)
 
 ### Process Pattern (High-Level)
 
@@ -407,8 +403,8 @@ For current execution level:
   1. Get all tasks in level from execution.levels
   2. Filter by status: pending
   3. For each pending task:
-     - Read metadata.yml dependencies
-     - Check all dependencies status == completed
+     - Read orchestrator-state.yml task.dependencies
+     - Check all dependencies task.status == completed
      - If yes: Add to execute queue
      - If no: Mark blocked (shouldn't happen if graph valid)
 
@@ -420,7 +416,7 @@ Result: Queue of tasks ready to execute this round
 **Sequential Mode**:
 ```
 1. Take first task from queue
-2. Determine task type from metadata.yml (new-feature, enhancement, etc.)
+2. Determine task type from orchestrator-state.yml task.type (new-feature, enhancement, etc.)
 3. Launch appropriate orchestrator skill:
    - Use Skill tool
    - skill: [feature-orchestrator|enhancement-orchestrator|migration-orchestrator|bug-fix-orchestrator|refactoring-orchestrator]
@@ -466,16 +462,16 @@ The skill will receive prompt:
 
   Execution Mode: [--yolo flag if initiative in yolo mode, otherwise interactive]
 
-  Task metadata.yml already contains:
+  Task orchestrator-state.yml task section already contains:
   - initiative_id: [id]
   - dependencies: [paths]
   - blocks: [ids]
 
   Phase 0.5 (Dependency Check) will verify dependencies before proceeding.
 
-  On completion, update task metadata.yml:
-  - status: completed
-  - actual_hours: [final hours]
+  On completion, update task orchestrator-state.yml:
+  - task.status: completed
+  - task.actual_hours: [final hours]
 ```
 
 #### 3.C Task Monitoring
@@ -518,11 +514,11 @@ While tasks_running > 0:
 
 ```
 On task completion (task-X):
-  1. Read task-X metadata.yml blocks field
+  1. Read task-X orchestrator-state.yml task.blocks field
      - Get list of task IDs that depend on task-X
 
   2. For each dependent task-Y:
-     a. Read task-Y metadata.yml dependencies
+     a. Read task-Y orchestrator-state.yml task.dependencies
      b. Check if ALL dependencies now completed
      c. If yes:
         - Update task-Y status: blocked → pending
@@ -561,7 +557,7 @@ tasks:
 
 **Impact Analysis**:
 ```
-1. Read failed task metadata.yml blocks field
+1. Read failed task orchestrator-state.yml task.blocks field
 2. For each dependent task:
    - Mark as blocked (cannot proceed)
    - Add blocked_reason: "Dependency task-3 failed"
@@ -602,7 +598,7 @@ Choice: ___
 ### Outputs
 
 - All tasks status updated (completed/failed/blocked)
-- Task metadata.yml actual_hours populated
+- Task orchestrator-state.yml task.actual_hours populated
 - Updated initiative-state.yml with execution results
 
 ### Decision Points
@@ -804,7 +800,7 @@ Update roadmap, create summary, archive initiative
 
 - Completed initiative-state.yml
 - verification-report.md
-- All task metadata.yml files (for actual hours)
+- All task orchestrator-state.yml files (for actual hours)
 - initiative.yml, spec.md, task-plan.md
 
 ### Process Pattern

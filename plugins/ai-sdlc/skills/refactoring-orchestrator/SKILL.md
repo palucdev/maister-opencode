@@ -657,8 +657,7 @@ branch_context:
 
 ```
 .ai-sdlc/tasks/refactoring/YYYY-MM-DD-refactoring-name/
-├── metadata.yml
-├── orchestrator-state.yml
+├── orchestrator-state.yml            # Execution state + task metadata
 ├── analysis/
 │   ├── code-quality-baseline.md       # Phase 0
 │   ├── target-code-analysis.md        # Phase 0

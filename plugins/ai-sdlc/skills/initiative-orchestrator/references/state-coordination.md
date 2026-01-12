@@ -15,9 +15,10 @@ Initiative orchestration requires coordinating state across multiple files: init
 │   └── task-plan.md                (IMMUTABLE after planning)
 │
 └── tasks/[type]/YYYY-MM-DD-task-name/
-    ├── metadata.yml                (MUTABLE: task metadata)
-    └── orchestrator-state.yml      (MUTABLE: task execution state)
+    └── orchestrator-state.yml      (MUTABLE: execution + metadata)
 ```
+
+**Note**: Task metadata (title, description, status, dependencies, etc.) is stored in the `task:` section of `orchestrator-state.yml`. No separate `metadata.yml` file is needed.
 
 ### State Ownership
 
@@ -25,10 +26,11 @@ Initiative orchestration requires coordinating state across multiple files: init
 |------|-------|---------|----------|
 | initiative.yml | Initiative planner | Initiative orchestrator, Tasks | Initiative planner only |
 | initiative-state.yml | Initiative orchestrator | Initiative orchestrator | Initiative orchestrator only |
-| task metadata.yml | Task orchestrator | Initiative orch, Task orch | Task orchestrator only |
 | task orchestrator-state.yml | Task orchestrator | Initiative orchestrator (poll) | Task orchestrator only |
 
 **Key Principle**: Each file has single writer, multiple readers → No write conflicts
+
+**Note**: Task metadata is in the `task:` section of `orchestrator-state.yml`, so initiative orchestrator reads both execution state and metadata from a single file.
 
 ---
 
@@ -419,46 +421,58 @@ def task_execution_loop(initiative_path):
 
 ## Task Metadata Coordination
 
+Task metadata is stored in the `task:` section of `orchestrator-state.yml` (unified state file).
+
 ### Task Metadata Fields
 
 ```yaml
-# In tasks/[type]/YYYY-MM-DD-name/metadata.yml
+# In tasks/[type]/YYYY-MM-DD-name/orchestrator-state.yml
 
-# Standard fields (existing)
-name: Task Name
-type: new-feature
-status: pending|in-progress|completed|blocked|failed
-priority: high
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+orchestrator:
+  # ... execution state fields ...
 
-# Initiative-specific fields (NEW)
-initiative_id: YYYY-MM-DD-initiative-name
-dependencies: [.ai-sdlc/tasks/new-features/YYYY-MM-DD-auth]
-blocks: [task-id-5, task-id-6]
-milestone: Foundation
+task:
+  title: Task Name
+  description: Full task description
+  type: new-feature
+  status: pending|in-progress|completed|blocked|failed
 
-# Actual hours tracking
-estimated_hours: 40
-actual_hours: 35
+  # Initiative coordination
+  initiative_id: YYYY-MM-DD-initiative-name
+  dependencies: [.ai-sdlc/tasks/new-features/YYYY-MM-DD-auth]
+  blocks: [task-id-5, task-id-6]
+  milestone: Foundation
+
+  # Optional metadata
+  tags: []
+  priority: high
+
+  # Hours tracking
+  estimated_hours: 40
+  actual_hours: 35
 ```
 
 ### Reading Task Metadata
 
 ```python
-def read_task_metadata(task_path):
-    metadata_file = f"{task_path}/metadata.yml"
-    return read_yaml(metadata_file)
+def read_task_state(task_path):
+    state_file = f"{task_path}/orchestrator-state.yml"
+    return read_yaml(state_file)
+
+
+def get_task_metadata(task_path):
+    state = read_task_state(task_path)
+    return state.get('task', {})
 
 
 def get_task_actual_hours(task_path):
-    metadata = read_task_metadata(task_path)
+    metadata = get_task_metadata(task_path)
     return metadata.get('actual_hours', 0)
 
 
 def is_task_complete(task_path):
-    metadata = read_task_metadata(task_path)
-    return metadata['status'] == 'completed'
+    metadata = get_task_metadata(task_path)
+    return metadata.get('status') == 'completed'
 ```
 
 ### Writing Task Metadata (Task Orchestrator Only)
@@ -467,15 +481,15 @@ def is_task_complete(task_path):
 def update_task_status(task_path, new_status, actual_hours=None):
     """Called by task orchestrator on completion"""
 
-    metadata = read_task_metadata(task_path)
+    state = read_task_state(task_path)
 
-    metadata['status'] = new_status
-    metadata['updated'] = current_date()
+    state['task']['status'] = new_status
+    state['orchestrator']['updated'] = current_iso_timestamp()
 
     if actual_hours is not None:
-        metadata['actual_hours'] = actual_hours
+        state['task']['actual_hours'] = actual_hours
 
-    write_yaml(f"{task_path}/metadata.yml", metadata)
+    write_yaml(f"{task_path}/orchestrator-state.yml", state)
 ```
 
 ---
@@ -523,14 +537,14 @@ def reconstruct_initiative_state(initiative_path):
         # ... other sections
     }
 
-    # Reconstruct task states from task metadata
+    # Reconstruct task states from task orchestrator-state.yml
     for task in initiative['tasks']:
         task_id = task['id']
         task_path = task['path']
 
-        # Read task metadata
-        metadata = read_task_metadata(task_path)
-        task_status = metadata['status']
+        # Read task metadata from orchestrator-state.yml
+        task_metadata = get_task_metadata(task_path)
+        task_status = task_metadata.get('status', 'pending')
 
         # Categorize task
         state['tasks'][task_status].append(task_id)
@@ -543,7 +557,7 @@ def reconstruct_initiative_state(initiative_path):
             'dependencies': task['dependencies'],
             'blocks': task.get('blocks', []),
             'estimated_hours': task['estimated_hours'],
-            'actual_hours': metadata.get('actual_hours', 0)
+            'actual_hours': task_metadata.get('actual_hours', 0)
         }
 
     # Determine current phase from task states
@@ -685,7 +699,7 @@ def resume_after_failure(initiative_path):
         print(f"  Type: {task_details['type']}")
 
         # Check if user fixed it
-        current_status = read_task_metadata(task_details['path'])['status']
+        current_status = get_task_metadata(task_details['path']).get('status')
 
         if current_status == 'completed':
             # User fixed it!
@@ -830,8 +844,7 @@ State coordination in initiative orchestration:
 
 **State Files**:
 - `initiative-state.yml`: Initiative orchestrator owns
-- `metadata.yml`: Task orchestrator owns
-- `orchestrator-state.yml`: Task orchestrator owns
+- `orchestrator-state.yml`: Task orchestrator owns (includes task metadata in `task:` section)
 
 **Coordination Pattern**:
 - Initiative orchestrator polls task states

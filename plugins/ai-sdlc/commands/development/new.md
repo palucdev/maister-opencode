@@ -146,8 +146,7 @@ Old commands still work as aliases.
 
 ```
 .ai-sdlc/tasks/[type-directory]/YYYY-MM-DD-task-name/
-├── metadata.yml
-├── orchestrator-state.yml
+├── orchestrator-state.yml           # Execution state + task metadata
 ├── analysis/
 │   ├── codebase-analysis.md
 │   ├── gap-analysis.md

@@ -189,7 +189,7 @@ This orchestrator follows shared patterns. See:
 
 ### Phase 0: Dependency Check (If Part of Initiative)
 
-**When**: Only if task has `initiative_id` in metadata.yml
+**When**: Only if task has `initiative_id` in `orchestrator-state.yml` task section
 
 **Process**: Check all dependencies are "completed". If blocked, update status and exit.
 
@@ -1195,7 +1195,7 @@ If NO to any: STOP - go back and invoke the Task tool.
 
 **Process**:
 1. Create workflow summary
-2. Update metadata.yml status to "completed"
+2. Update `task.status` to "completed" in orchestrator-state.yml
 3. Provide commit message template
 4. Guide next steps
 
@@ -1233,8 +1233,7 @@ orchestrator:
 
 ```
 .ai-sdlc/tasks/[type-directory]/YYYY-MM-DD-task-name/
-├── metadata.yml
-├── orchestrator-state.yml
+├── orchestrator-state.yml           # Execution state + task metadata
 ├── analysis/
 │   ├── codebase-analysis.md          # Phase 1
 │   ├── clarifications.md             # Phase 1.5

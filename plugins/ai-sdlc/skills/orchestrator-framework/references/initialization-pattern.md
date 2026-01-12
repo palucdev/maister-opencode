@@ -49,9 +49,9 @@ For new tasks, create directory structure:
 - Research: `.ai-sdlc/tasks/research/`
 - Documentation: `.ai-sdlc/tasks/documentation/`
 
-### Step 4: Create State Files
+### Step 4: Create State File
 
-**Create `orchestrator-state.yml`** (see `state-management.md` for schema):
+**Create `orchestrator-state.yml`** (see `state-management.md` for full schema):
 
 ```yaml
 orchestrator:
@@ -70,18 +70,27 @@ orchestrator:
   task_path: [full path]
 
   # Domain-specific context (all null initially)
-```
 
-**Create `metadata.yml`**:
-
-```yaml
+# Task metadata (unified in single file)
 task:
   title: [task name from description]
   description: [full task description]
   type: [task type]
   status: in_progress
-  created: [current ISO 8601 timestamp]
-  updated: [current ISO 8601 timestamp]
+
+  # Initiative coordination (null for standalone tasks)
+  initiative_id: null
+  dependencies: []
+  blocks: []
+
+  # Optional metadata
+  tags: []
+  priority: null
+  milestone: null
+
+  # Time tracking
+  estimated_hours: null
+  actual_hours: null
 ```
 
 ### Step 5: Create TodoWrite with All Phases

@@ -486,7 +486,7 @@ Enforcement:
 ### Future Enhancement
 
 Currently, all dependencies are **hard**. Soft dependencies are a future enhancement requiring:
-- metadata.yml schema update
+- orchestrator-state.yml schema update (task section)
 - Dependency checking logic update
 - User prompt for override
 

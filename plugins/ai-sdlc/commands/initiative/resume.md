@@ -73,7 +73,7 @@ Checks state consistency:
 
 If state file missing or corrupted:
 - Reads initiative.yml (source of truth)
-- Polls all task metadata.yml files
+- Polls all task orchestrator-state.yml files
 - Reconstructs state from task statuses
 - Determines current phase from progress
 - Prompts user to confirm reconstructed state
@@ -140,7 +140,7 @@ Choice: ___
 ```
 
 **Option 1**: User fixed manually
-- Checks task metadata.yml status
+- Checks task orchestrator-state.yml task.status
 - If now "completed", moves to completed list
 - Unblocks dependent tasks
 - Continues execution
@@ -166,10 +166,10 @@ Choice: ___
 **Process**:
 1. Detects missing state file
 2. Reads initiative.yml
-3. Polls all task metadata.yml files for status
+3. Polls all task orchestrator-state.yml files for status
 4. Reconstructs state:
-   - Completed: status == "completed"
-   - In-progress: status == "in-progress"
+   - Completed: task.status == "completed"
+   - In-progress: task.status == "in-progress"
    - Blocked: Dependencies not satisfied
    - Pending: Dependencies satisfied, not started
 5. Determines current phase from progress
@@ -283,7 +283,7 @@ Remove all tasks from `failed` list and re-evaluate.
 **Process**:
 1. Read current failed tasks list
 2. For each failed task:
-   - Read task metadata.yml current status
+   - Read task orchestrator-state.yml task.status
    - If status == "completed": Move to completed
    - If status == "in-progress": Move to in-progress
    - If status == "failed": Keep in failed (not fixed yet)
@@ -347,9 +347,9 @@ If validation fails:
 
 ### "Task status mismatch"
 
-**Cause**: Task metadata.yml shows different status than initiative-state.yml
+**Cause**: Task orchestrator-state.yml shows different status than initiative-state.yml
 
-**Fix**: Use `--clear-failures` to re-sync from task metadata (source of truth)
+**Fix**: Use `--clear-failures` to re-sync from task status (source of truth)
 
 ### "Cannot resume, missing tasks"
 

@@ -142,7 +142,7 @@ Read these during relevant phases:
 4. **Define Success Criteria** - How we know research is complete
 5. **Create Research Brief** - Save to `planning/research-brief.md`
 
-**Outputs**: `metadata.yml`, `orchestrator-state.yml`, `planning/research-brief.md`
+**Outputs**: `orchestrator-state.yml`, `planning/research-brief.md`
 
 **Success**: Research question clear, type classified, scope defined
 
@@ -150,7 +150,6 @@ Read these during relevant phases:
 
 Before proceeding, verify required files exist:
 ```bash
-ls -la [task-path]/metadata.yml
 ls -la [task-path]/orchestrator-state.yml
 ls -la [task-path]/planning/research-brief.md
 ```
@@ -840,8 +839,7 @@ options:
 
 ```
 .ai-sdlc/tasks/research/YYYY-MM-DD-research-name/
-├── metadata.yml
-├── orchestrator-state.yml
+├── orchestrator-state.yml            # Execution state + task metadata
 ├── planning/
 │   ├── research-brief.md
 │   ├── research-plan.md
@@ -871,7 +869,7 @@ options:
 
 | Phase | Required Files | Validation Criteria |
 |-------|---------------|---------------------|
-| 0 | `metadata.yml`, `orchestrator-state.yml`, `planning/research-brief.md` | All 3 files must exist |
+| 0 | `orchestrator-state.yml`, `planning/research-brief.md` | Both files must exist |
 | 1 | `planning/research-plan.md`, `planning/sources.md` | Both files must exist with non-empty content |
 | 2 | At least one file in `analysis/findings/` matching `codebase-*.md`, `docs-*.md`, `config-*.md`, or `external-*.md` | Directory contains at least one findings file |
 | 2.5 | `analysis/findings/00-summary.md`, `analysis/findings/99-verification.md` | Both files must exist |
