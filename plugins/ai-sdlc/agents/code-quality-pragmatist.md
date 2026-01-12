@@ -132,8 +132,17 @@ This agent champions **simplicity** and **pragmatic decision-making** over theor
 - Dead code and unused imports
 - Abandoned patterns (half-implemented)
 - Inconsistent error handling approaches
+- Unused private methods (created but never called)
+- Helper functions with no import references
+- Methods that only call other unused methods (dead chains)
 
-**Output**: Context loss issues with evidence
+**Unused Code Analysis** (explicit check):
+- Search for private methods with no callers
+- Identify helper functions never imported
+- Flag methods created but never referenced
+- Check for parameters passed but never used
+
+**Output**: Context loss issues with evidence, including unused code findings
 
 ---
 

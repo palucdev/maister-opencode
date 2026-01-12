@@ -35,6 +35,21 @@ Consolidated reference for quality, security, and performance analysis patterns.
 - Misleading names
 - Inconsistent naming conventions
 
+### Unused Code Detection
+
+| Pattern | Detection Method | Severity |
+|---------|-----------------|----------|
+| **Unused private methods** | Find methods with no internal references | Warning |
+| **Unused exported functions** | Find exports with no imports | Warning |
+| **Orphaned helpers** | Functions defined but never called | Warning |
+| **Dead parameters** | Parameters never used in function body | Info |
+
+**Detection Approach for Unused Code**:
+1. List all function/method definitions in changed files
+2. Search codebase for calls to each function
+3. Flag functions with 0 call sites
+4. **Exclude from flagging**: entry points, event handlers, exports intended for external use, lifecycle hooks, test utilities, framework callbacks
+
 ### Detection Approach
 
 For each file:

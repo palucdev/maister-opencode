@@ -193,6 +193,8 @@ Follow standards from `.ai-sdlc/docs/standards/`
    - Duplicated logic that exists?
    - Missing reuse opportunities?
    - Clear justification for new code?
+   - Speculative methods? (methods without immediate callers)
+   - Future-proofing stubs? (methods for "might need later")
 
 ### Handle Verification Results
 

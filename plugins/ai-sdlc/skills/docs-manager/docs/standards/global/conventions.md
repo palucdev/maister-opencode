@@ -9,3 +9,4 @@
 - **Testing Requirements**: Define what level of testing is required before merging (unit tests, integration tests, etc.)
 - **Feature Flags**: Use feature flags for incomplete features rather than long-lived feature branches
 - **Changelog Maintenance**: Keep a changelog or release notes to track significant changes and improvements
+- **Minimal Implementation**: Build only what's needed now; avoid speculative methods and "just in case" code (see minimal-implementation.md)
