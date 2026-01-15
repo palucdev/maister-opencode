@@ -200,6 +200,57 @@ Layer 3 (User Access):
 - `critical_issues`: Blocking problems found
 - `needs_clarification`: Convenience flag (true if decisions_needed non-empty OR scope_expansion_recommended OR ui_heavy)
 
+### Decision Generation Rules
+
+**CRITICAL: You MUST generate decisions based on your findings. Do not just report findings without actionable flags.**
+
+#### Orphaned Operations → Scope Expansion
+
+When `data_lifecycle_gaps.orphaned_operations` is non-empty:
+
+| Orphan Type | Action |
+|-------------|--------|
+| READ without CREATE | Add `decisions_needed.critical` with scope expansion options |
+| CREATE without READ | Add `decisions_needed.critical` with scope expansion options |
+| UPDATE without READ | Add `decisions_needed.critical` with scope expansion options |
+| completeness_score < 50% | Set `scope_expansion_recommended: true` |
+
+**Example decision for orphaned operations:**
+```yaml
+decisions_needed:
+  critical:
+    - id: "scope-orphan-[entity]"
+      issue: "[Entity] has [orphan type] - feature will be incomplete"
+      options: ["Expand scope to add [missing operation]", "Keep limited scope (document limitation)"]
+      recommendation: "Expand scope"
+      rationale: "[Reason why expansion is recommended]"
+```
+
+#### Missing Touchpoints → Decisions
+
+When `data_lifecycle_gaps.missing_touchpoints` is non-empty, evaluate criticality:
+
+| Touchpoint Criticality | Action |
+|------------------------|--------|
+| Safety-critical (medical, financial, legal) | Add `decisions_needed.critical` |
+| High-value user workflow | Add `decisions_needed.important` |
+| Nice-to-have | Document in report only, no decision needed |
+
+#### Calculating needs_clarification
+
+After generating all decisions, calculate the convenience flag:
+
+```
+needs_clarification = (
+  decisions_needed.critical.length > 0 OR
+  decisions_needed.important.length > 0 OR
+  scope_expansion_recommended == true OR
+  ui_heavy == true
+)
+```
+
+**DO NOT set `needs_clarification: false` if any of the above conditions are true.**
+
 ---
 
 ## Output Format

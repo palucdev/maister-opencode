@@ -427,11 +427,16 @@ If NO to any: STOP - go back and invoke the Task tool.
 - Update `task_context.ui_heavy` from output `ui_heavy` field
 - Update `task_context.risk_level` from output `risk_level` (if currently null)
 - For bugs: Update `task_context.reproduction_data` from output `reproduction_data`
-- **Calculate `task_context.needs_clarification`**: true if ANY of:
-  - `decisions_needed.critical` is non-empty
-  - `decisions_needed.important` is non-empty
-  - `scope_expansion_recommended = true`
-  - `ui_heavy = true`
+- **Calculate `task_context.needs_clarification`** (DO NOT blindly trust gap-analyzer's flag - verify from components):
+  ```
+  needs_clarification = (
+    decisions_needed.critical.length > 0 OR
+    decisions_needed.important.length > 0 OR
+    scope_expansion_recommended == true OR
+    ui_heavy == true
+  )
+  ```
+  **Even if gap-analyzer says `needs_clarification: false`, recalculate from above.**
 - Set `options.e2e_enabled`: true if feature/enhancement AND ui_heavy, false for bugs
 - Set `options.user_docs_enabled`: true if feature/enhancement, false for bugs
 
