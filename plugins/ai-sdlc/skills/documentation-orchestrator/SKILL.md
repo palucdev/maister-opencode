@@ -11,6 +11,31 @@ Systematic documentation creation workflow from planning to published, user-read
 
 **CRITICAL: You MUST complete these steps BEFORE executing any workflow phase:**
 
+### Step 0: Load Framework Patterns
+
+**STOP. You MUST read these files NOW using the Read tool before continuing:**
+
+1. `../orchestrator-framework/references/phase-execution-pattern.md` - 7-step phase loop
+2. `../orchestrator-framework/references/delegation-enforcement.md` - Delegation patterns and subagent result handling
+3. `../orchestrator-framework/references/interactive-mode.md` - Phase gates and AUTO-CONTINUE
+4. `../orchestrator-framework/references/state-management.md` - State file operations
+
+**⚠️ FAILURE TO READ THESE FILES IS A WORKFLOW VIOLATION.**
+
+These patterns define:
+- How to execute each phase (7-step loop)
+- How to delegate to skills (mandatory patterns)
+- When to auto-continue vs pause (Phase Gates and ⚡ AUTO)
+- How to consume subagent results and continue workflow
+- How to manage orchestrator-state.yml
+
+**SELF-CHECK:**
+- [ ] Did you use the Read tool to read all 4 files?
+- [ ] Do you understand the AUTO-CONTINUE pattern in interactive-mode.md?
+- [ ] Do you understand Pattern 6 (Consuming Subagent Results) in delegation-enforcement.md?
+
+If NO to any: STOP and read the files now.
+
 ### Step 1: Create TodoWrite with All Phases
 
 **Immediately use the TodoWrite tool** to create todos for all phases:
@@ -50,7 +75,7 @@ Starting Phase 0: Plan documentation structure...
 
 ### Step 3: Only Then Proceed to Phase 0
 
-After completing Steps 1 and 2, proceed to Phase 0 (Documentation Planning & Audience Analysis).
+After completing Steps 0-2, proceed to Phase 0 (Documentation Planning & Audience Analysis).
 
 ---
 
@@ -72,22 +97,6 @@ Use when:
 5. **Maintainable**: Structure for easy updates when features change
 
 ---
-
-## Framework Patterns
-
-**MANDATORY**: Before executing any phase, READ these framework patterns:
-
-1. `../orchestrator-framework/references/phase-execution-pattern.md`
-2. `../orchestrator-framework/references/state-management.md`
-3. `../orchestrator-framework/references/interactive-mode.md`
-4. `../orchestrator-framework/references/initialization-pattern.md`
-5. `../orchestrator-framework/references/issue-resolution-pattern.md`
-
-**SELF-CHECK (before proceeding to Phase 0):**
-- [ ] Did you read all 5 framework pattern files?
-- [ ] Do you understand the Issue Resolution pattern for Phase 2.5?
-
-If NO to any: STOP - go back and read the files.
 
 ## Local References
 
