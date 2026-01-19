@@ -5,6 +5,5 @@
   "author": {
     "name": "Skillpanel",
     "email": "marek@skillpanel.com"
-  },
-  "hooks": "./hooks/hooks.json"
+  }
 }

@@ -871,7 +871,7 @@ This hook fires after context compaction and injects a reminder into Claude's co
 [2026-01-19 14:30:45] SessionStart(compact) | project=/Users/marek/myproject
 ```
 
-**See**: `hooks/hooks.json` for hook configuration.
+**See**: `hooks/hooks.json` for hook configuration (auto-discovered by Claude Code).
 
 ## Claude Code Documentation
 
