@@ -3,6 +3,8 @@ name: ai-sdlc:init-sdlc
 description: Initialize AI SDLC framework with intelligent project analysis and documentation generation
 ---
 
+**NOTE**: This is a multi-step workflow that invokes other skills (docs-manager, project-analyzer) at specific phases. The `<command-name>` tag refers to THIS command only — you MUST still use the Skill tool and Task tool to invoke those other skills when instructed below.
+
 ## Initialization Process
 
 Initialize `.ai-sdlc/docs/` with intelligent project analysis and meaningful documentation generation based on actual codebase inspection.

@@ -3,6 +3,8 @@ name: ai-sdlc:standards:discover
 description: Automatically discover coding standards, conventions, and best practices from multiple sources in the project (configuration files, source code, pull requests, documentation, CI/CD)
 ---
 
+**NOTE**: This is a multi-step workflow that invokes other skills (docs-manager) and subagents at specific phases. The `<command-name>` tag refers to THIS command only — you MUST still use the Skill tool and Task tool to invoke those other skills when instructed below.
+
 # Discover Project Standards
 
 You are running an automated standards discovery process that analyzes multiple sources in the project to extract coding standards, conventions, and best practices. This command will examine configuration files, code patterns, documentation, pull requests, and CI/CD configs to discover what standards are actually being used.

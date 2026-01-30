@@ -3,7 +3,7 @@ name: ai-sdlc:standards:update
 description: Update or create project standards from conversation context or explicit input
 ---
 
-**ACTION REQUIRED**: This command delegates to a different skill. The `<command-name>` tag refers to THIS command, not the target. Call the Skill tool with skill="ai-sdlc:docs-manager" NOW. Pass the standard path (if provided). Do not read files, explore code, or execute workflow steps yourself.
+**NOTE**: This is a multi-step workflow that invokes the docs-manager skill at Phase 4. The `<command-name>` tag refers to THIS command only — you MUST still use the Skill tool to invoke docs-manager when instructed in Phase 4 below. Follow ALL phases in order.
 
 # Update Project Standards
 
