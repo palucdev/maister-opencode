@@ -14,7 +14,7 @@ Reduce duplication across orchestrators by documenting common patterns once:
 - **Phase Blocks**: Simple phase structure with inline transitions (`→ Continue`, `→ Pause`, `→ Conditional`)
 - **State Management**: `orchestrator-state.yml` schema and operations
 - **Interactive Mode**: Mode-aware pause behavior and user prompts
-- **Initialization**: Task directory setup, metadata, TodoWrite patterns
+- **Initialization**: Task directory setup, metadata, task creation patterns
 
 ## How Orchestrators Use This
 
@@ -38,7 +38,7 @@ This orchestrator follows shared patterns. See:
 | `references/phase-execution-pattern.md` | Phase Block structure and transitions |
 | `references/state-management.md` | State file schema and operations |
 | `references/interactive-mode.md` | Pause behavior and user prompts |
-| `references/initialization-pattern.md` | Startup sequence and TodoWrite |
+| `references/initialization-pattern.md` | Startup sequence and task creation |
 | `references/delegation-enforcement.md` | Skill/agent invocation patterns |
 
 ## Key Principles
@@ -49,7 +49,7 @@ All orchestrators follow these principles:
 2. **Resume Capability**: Any orchestrator can be paused and resumed
 3. **Interactive by Default**: Pause after each phase for user review (unless YOLO)
 4. **User-Confirmed Rollback**: Never auto-rollback without user approval
-5. **TodoWrite Progress**: Always track progress with TodoWrite tool
+5. **Task Progress**: Always track progress with TaskCreate/TaskUpdate tools
 6. **Standards Discovery**: Reference `.ai-sdlc/docs/INDEX.md` throughout
 
 ## Orchestrators Using This Framework

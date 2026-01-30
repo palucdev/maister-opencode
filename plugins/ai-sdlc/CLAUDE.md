@@ -573,7 +573,7 @@ Before considering an orchestrator complete, verify ALL items:
 | Standards discovery in Phases 5,7,8,11 | ✓ | Is INDEX.md referenced in each? |
 | Reality check (Phase 11) | ✓ | Is reality-assessor invoked via implementation-verifier? |
 | Pragmatic review (Phase 11) | ✓ | Is code-quality-pragmatist invoked via implementation-verifier? |
-| TodoWrite initialization | ✓ | Are todos created at workflow start? |
+| TaskCreate initialization | ✓ | Are tasks created with TaskCreate at workflow start, with dependencies via addBlockedBy? |
 | Error handling with retry limits | ✓ | Does each phase have max attempts? |
 
 ### Anti-Patterns to Avoid
@@ -844,15 +844,26 @@ Subagents are specialized AI agents invoked by skills and orchestrators. All age
 
 **For detailed workflow documentation, see**: `docs/guides/workflow-overview.md`
 
-## Progress Tracking with TodoWrite
+## Progress Tracking with Task System
 
-All orchestrators use `TodoWrite` for real-time progress visibility:
-- At workflow start: Create todos for all phases (pending)
-- At each phase: Mark `in_progress` → execute → mark `completed`
+All orchestrators use `TaskCreate`/`TaskUpdate` for real-time progress visibility at two levels:
+
+### Orchestrator Phase Tracking
+
+- At workflow start: `TaskCreate` for all phases (pending), then `TaskUpdate addBlockedBy` for phase dependencies
+- At each phase: `TaskUpdate` to `in_progress` (shows spinner with `activeForm`) → execute → `TaskUpdate` to `completed`
+- Optionally set `owner` when delegating to skills/agents, and `metadata` for timing/artifacts
 - State file (`orchestrator-state.yml`) is source of truth for resume logic
-- TodoWrite mirrors state for UX, doesn't control workflow
+- Task system mirrors state for UX and provides dependency visualization
 
-See individual orchestrator `skill.md` files for phase-specific todo tables.
+### Implementation Task Group Tracking
+
+- At planning: `TaskCreate` for each task group with dependencies mirroring the plan
+- During execution: `TaskUpdate` to `in_progress` with `owner` → execute → `TaskUpdate` to `completed` with metadata
+- Markdown checkboxes in `implementation-plan.md` remain the step-level source of truth
+- Task system provides group-level visibility with dependencies, timing, and ownership
+
+See individual orchestrator `skill.md` files for phase-specific task tables.
 
 ## Hooks
 

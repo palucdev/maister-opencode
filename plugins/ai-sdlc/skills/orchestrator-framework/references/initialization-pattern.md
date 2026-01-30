@@ -10,8 +10,36 @@ All orchestrators follow this initialization sequence before executing any workf
 2. **Determine Starting Phase**: New task starts Phase 0; resume reads state and finds first incomplete phase
 3. **Create Task Directory**: Standard structure with analysis/, implementation/, verification/, documentation/
 4. **Create State File**: `orchestrator-state.yml` (see state-management.md for schema)
-5. **Create TodoWrite**: All phases as pending todos for progress visibility
+5. **Create Task Items**: Use `TaskCreate` for all phases as pending tasks for progress visibility, then set dependencies with `TaskUpdate addBlockedBy`
 6. **Output Summary**: Show task info, mode, phases, and starting message
+
+---
+
+## Task Item Creation Pattern
+
+For each phase in the Phase Configuration table, call `TaskCreate`:
+
+| Phase Config Column | TaskCreate Parameter |
+|---------------------|---------------------|
+| `content` | `subject` |
+| `activeForm` | `activeForm` |
+| Phase `**Purpose**:` line | `description` |
+
+After creating all phase tasks, set up dependencies using `TaskUpdate` with `addBlockedBy`:
+- Each phase task is blocked by its prerequisite phase task(s)
+- Conditional phases only get dependencies if they will execute
+- Dependencies mirror the workflow sequence (e.g., Specification blockedBy Gap Analysis)
+
+Store task IDs in `orchestrator-state.yml` under `orchestrator.task_ids`:
+
+```yaml
+orchestrator:
+  task_ids:
+    phase-0: "1"    # populated with TaskCreate IDs during init
+    phase-1: "2"
+    phase-2: "3"
+    # ... one entry per phase
+```
 
 ---
 
@@ -88,7 +116,7 @@ If starting mid-workflow with missing prerequisites:
 
 | Mistake | Why It's Wrong |
 |---------|----------------|
-| Skipping TodoWrite | No progress visibility for user |
+| Skipping TaskCreate | No progress visibility for user |
 | Not creating state file | Resume capability breaks |
 | Wrong task type directory | Organization confusion (don't put bugs in new-features/) |
 | Starting execution before summary | User doesn't see full workflow plan |

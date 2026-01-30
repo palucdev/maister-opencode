@@ -43,6 +43,12 @@ orchestrator:
   updated: [ISO 8601 timestamp]
   task_path: .ai-sdlc/tasks/[type]/YYYY-MM-DD-task-name
 
+  # Task tracking IDs (maps phase names to TaskCreate IDs)
+  task_ids:
+    phase-0: null    # populated during initialization
+    phase-1: null
+    # ... one entry per phase
+
 # Task metadata
 task:
   title: [human-readable task title]
@@ -196,3 +202,21 @@ When resuming mid-workflow:
 2. If `phase_summaries` missing for completed phase, extract from artifact file
 3. Build context summary for next subagent prompt
 4. Pass context using Pattern 7 from delegation-enforcement.md
+
+---
+
+## Task System Integration
+
+`orchestrator-state.yml` remains the source of truth for workflow control. The Task system (`TaskCreate`/`TaskUpdate`/`TaskGet`/`TaskList`) provides UX visibility and structured progress tracking.
+
+| Aspect | Source of Truth | Task System Role |
+|--------|----------------|------------------|
+| Phase completion | `completed_phases[]` | Mirrors as `completed` status |
+| Resume logic | `orchestrator-state.yml` | Complementary overview via `TaskList` |
+| Error tracking | `auto_fix_attempts`, `failed_phases` | Not tracked in tasks |
+| Phase dependencies | Workflow sequence in SKILL.md | Expressed via `addBlockedBy` |
+| Delegation tracking | Phase definitions | `owner` field on tasks |
+| Phase timing | Not tracked | `metadata: {started_at, completed_at}` |
+| Phase artifacts | Phase outputs in task directory | `metadata: {artifact_paths}` |
+
+On resume, `TaskList` can complement state file reading by providing a quick visual overview of completed vs pending phases before resuming execution.

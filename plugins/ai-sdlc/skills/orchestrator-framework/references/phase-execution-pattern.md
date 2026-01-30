@@ -76,9 +76,23 @@ Use when different paths are needed based on state:
 For each phase:
 
 1. **Check completion**: Read `orchestrator-state.yml` → if phase in `completed_phases`, skip
-2. **Execute**: Run the phase content (delegate via Skill/Task tool or execute directly)
-3. **Update state**: Add phase to `completed_phases`, update `current_phase`
-4. **Follow transition**: Execute the `→` instruction at phase end
+2. **Mark task in progress**: `TaskUpdate` the phase's task to `in_progress` (shows spinner with `activeForm`)
+3. **Execute**: Run the phase content (delegate via Skill/Task tool or execute directly)
+4. **Update state**: Add phase to `completed_phases`, update `current_phase`
+5. **Mark task completed**: `TaskUpdate` the phase's task to `completed`. Optionally set `metadata` with timing and artifact paths. Set `owner` if phase was delegated to a skill/agent.
+6. **Follow transition**: Execute the `→` instruction at phase end
+
+---
+
+## Task Status Lifecycle
+
+| Phase Event | TaskUpdate Action |
+|-------------|-------------------|
+| Phase starting | `status: "in_progress"`, `activeForm` from Phase Configuration |
+| Phase completed | `status: "completed"`, `metadata: {completed_at, artifact_paths}` |
+| Phase skipped | `status: "completed"`, `metadata: {skipped: true, reason: "..."}` |
+| Phase delegated | `owner: "ai-sdlc:[skill-or-agent-name]"` |
+| Phase failed | Keep as `in_progress` (state file tracks failure details) |
 
 ---
 

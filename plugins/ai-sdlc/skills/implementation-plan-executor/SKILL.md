@@ -45,7 +45,8 @@ You are an implementation plan executor that runs implementation plans with adap
    - `.ai-sdlc/docs/INDEX.md` (required for standards)
 3. **Count steps** in implementation-plan.md
 4. **Select mode**: ≤5 → Direct, 6+ → Delegated
-5. **Initialize work-log.md**:
+5. **Check for task group items**: Call `TaskList` to find existing task group items from the planner. If found, use them. If not, create them with `TaskCreate` for each task group (fallback for plans created before task system migration).
+6. **Initialize work-log.md**:
    ```markdown
    # Work Log
 
@@ -71,6 +72,8 @@ Execute each task group yourself:
 
 ```
 For each task group:
+  0. TaskUpdate group task to in_progress (owner: "ai-sdlc:implementer")
+
   1. Load standards for THIS group:
      a. Check "Standards Compliance" in implementation-plan.md
         - Identify which listed standards apply to this group
@@ -94,6 +97,9 @@ For each task group:
      a. Run only this group's new tests (not entire suite)
      b. Mark checkbox
      c. Log test results
+
+  5. TaskUpdate group task to completed with metadata:
+     {completed_at, tests_passed, files_modified, standards_applied}
 ```
 
 ### Mode B: Delegated Execution (6+ steps)
@@ -102,6 +108,8 @@ For each task group:
 
 ```
 For each task group:
+  0. TaskUpdate group task to in_progress (owner: "ai-sdlc:task-group-implementer")
+
   1. Prepare group context:
      a. Extract group content from implementation-plan.md
      b. Check "Standards Compliance" section - identify standards relevant to this group
@@ -123,10 +131,14 @@ For each task group:
      b. Add group entry to work-log.md with standards trail
      c. Verify test results are acceptable
 
-  5. If subagent reports failure:
+  5. TaskUpdate group task to completed with metadata:
+     {completed_at, tests_passed, files_modified, standards_applied}
+
+  6. If subagent reports failure:
      a. Do NOT auto-rollback (see Critical Principle in CLAUDE.md)
      b. Assess: config issue? test setup? logic error?
      c. Use AskUserQuestion for recovery path
+     d. Keep group task as in_progress (metadata: {failed_at, failure_reason})
 ```
 
 ## Continuous Standards Discovery
@@ -327,6 +339,7 @@ After each task group:
    - No `- [ ]` checkboxes remain
    - All groups have work-log entries
    - Standards Reading Log is complete
+   - All group tasks are `completed` via `TaskList` (cross-validate against markdown checkboxes)
 
 2. **Run full test suite** (entire feature, not just incremental)
 

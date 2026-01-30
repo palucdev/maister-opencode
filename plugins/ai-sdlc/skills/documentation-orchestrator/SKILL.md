@@ -24,7 +24,7 @@ Systematic documentation creation workflow from planning to published, user-read
 
 ### Step 2: Initialize Workflow
 
-1. **Create TodoWrite**: Initialize todos for all phases (see Phase Configuration)
+1. **Create Task Items**: Use `TaskCreate` for all phases (see Phase Configuration), then set dependencies with `TaskUpdate addBlockedBy`
 2. **Create Task Directory**: `.ai-sdlc/tasks/documentation/YYYY-MM-DD-task-name/`
 3. **Initialize State**: Create `orchestrator-state.yml` with mode and documentation context
 

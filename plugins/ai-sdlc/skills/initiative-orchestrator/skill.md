@@ -24,7 +24,7 @@ Epic-level coordination of 3-15 related tasks with dependency management and seq
 
 ### Step 2: Initialize Workflow
 
-1. **Create TodoWrite**: Initialize todos for all phases (see Phase Configuration)
+1. **Create Task Items**: Use `TaskCreate` for all phases (see Phase Configuration), then set dependencies with `TaskUpdate addBlockedBy`
 2. **Create Initiative Directory**: `.ai-sdlc/docs/project/initiatives/YYYY-MM-DD-name/`
 3. **Initialize State**: Create `initiative-state.yml` with mode and tracking info
 

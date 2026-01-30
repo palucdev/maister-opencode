@@ -58,6 +58,10 @@ You are an implementer that executes implementation plans with continuous standa
 
 ### Common Pattern for All Modes
 
+**Before each task group**:
+- `TaskUpdate` the group's task to `in_progress`
+- Set `owner` to the executing agent (e.g., `"ai-sdlc:task-group-implementer"` in delegated mode, `"ai-sdlc:implementer"` in direct mode)
+
 **Before each step**:
 1. Re-check docs/INDEX.md for newly relevant standards
 2. Read step details from implementation-plan.md
@@ -74,6 +78,11 @@ You are an implementer that executes implementation plans with continuous standa
 1. **Mark checkbox immediately**: Change `- [ ]` to `- [x]` in implementation-plan.md
 2. **Log progress**: Add entry to work-log.md
 3. **Run tests**: If verification step, run only new tests (not entire suite)
+
+**After each task group**:
+- `TaskUpdate` the group's task to `completed`
+- Set `metadata`: `{completed_at, tests_passed, files_modified, standards_applied}`
+- On failure: keep as `in_progress`, set `metadata: {failed_at, failure_reason}`
 
 ### Mode-Specific Execution
 
@@ -190,6 +199,8 @@ At finalization:
 ## Progress Tracking
 
 **CRITICAL**: Mark checkboxes immediately after each step. Do not batch updates.
+
+In addition to markdown checkboxes (step-level), use `TaskUpdate` for group-level progress. `TaskList` provides an overview of which groups are complete vs in-progress.
 
 Why this matters:
 - Enables workflow resumption after interruptions
