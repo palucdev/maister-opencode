@@ -12,11 +12,10 @@ You are an implementation verifier that orchestrates comprehensive quality assur
 ## Responsibilities
 
 1. Validate prerequisites exist
-2. Delegate core checks to subagents (completeness + tests)
-3. Delegate optional reviews to subagents (code review, pragmatic, production, reality)
-4. Compile all results into verification report
-5. Update roadmap if exists (optional)
-6. Output summary with overall verdict
+2. Delegate ALL verifications to subagents in parallel (core + optional)
+3. Compile all results into verification report
+4. Update roadmap if exists (optional)
+5. Output summary with overall verdict
 
 ## Output Artifacts
 
@@ -68,7 +67,7 @@ If prerequisites missing, report and stop.
 
 ---
 
-## Phase 2: Delegate Core Checks
+## Phase 2: Delegate All Verifications
 
 **ANTI-PATTERN — DO NOT DO ANY OF THIS:**
 - ❌ "Let me run the tests..." — STOP. Delegate to test-suite-runner.
@@ -76,56 +75,39 @@ If prerequisites missing, report and stop.
 - ❌ "Let me read the standards..." — STOP. Delegate to implementation-completeness-checker.
 - ❌ "I'll verify the work-log..." — STOP. Delegate to implementation-completeness-checker.
 - ❌ Running any Bash command to execute tests — STOP. Delegate to test-suite-runner.
-- ❌ Reading source code to check quality — STOP. That's Phase 3 (code-reviewer).
-
-**PARALLEL EXECUTION**: These two subagents are independent. Invoke BOTH in a single message with two Task tool calls to run them in parallel.
-
-Before invoking, use `TaskUpdate` to set both "Completeness check" and "Test suite" tasks to `status: "in_progress"`.
-
-**INVOKE NOW** — send both Task tool calls in a single message:
-
-Task tool call 1:
-- subagent_type: `ai-sdlc:implementation-completeness-checker`
-- description: `Check implementation completeness`
-- prompt: Include task_path, task_type. The subagent checks plan completion, standards compliance, and documentation completeness.
-
-Task tool call 2:
-- subagent_type: `ai-sdlc:test-suite-runner`
-- description: `Run full test suite`
-- prompt: Include task_path, task_type, test_command (if known). The subagent runs ALL tests and analyzes results.
-
-**SELF-CHECK**: Did you just invoke two Task tool calls? Or did you start reading implementation-plan.md, running bash test commands, or checking standards yourself? If the latter, STOP immediately and invoke the Task tool instead.
-
-### Process Core Results
-
-After both subagents return:
-1. Use `TaskUpdate` to set both "Completeness check" and "Test suite" tasks to `status: "completed"`
-2. Extract status, issues, and findings from each
-3. Aggregate issue counts
-4. Track any critical issues that would affect overall verdict
-
----
-
-## Phase 3: Delegate Optional Reviews
-
-**ANTI-PATTERN — DO NOT DO ANY OF THIS:**
 - ❌ "Let me review the code quality..." — STOP. Delegate to code-reviewer.
 - ❌ "I'll check for over-engineering..." — STOP. Delegate to code-quality-pragmatist.
 - ❌ "Let me verify production readiness..." — STOP. Delegate to production-readiness-checker.
 - ❌ "I'll assess whether this solves the problem..." — STOP. Delegate to reality-assessor.
 - ❌ Reading source code to find security/performance issues — STOP. Delegate to code-reviewer.
 
-**PARALLEL EXECUTION**: All enabled optional reviews are independent. Determine which are enabled first, then invoke ALL enabled reviews in a single message with multiple Task tool calls.
+**ALL verifications are independent. Launch everything in a SINGLE parallel batch.**
 
-1. **Check invocation context** for each review:
+### Step 1: Determine enabled optional reviews
+
+1. **Check invocation context** for each optional review:
    - If orchestrator mode AND option is `true`: Include in parallel batch (mandatory)
    - If orchestrator mode AND option is `false`: Skip (mark task as completed with `metadata: {skipped: true}`)
    - If orchestrator mode AND option is `null`: Warn and prompt user
    - If standalone mode: Prompt user with AskUserQuestion
 
-2. **Use `TaskUpdate`** to set each enabled review task to `status: "in_progress"`. For skipped reviews, use `TaskUpdate` with `status: "completed"` and `metadata: {"skipped": true}`.
+### Step 2: Set all tasks to in_progress
 
-3. **INVOKE NOW** — send ALL enabled reviews in a single message:
+2. Use `TaskUpdate` to set ALL enabled verification tasks to `status: "in_progress"`. For skipped optional reviews, use `TaskUpdate` with `status: "completed"` and `metadata: {"skipped": true}`.
+
+### Step 3: Invoke all subagents
+
+**INVOKE NOW** — send ALL enabled subagents in a SINGLE message (up to 6 Task tool calls):
+
+Task tool call (always):
+- subagent_type: `ai-sdlc:implementation-completeness-checker`
+- description: `Check implementation completeness`
+- prompt: Include task_path, task_type. The subagent checks plan completion, standards compliance, and documentation completeness.
+
+Task tool call (always):
+- subagent_type: `ai-sdlc:test-suite-runner`
+- description: `Run full test suite`
+- prompt: Include task_path, task_type, test_command (if known). The subagent runs ALL tests and analyzes results.
 
 Task tool call (if code_review_enabled):
 - subagent_type: `ai-sdlc:code-reviewer`
@@ -147,9 +129,15 @@ Task tool call (if reality_check_enabled):
 - description: `Reality assessment`
 - prompt: Include task_path, report_path (`[task_path]/verification/reality-check.md`)
 
-**SELF-CHECK**: Did you just invoke Task tool calls for each enabled review? Or did you start reading source code, checking configuration, or analyzing quality yourself? If the latter, STOP immediately and invoke the Task tool instead.
+**SELF-CHECK**: Did you just invoke Task tool calls for ALL enabled verifications in a single message? Or did you start reading files, running tests, or checking standards yourself? If the latter, STOP immediately and invoke the Task tool instead.
 
-4. **After all return**: Use `TaskUpdate` to set each review task to `status: "completed"`, then integrate results
+### Step 4: Process all results
+
+After ALL subagents return:
+1. Use `TaskUpdate` to set each verification task to `status: "completed"`
+2. Extract status, issues, and findings from each
+3. Aggregate issue counts
+4. Track any critical issues that would affect overall verdict
 
 ### Impact on Overall Status
 
@@ -160,11 +148,11 @@ Task tool call (if reality_check_enabled):
 
 ---
 
-## Phase 4: Compile Verification Report
+## Phase 3: Compile Verification Report
 
 Use `TaskUpdate` to set "Compile report" task to `status: "in_progress"`.
 
-1. **Compile all findings** from Phase 2 and Phase 3
+1. **Compile all findings** from Phase 2
 2. **Determine overall status**:
 
    | Status | Criteria |
@@ -190,7 +178,7 @@ Use `TaskUpdate` to set "Compile report" task to `status: "in_progress"`.
 
 ---
 
-## Phase 5: Update Roadmap (Optional)
+## Phase 4: Update Roadmap (Optional)
 
 1. **Check for roadmap** at `.ai-sdlc/docs/project/roadmap.md`
 2. **If exists**, find matching items and mark complete
@@ -198,7 +186,7 @@ Use `TaskUpdate` to set "Compile report" task to `status: "in_progress"`.
 
 ---
 
-## Phase 6: Finalize & Output
+## Phase 5: Finalize & Output
 
 Output summary to user:
 
