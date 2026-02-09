@@ -1,11 +1,11 @@
 ---
 name: performance-orchestrator
-description: Orchestrates performance optimization workflows with profiling, benchmarking, and load testing. Measures baseline, identifies bottlenecks, implements optimizations incrementally with benchmarks, and verifies production readiness.
+description: Orchestrates performance optimization workflows using static code analysis to identify bottlenecks (N+1 queries, missing indexes, O(n^2) algorithms, blocking I/O, memory leaks). Accepts optional user-provided profiling data. Reuses standard specification, planning, implementation, and verification phases.
 ---
 
 # Performance Orchestrator
 
-Systematic performance optimization workflow from profiling to production-ready deployment.
+Static-analysis-first performance optimization workflow. Identifies bottlenecks by reading code, then uses the standard specification/planning/implementation/verification pipeline to fix them.
 
 ## Initialization
 
@@ -26,17 +26,18 @@ Systematic performance optimization workflow from profiling to production-ready 
 
 1. **Create Task Items**: Use `TaskCreate` for all phases (see Phase Configuration), then set dependencies with `TaskUpdate addBlockedBy`
 2. **Create Task Directory**: `.ai-sdlc/tasks/performance/YYYY-MM-DD-task-name/`
-3. **Initialize State**: Create `orchestrator-state.yml` with mode and performance context
+3. **Create Subdirectories**: `analysis/`, `analysis/user-profiling-data/`, `implementation/`, `verification/`
+4. **Initialize State**: Create `orchestrator-state.yml` with mode and performance context
 
 **Output**:
 ```
-🚀 Performance Orchestrator Started
+Performance Orchestrator Started
 
 Task: [performance issue description]
 Mode: [Interactive/YOLO]
 Directory: [task-path]
 
-Starting Phase 0: Profile and establish baseline...
+Starting Phase 0: Codebase Analysis...
 ```
 
 ---
@@ -44,11 +45,12 @@ Starting Phase 0: Profile and establish baseline...
 ## When to Use
 
 Use for:
-- Application slow (response time >1s, high latency)
-- Need systematic optimization workflow
-- Want benchmarking and verification
-- Require load testing before production
-- Performance issues reported
+- Application slow (response time issues, high latency)
+- Need systematic bottleneck identification and resolution
+- Want static code analysis for performance anti-patterns
+- Have user-provided profiling data to act on
+- Database query optimization needed
+- Algorithm or I/O inefficiencies suspected
 
 **DO NOT use for**: New features, bug fixes, refactoring without performance goals.
 
@@ -56,11 +58,11 @@ Use for:
 
 ## Core Principles
 
-1. **Measure First**: Never optimize without baseline metrics
-2. **Benchmark-Driven**: Prove every optimization with benchmarks
-3. **Incremental**: One optimization at a time (attribute improvements)
-4. **Production-Realistic**: Test with real data volumes and traffic patterns
-5. **Quantitative**: Use objective metrics, not subjective feelings
+1. **Static Analysis First**: Read code to detect patterns. Don't try to run profiling tools.
+2. **User Data Welcome**: Incorporate user-provided profiling data when available
+3. **Reuse Standard Phases**: Use proven specification/planning/implementation/verification pipeline
+4. **Conservative Estimates**: Provide improvement ranges, not false precision
+5. **Practical Optimizations**: Focus on patterns the agent CAN detect and fix
 
 ---
 
@@ -68,143 +70,224 @@ Use for:
 
 | Phase | content | activeForm | Agent/Skill |
 |-------|---------|------------|-------------|
-| 0 | "Profile and establish baseline" | "Profiling and establishing baseline" | performance-profiler |
-| 1 | "Analyze bottlenecks and plan" | "Analyzing bottlenecks and planning" | bottleneck-analyzer |
-| 2 | "Implement with benchmarking" | "Implementing with benchmarking" | Direct + implementation-changes-planner |
-| 3 | "Verify performance improvements" | "Verifying performance improvements" | performance-verifier |
-| 3.5 | "Resolve verification issues" | "Resolving verification issues" | Direct (conditional) |
-| 4 | "Load test and check readiness" | "Load testing and checking readiness" | Direct + production-readiness-checker |
+| 0 | "Analyze codebase" | "Analyzing codebase" | codebase-analyzer |
+| 1 | "Analyze performance bottlenecks" | "Analyzing performance bottlenecks" | bottleneck-analyzer |
+| 2 | "Gather requirements & create specification" | "Gathering requirements & creating specification" | specification-creator |
+| 3 | "Audit specification" | "Auditing specification" | spec-auditor (conditional) |
+| 4 | "Plan implementation" | "Planning implementation" | implementation-planner |
+| 5 | "Execute implementation" | "Executing implementation" | implementation-plan-executor |
+| 5.5 | "Prompt verification options" | "Prompting verification options" | Direct |
+| 6 | "Verify implementation & resolve issues" | "Verifying implementation" | implementation-verifier |
+| 7 | "Finalize workflow" | "Finalizing workflow" | Direct |
 
 ---
 
 ## Workflow Phases
 
-### Phase 0: Performance Baseline & Profiling
+### Phase 0: Codebase Analysis
 
-**Purpose**: Measure current performance metrics to establish baseline
-**Execute**: Task tool - `ai-sdlc:performance-profiler` subagent
-**Output**: `analysis/performance-baseline.md`
-**State**: Update `performance_context.baseline_p95`, `target_p95`
+**Purpose**: Comprehensive codebase exploration for performance context
+**Execute**: Skill tool - `ai-sdlc:codebase-analyzer`
+**Output**: `analysis/codebase-analysis.md`
+**State**: Update `performance_context.phase_summaries.codebase_analysis`
 
-**Profiler Tasks**:
-1. Measure response time (p50, p95, p99)
-2. Measure throughput (req/sec, saturation point)
-3. Profile CPU usage (hot functions)
-4. Profile memory usage (heap size, growth, leaks)
-5. Count database queries (N+1 patterns, slow queries)
-6. Identify performance hotspots
+Pass `task_type="enhancement"` and the performance-focused description. The codebase-analyzer uses 3 parallel Explore agents. For performance tasks, the description should guide agents toward: database query patterns, hot code paths, I/O operations, caching layers, connection management, schema/migration files.
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Baseline established. Continue to bottleneck analysis?"
+**Interactive**: AskUserQuestion - "Codebase analysis complete. Continue to performance analysis?"
 **YOLO**: "→ Continuing to Phase 1..."
 
 ---
 
-### Phase 1: Bottleneck Analysis & Optimization Planning
+### Phase 1: Static Performance Analysis
 
-**Purpose**: Identify bottlenecks and create prioritized optimization plan
+**Purpose**: Identify bottlenecks through static code analysis + optional user profiling data
 **Execute**: Task tool - `ai-sdlc:bottleneck-analyzer` subagent
-**Output**: `implementation/optimization-plan.md`
-**State**: Update `performance_context.optimizations_planned`
+**Output**: `analysis/performance-analysis.md`
+**State**: Update `performance_context.bottlenecks_identified`, `performance_context.user_data_available`, `performance_context.bottleneck_priorities`
 
-**Analyzer Tasks**:
-1. Analyze database performance (N+1 queries, missing indexes)
-2. Review CPU hotspots (inefficient algorithms)
-3. Detect memory issues (leaks, excessive allocations)
-4. Identify I/O bottlenecks (blocking operations)
-5. Classify and prioritize bottlenecks (P0/P1/P2/P3)
+**Process**:
+1. Check if `analysis/user-profiling-data/` contains any files
+2. If empty, use AskUserQuestion:
+   - Question: "Do you have profiling data to provide (flame graphs, APM screenshots, slow query logs)?"
+   - Options: "Yes, let me add files to analysis/user-profiling-data/" | "No, proceed with static analysis only"
+3. If user chooses to add files, wait for them, then proceed
+
+**ANTI-PATTERN — DO NOT DO THIS:**
+- ❌ "Let me analyze the bottlenecks myself..." — STOP. Delegate to bottleneck-analyzer.
+- ❌ "I'll grep for N+1 patterns..." — STOP. Delegate to bottleneck-analyzer.
+
+**INVOKE NOW** — Task tool call:
+
+4. Task tool - `ai-sdlc:bottleneck-analyzer` subagent
+
+**Context to pass**: task_path, description, codebase analysis summary from Phase 0, user data paths (if any)
+
+**SELF-CHECK**: Did you just invoke the Task tool with `ai-sdlc:bottleneck-analyzer`? Or did you start analyzing code yourself? If the latter, STOP and invoke the Task tool.
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Optimization plan ready. Continue to implementation?"
+**Interactive**: AskUserQuestion - "Performance analysis complete. [N] bottlenecks identified ([P0 count] P0, [P1 count] P1). Continue to specification?"
 **YOLO**: "→ Continuing to Phase 2..."
 
 ---
 
-### Phase 2: Implementation with Benchmarking
+### Phase 2: Requirements & Specification
 
-**Purpose**: Implement optimizations with before/after benchmarks
-**Execute**: Direct for simple (1-3 files), Task tool - `ai-sdlc:implementation-changes-planner` for complex (4+ files)
-**Output**: Modified code, `implementation/benchmarks/*.txt`
-**State**: Increment `performance_context.optimizations_completed` after each
+**Purpose**: Gather optimization requirements and create specification
+**Output**: `analysis/requirements.md`, `implementation/spec.md`
+**State**: Update `performance_context.phase_summaries.specification`
 
-**Standards Reminder**: Review `.ai-sdlc/docs/INDEX.md` before implementing.
+**Part A — Requirements Gathering (inline)**:
 
-**Process** (for each optimization in priority order):
-1. Benchmark before
-2. Implement optimization
-3. Benchmark after
-4. Verify improvement vs target
-5. Run tests (ensure no regressions)
-6. Update plan (mark complete/failed)
+1. Present bottleneck summary from Phase 1 to user
+2. Use AskUserQuestion for optimization priorities:
+   - Which bottleneck priorities to address? (All P0+P1, P0 only, specific ones)
+   - Any constraints? (backward compatibility, memory limits, no new dependencies)
+   - Performance targets? (specific response time goals, if known)
+3. Save gathered requirements to `analysis/requirements.md` with: performance issue description, bottleneck analysis summary, optimization priorities, constraints, targets
+
+**YOLO Mode**: Address all P0+P1 bottlenecks, no special constraints
+
+**Part B — Specification Creation (subagent)**:
+
+📋 **Standards Discovery**: Read `.ai-sdlc/docs/INDEX.md` before creating spec.
+
+**ANTI-PATTERN — DO NOT DO THIS:**
+- ❌ "Let me create the specification..." — STOP. Delegate to specification-creator.
+- ❌ "I'll write the spec based on the analysis..." — STOP. Delegate to specification-creator.
+
+**INVOKE NOW** — Task tool call:
+
+4. Task tool - `ai-sdlc:specification-creator` subagent
+
+**Context to pass**: task_path, task_type="performance", task_description, requirements_path (analysis/requirements.md), project_context_paths (INDEX.md, vision.md, roadmap.md, tech-stack.md), phase_summaries (codebase_analysis, bottleneck_analysis)
+
+**SELF-CHECK**: Did you just invoke the Task tool with `ai-sdlc:specification-creator`? Or did you start writing spec.md yourself? If the latter, STOP and invoke the Task tool.
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Optimizations complete. Continue to verification?"
+**Interactive**: AskUserQuestion - "Specification created. Continue to Phase 3?"
 **YOLO**: "→ Continuing to Phase 3..."
 
 ---
 
-### Phase 3: Performance Verification
+### Phase 3: Specification Audit (Conditional)
 
-**Purpose**: Verify optimizations achieved targets with no regressions
-**Execute**: Task tool - `ai-sdlc:performance-verifier` subagent
-**Output**: `verification/performance-verification.md` with verdict
-**State**: Update `performance_context.verification_verdict`, `overall_improvement`
+**Purpose**: Independent review of optimization specification
+**Execute**: Task tool - `ai-sdlc:spec-auditor` subagent
+**Output**: `verification/spec-audit.md`
+**State**: Update `options.spec_audit_enabled`
 
-**Verdict Criteria**:
-- **PASS**: All critical targets met, no critical regressions
-- **PASS with Concerns**: Most targets met (>80%), minor regressions only
-- **FAIL**: Critical targets not met (<80%) or critical regressions
+**Run if**: >5 optimizations planned, spec >50 lines, or user requests
+**Skip if**: Simple optimization (1-3 changes)
 
-→ Conditional: if verdict=PASS skip to Phase 4, if fixable issues continue to Phase 3.5, otherwise stop workflow
-
----
-
-### Phase 3.5: Issue Resolution (Conditional)
-
-**Purpose**: Fix performance issues through direct editing and re-verification
-**Execute**: Direct - apply fixes, re-verify with performance-verifier
-**Output**: Updated code, `verification_context.fixes_applied`
-**State**: Update `reverify_count`, `decisions_made`
-
-**Skip if**: verdict = PASS
-
-**Process**:
-1. Parse issues (categorize: auto-fixable, needs decision, not fixable)
-2. Apply auto-fixes (cache config, query hints, index additions)
-3. For user decisions: AskUserQuestion with options
-4. Re-verify after fixes (max 3 iterations)
-
-**Exit Conditions**:
-- ✅ New verdict = PASS → Proceed to Phase 4
-- ⚠️ Max iterations (3) reached → Ask user: continue with concerns or stop
-- ❌ Critical regressions remain → Report to user, recommend stopping
+**Interactive**: AskUserQuestion to decide - "Run specification audit?"
+**YOLO**: Auto-decide based on optimization count
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Issues resolved. Continue to load testing?"
+**Interactive**: AskUserQuestion - "Audit complete. Continue to Phase 4?"
 **YOLO**: "→ Continuing to Phase 4..."
 
 ---
 
-### Phase 4: Load Testing & Production Readiness
+### Phase 4: Implementation Planning
 
-**Purpose**: Verify performance under production-like load
-**Execute**: Direct for load tests, Task tool - `ai-sdlc:production-readiness-checker` subagent for production check
-**Output**: `verification/load-test-results.md`, `verification/production-readiness-report.md`
-**State**: Set load testing and production readiness results
+**Purpose**: Break optimization specification into implementation steps
 
-**Load Test Scenarios**:
-- Ramp-up: Gradually increase to 200 VUs over 10 minutes
-- Sustained: 500 VUs for 30 minutes
-- Spike: 10x sudden increase to 1000 VUs
+📋 **Standards Discovery**: Read `.ai-sdlc/docs/INDEX.md` before planning.
 
-**Success Criteria**:
-- CPU <90%, memory stable
-- Error rates <1%
-- Response times within targets under load
+**ANTI-PATTERN — DO NOT DO THIS:**
+- ❌ "Let me create the implementation plan..." — STOP. Delegate to implementation-planner.
+- ❌ "I'll break this into optimization steps..." — STOP. Delegate to implementation-planner.
+
+**INVOKE NOW** — Task tool call:
+
+**Execute**: Task tool - `ai-sdlc:implementation-planner` subagent
+**Output**: `implementation/implementation-plan.md`
+**State**: Update task groups and dependencies
+
+**Context to pass**: task_path, task_type="performance", task_description, phase_summaries (specification, bottleneck_analysis, codebase_analysis)
+
+**SELF-CHECK**: Did you just invoke the Task tool with `ai-sdlc:implementation-planner`? Or did you start writing the plan yourself? If the latter, STOP and invoke the Task tool.
+
+→ Pause
+
+**Interactive**: AskUserQuestion - "Implementation plan created. Continue to Phase 5?"
+**YOLO**: "→ Continuing to Phase 5..."
+
+---
+
+### Phase 5: Implementation
+
+**Purpose**: Execute the optimization plan
+
+📋 **Standards Discovery**: Implementation reads `.ai-sdlc/docs/INDEX.md` continuously.
+
+**Execute**: Skill tool - `ai-sdlc:implementation-plan-executor`
+**Output**: Implemented optimizations, `implementation/work-log.md`
+**State**: Update implementation progress
+
+→ Continue to Phase 5.5
+
+---
+
+### Phase 5.5: Verification Options
+
+**Purpose**: Determine which verification checks to run
+**Execute**: Direct - use AskUserQuestion for options
+**Output**: Updated state with verification options
+**State**: Set `options.code_review_enabled`, `options.pragmatic_review_enabled`, `options.production_check_enabled`, `options.reality_check_enabled`
+
+**Always enabled**: Reality check, pragmatic review
+
+**Interactive**: AskUserQuestion with multiselect - "Which additional verification checks?"
+  - "Code review" (recommended)
+  - "Production readiness check"
+**YOLO**: Auto-enable code review, skip production readiness
+
+→ Pause
+
+**Interactive**: AskUserQuestion - "Options selected. Continue to Phase 6?"
+**YOLO**: "→ Continuing to Phase 6..."
+
+---
+
+### Phase 6: Verification & Issue Resolution
+
+**Purpose**: Comprehensive implementation verification with fix-then-reverify cycles
+**Execute**:
+1. Skill tool - `ai-sdlc:implementation-verifier`
+2. If issues found: Fix trivial issues directly, AskUserQuestion for non-trivial
+3. Re-verify after fixes (max 3 fix-then-reverify cycles)
+**Output**: `verification/implementation-verification.md`, optional review reports
+**State**: Update `verification_context`
+
+→ Pause
+
+**Interactive**: AskUserQuestion - "Verification complete. Continue to finalization?"
+**YOLO**: "→ Continuing to Phase 7..."
+
+---
+
+### Phase 7: Finalization
+
+**Purpose**: Complete workflow and provide next steps
+**Execute**: Direct - create summary, update state, guide commit
+**Output**: Workflow summary
+**State**: Set `task.status: completed`
+
+**Process**:
+1. Create workflow summary (bottlenecks found, optimizations implemented, verification result)
+2. Update task status to "completed"
+3. Provide commit message template
+4. Guide performance-specific next steps:
+   - Run the application and verify improvements manually
+   - Consider profiling with runtime tools to measure actual impact
+   - Monitor production metrics after deployment
+   - Address remaining P2/P3 bottlenecks if needed
 
 → End of workflow
 
@@ -216,12 +299,17 @@ Performance-specific fields in `orchestrator-state.yml`:
 
 ```yaml
 performance_context:
-  baseline_p95: null  # milliseconds
-  target_p95: null    # milliseconds
-  optimizations_planned: null
-  optimizations_completed: 0
-  verification_verdict: null
-  overall_improvement: null
+  bottlenecks_identified: null    # count from bottleneck-analyzer
+  user_data_available: false      # whether user provided profiling data
+  bottleneck_priorities:
+    p0: 0
+    p1: 0
+    p2: 0
+    p3: 0
+  phase_summaries:
+    codebase_analysis: {key_files: [], summary: null}
+    bottleneck_analysis: {bottlenecks: [], summary: null, user_data_incorporated: false}
+    specification: {summary: null}
 
 verification_context:
   last_status: null
@@ -231,8 +319,11 @@ verification_context:
   reverify_count: 0
 
 options:
-  skip_load_testing: false
-  skip_production_check: false
+  spec_audit_enabled: null
+  code_review_enabled: true
+  pragmatic_review_enabled: true
+  reality_check_enabled: true
+  production_check_enabled: null
 ```
 
 ---
@@ -243,14 +334,17 @@ options:
 .ai-sdlc/tasks/performance/YYYY-MM-DD-task-name/
 ├── orchestrator-state.yml
 ├── analysis/
-│   └── performance-baseline.md        # Phase 0
+│   ├── codebase-analysis.md           # Phase 0
+│   ├── performance-analysis.md        # Phase 1
+│   ├── user-profiling-data/           # Optional user-provided data
+│   └── requirements.md                # Phase 2
 ├── implementation/
-│   ├── optimization-plan.md           # Phase 1
-│   └── benchmarks/                    # Phase 2
+│   ├── spec.md                        # Phase 2
+│   ├── implementation-plan.md         # Phase 4
+│   └── work-log.md                    # Phase 5
 └── verification/
-    ├── performance-verification.md    # Phase 3
-    ├── load-test-results.md           # Phase 4
-    └── production-readiness-report.md # Phase 4 (optional)
+    ├── spec-audit.md                  # Phase 3 (conditional)
+    └── implementation-verification.md # Phase 6
 ```
 
 ---
@@ -259,12 +353,12 @@ options:
 
 | Phase | Max Attempts | Strategy |
 |-------|--------------|----------|
-| 0 | 2 | Expand profiling, try alternatives |
-| 1 | 2 | Prompt user if bottleneck unclear |
-| 2 | 3 | Fix syntax errors, retry benchmarks |
-| 3 | 0 | Read-only, report only |
-| 3.5 | 3 | Fix-then-reverify cycles |
-| 4 | 1 | Retry failed load tests |
+| 0 | 2 | Expand search scope, prompt user for hints |
+| 1 | 2 | Re-analyze with broader patterns, ask user |
+| 2 | 2 | Regenerate spec with adjusted requirements |
+| 4 | 2 | Regenerate plan |
+| 5 | 5 | Fix syntax, imports, tests |
+| 6 | 3 | Fix-then-reverify cycles |
 
 ---
 

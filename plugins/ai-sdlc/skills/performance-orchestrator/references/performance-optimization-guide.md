@@ -1,13 +1,12 @@
 # Performance Optimization Guide
 
-Comprehensive reference covering performance metrics, profiling strategies, optimization patterns, and benchmarking approaches.
+Reference covering performance metrics knowledge, optimization patterns, and static analysis detection strategies.
 
 ## Table of Contents
 
 1. [Performance Metrics](#performance-metrics)
-2. [Profiling Strategies](#profiling-strategies)
-3. [Optimization Patterns](#optimization-patterns)
-4. [Benchmarking Approaches](#benchmarking-approaches)
+2. [Optimization Patterns](#optimization-patterns)
+3. [Static Analysis Detection Patterns](#static-analysis-detection-patterns)
 
 ---
 
@@ -32,21 +31,16 @@ Comprehensive reference covering performance metrics, profiling strategies, opti
 **Transactions/sec**: Completed transactions per second
 **Saturation Point**: Concurrency level where throughput plateaus
 
-**Targets by Application Type**:
-- Simple API: 1000+ req/s
-- Complex API: 100-500 req/s
-- Database-heavy: 50-200 req/s
-
 ## CPU Metrics
 
 **Usage %**: Overall CPU utilization
 **Hot Functions**: Top functions by CPU time
-**Complexity**: O(n), O(n log n), O(n²), etc.
+**Complexity**: O(n), O(n log n), O(n^2), etc.
 
 **Thresholds**:
 - < 70%: Good headroom
 - 70-90%: Acceptable
-- > 90%: Saturated
+- \> 90%: Saturated
 
 ## Memory Metrics
 
@@ -62,104 +56,6 @@ Comprehensive reference covering performance metrics, profiling strategies, opti
 **Query Time**: Time spent in database
 **N+1 Pattern**: 1 query + N related queries in loop
 **Missing Indexes**: Full table scans
-
-**Targets**:
-- Queries/request: < 10
-- Query time: < 50ms avg
-- Slow queries (>100ms): 0
-
----
-
-# Profiling Strategies
-
-## JavaScript/Node.js
-
-### CPU Profiling
-
-```bash
-# Built-in profiler
-node --prof app.js
-node --prof-process isolate-*.log > cpu-profile.txt
-
-# clinic.js (better visualization)
-clinic doctor -- node app.js
-
-# Chrome DevTools
-node --inspect app.js
-# Open chrome://inspect
-```
-
-### Memory Profiling
-
-```bash
-# Heap snapshot
-node --expose-gc --inspect app.js
-# Take snapshot in Chrome DevTools
-
-# clinic.js
-clinic bubbleprof -- node app.js
-
-# Track GC
-node --trace-gc app.js
-```
-
-## Python
-
-### CPU Profiling
-
-```bash
-# cProfile (built-in)
-python -m cProfile -o profile.stats app.py
-python -m pstats profile.stats
-# Use 'sort cumulative' and 'stats 20'
-
-# py-spy (sampling, low overhead)
-py-spy record -o profile.svg -- python app.py
-```
-
-### Memory Profiling
-
-```bash
-# memory_profiler
-pip install memory_profiler
-python -m memory_profiler script.py
-
-# objgraph (find leaks)
-import objgraph
-objgraph.show_most_common_types()
-objgraph.show_growth()
-```
-
-## Database Profiling
-
-### PostgreSQL
-
-```sql
--- Enable slow query log
-ALTER SYSTEM SET log_min_duration_statement = 100; -- >100ms
-SELECT pg_reload_conf();
-
--- View slow queries
-SELECT query, calls, total_time, mean_time
-FROM pg_stat_statements
-ORDER BY mean_time DESC LIMIT 20;
-
--- Check missing indexes
-EXPLAIN ANALYZE SELECT ...;
--- Look for "Seq Scan" (missing index)
-```
-
-### MySQL
-
-```sql
--- Enable slow query log
-SET GLOBAL slow_query_log = 'ON';
-SET GLOBAL long_query_time = 0.1;
-
--- View slow queries
-SELECT * FROM mysql.slow_log
-ORDER BY query_time DESC LIMIT 20;
-```
 
 ---
 
@@ -188,18 +84,16 @@ const users = await User.findAll({
 
 ### Add Missing Indexes
 
-**Detection**: EXPLAIN shows "Seq Scan" or high cost
+**Detection**: Query filters/sorts on unindexed columns
 
 ```sql
--- Before (slow)
+-- Before (slow - sequential scan)
 SELECT * FROM orders WHERE user_id = 123;
--- Seq Scan on orders (cost=0.00..2500.00)
 
 -- Add index
 CREATE INDEX CONCURRENTLY idx_orders_user_id ON orders(user_id);
 
--- After (fast)
--- Index Scan using idx_orders_user_id (cost=0.00..8.00)
+-- After (fast - index scan)
 ```
 
 ### Connection Pooling
@@ -217,11 +111,11 @@ const pool = mysql.createPool({
 
 ## Algorithm Optimizations
 
-### Replace O(n²) with O(n)
+### Replace O(n^2) with O(n)
 
 **Bad** (nested loops):
 ```javascript
-// O(n²)
+// O(n^2)
 for (let user of users) {
   for (let order of orders) {
     if (order.userId === user.id) {
@@ -337,7 +231,7 @@ const [user, orders, profile] = await Promise.all([
   fetchOrders(id),
   fetchProfile(id)
 ]);
-// Total: 200ms (fastest of the three)
+// Total: 200ms (slowest of the three)
 ```
 
 ## Memory Optimizations
@@ -376,181 +270,96 @@ for (let i = 0; i < 1000000; i++) {
 
 ---
 
-# Benchmarking Approaches
+# Static Analysis Detection Patterns
 
-## Load Testing Tools
+Strategies for detecting performance bottlenecks by reading code rather than running profiling tools.
 
-### ApacheBench (Simple)
+## Database Pattern Detection
 
-```bash
-# 1000 requests, 10 concurrent
-ab -n 1000 -c 10 http://localhost:3000/api/users
+### N+1 Query Detection by Framework
 
-# With POST data
-ab -n 1000 -c 10 -p data.json -T application/json http://localhost:3000/api/users
-```
+**Generic ORM-in-loop patterns** (Grep heuristics):
+- Query call inside `for`/`forEach`/`map`/`while` body
+- `await` + model method inside iteration callback
+- Lazy-loaded relationship access inside loop
 
-### wrk (Advanced)
+**Framework-specific indicators**:
 
-```bash
-# 4 threads, 100 connections, 30 seconds
-wrk -t4 -c100 -d30s http://localhost:3000/api/users
+| Framework | N+1 Pattern | Fix Pattern |
+|-----------|-------------|-------------|
+| Sequelize | `.findByPk()`/`.findOne()` in loop | `include: [{ model: X }]` |
+| Prisma | `prisma.x.findUnique()` in loop | `include: { x: true }` |
+| TypeORM | `repository.findOne()` in loop | `relations: ['x']` or QueryBuilder `.leftJoinAndSelect()` |
+| Django | Attribute access in template `{% for %}` | `.select_related()`/`.prefetch_related()` |
+| Rails | Association call without `.includes()` | `.includes(:association)` |
+| SQLAlchemy | Relationship access in loop | `joinedload()`/`subqueryload()` |
+| Hibernate | `@ManyToOne` lazy access in loop | `@Fetch(FetchMode.JOIN)` or JPQL `JOIN FETCH` |
 
-# With custom script
-wrk -t4 -c100 -d30s -s script.lua http://localhost:3000/api/users
-```
+### Missing Index Detection
 
-### k6 (Most Flexible)
+**Cross-reference strategy**:
+1. Find all index definitions in schema/migration files
+2. Find all query patterns (WHERE, ORDER BY, JOIN columns)
+3. Flag columns queried but not indexed
 
-```javascript
-// load-test.js
-import http from 'k6/http';
-import { check } from 'k6';
+**Where to find indexes by framework**:
+- **Rails**: `add_index` in `db/migrate/` files
+- **Django**: `db_index=True` in model fields, `indexes` in Meta
+- **Sequelize**: `indexes` array in model definition
+- **Prisma**: `@@index` and `@@unique` in schema.prisma
+- **TypeORM**: `@Index()` decorator
+- **SQL migrations**: `CREATE INDEX` statements
 
-export let options = {
-  vus: 100,  // Virtual users
-  duration: '30s',
-  thresholds: {
-    http_req_duration: ['p(95)<500'],  // 95% of requests < 500ms
-  },
-};
+### Slow Query Pattern Indicators
 
-export default function() {
-  let res = http.get('http://localhost:3000/api/users');
-  check(res, { 'status is 200': (r) => r.status === 200 });
-}
-```
+Patterns detectable from code without running queries:
+- `SELECT *` on tables with many columns
+- Missing `LIMIT`/`TOP` on queries against known-large tables
+- `LIKE '%...'` (leading wildcard prevents index use)
+- `OR` conditions on different columns (prevents single index use)
+- Subqueries in WHERE that could be JOINs
+- `DISTINCT` masking a JOIN issue
 
-```bash
-k6 run load-test.js
-```
+## Algorithm Pattern Detection
 
-## Benchmarking Methodology
+### Nested Loop / O(n^2) Heuristics
 
-### Warm-Up
+**Search patterns**:
+- Nested `for`/`forEach`/`while` loops over same or related collections
+- `.find()`/`.filter()`/`.some()`/`.includes()` inside `.map()`/`.forEach()`/`for`
+- `.indexOf()` inside loop (linear search repeated)
+- `.sort()` inside loop (O(n log n) per iteration)
 
-Always warm up before profiling:
-```bash
-# Run for 30s to warm up JIT, caches
-wrk -t4 -c10 -d30s http://localhost:3000/api/users
+**Fix indicators**: Can be resolved by pre-building a Map/Set/index before the loop
 
-# Then profile
-wrk -t4 -c100 -d60s http://localhost:3000/api/users
-```
+### Blocking I/O Patterns
 
-### Multiple Runs
+**Node.js sync operations**:
+- `readFileSync`, `writeFileSync`, `readdirSync`, `statSync`, `existsSync`
+- `execSync`, `spawnSync`
+- `crypto.pbkdf2Sync`, `crypto.randomBytesSync`
 
-Run 3-5 times, use median:
-```bash
-for i in {1..5}; do
-  wrk -t4 -c100 -d30s http://localhost:3000/api/users
-done
-# Use median p95, not average
-```
+**Sequential awaits** (should be `Promise.all`):
+- Multiple `await` statements on independent operations in same function
+- Sequential HTTP/fetch calls to different endpoints
+- Sequential database queries with no data dependency between them
 
-### Realistic Workloads
+## Memory Pattern Detection
 
-Use production-like data:
-- Same data volume (not test database with 10 rows)
-- Same query patterns (not just GET /health)
-- Same traffic mix (read/write ratio)
+**Unbounded growth indicators**:
+- `Map`/`Set`/`Object`/`Array` in module or class scope with `.set()`/`push()` but no `.delete()`/eviction
+- No size limit check before adding to collection
+- No TTL or expiration mechanism
 
-## Load Testing Patterns
+**Leak-prone patterns**:
+- `addEventListener`/`.on()` without paired `removeEventListener`/`.off()`
+- `setInterval` without `clearInterval` in cleanup/destroy/unmount
+- Closures in long-lived callbacks capturing large objects
 
-### Ramp-Up Testing
+## Caching Opportunity Detection
 
-Gradually increase load:
-```javascript
-export let options = {
-  stages: [
-    { duration: '2m', target: 100 },  // Ramp up to 100 users over 2 min
-    { duration: '5m', target: 100 },  // Stay at 100 for 5 min
-    { duration: '2m', target: 200 },  // Ramp up to 200
-    { duration: '5m', target: 200 },
-    { duration: '2m', target: 0 },    // Ramp down
-  ],
-};
-```
-
-### Sustained Load
-
-Constant load over time:
-```javascript
-export let options = {
-  vus: 500,
-  duration: '30m',  // 500 concurrent users for 30 minutes
-};
-```
-
-### Spike Testing
-
-Sudden traffic increase:
-```javascript
-export let options = {
-  stages: [
-    { duration: '10s', target: 100 },   // Normal load
-    { duration: '10s', target: 1000 },  // Spike (10x)
-    { duration: '3m', target: 1000 },   // Sustain spike
-    { duration: '10s', target: 100 },   // Back to normal
-  ],
-};
-```
-
-### Stress Testing
-
-Find breaking point:
-```javascript
-export let options = {
-  stages: [
-    { duration: '2m', target: 100 },
-    { duration: '5m', target: 100 },
-    { duration: '2m', target: 200 },
-    { duration: '5m', target: 200 },
-    { duration: '2m', target: 300 },
-    { duration: '5m', target: 300 },
-    { duration: '2m', target: 400 },
-    { duration: '5m', target: 400 },
-    // Continue until errors spike
-  ],
-};
-```
-
-## Interpreting Results
-
-### Latency Percentiles
-
-Focus on p95, p99 (not average):
-```
-p50: 45ms   (Median, typical user)
-p95: 180ms  (95% of users, SLA target)
-p99: 280ms  (Worst 1% of users)
-max: 800ms  (Outlier, ignore)
-```
-
-### Throughput Analysis
-
-```
-Requests/sec by concurrency:
-10 concurrent:  200 req/s
-50 concurrent:  450 req/s
-100 concurrent: 580 req/s  ← Peak
-200 concurrent: 580 req/s  ← Saturated (no improvement)
-500 concurrent: 550 req/s  ← Degraded (errors increasing)
-```
-
-Saturation point: 100 concurrent users (580 req/s)
-
-### Error Rate
-
-```
-Load Level    | Success Rate | Error Rate
-10 concurrent | 100%         | 0%
-100 concurrent| 99.5%        | 0.5%   ← Acceptable
-500 concurrent| 92%          | 8%     ← Too high
-```
-
-Target: < 1% error rate under normal load
-
----
-
-This guide provides practical patterns and tools for systematic performance optimization.
+**Indicators**:
+- Same query/function called multiple times with same parameters in a request lifecycle
+- Database query in a loop that could be batched and cached
+- External API call returning reference/config data (infrequent changes)
+- Expensive computation (sort, aggregate, transform) on data that doesn't change per-request

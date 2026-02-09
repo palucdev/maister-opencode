@@ -7,7 +7,7 @@ Pattern for resolving issues detected during verification phases. Use after any 
 After verification phases that return structured issues:
 - `implementation-verifier` → development workflows
 - `security-verifier` → security workflows
-- `performance-verifier` → performance workflows
+- `implementation-verifier` → performance workflows
 - `behavioral-verifier` → refactoring workflows
 - `documentation-reviewer` → documentation workflows
 
@@ -97,6 +97,6 @@ Each orchestrator adapts this pattern for its domain:
 |--------------|----------|----------------------|
 | Development | implementation-verifier | Lint, formatting, missing tests |
 | Security | security-verifier | Dependency updates, config hardening |
-| Performance | performance-verifier | Cache settings, query optimization |
+| Performance | implementation-verifier | Cache settings, query optimization |
 | Refactoring | behavioral-verifier | Test updates, signature adjustments |
 | Documentation | documentation-reviewer | Typos, broken links, formatting |

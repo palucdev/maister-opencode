@@ -654,7 +654,7 @@ Orchestrators manage complete workflows with state management, auto-recovery, an
 | Skill | Purpose | Details |
 |-------|---------|---------|
 | `development-orchestrator` | **Unified workflow** (19 phases: 0-14 + 1.5, 3.5, 4.5, 5.5) for bug fixes, enhancements, and new features. Includes clarifying questions (1.5), scope & approach clarifications (3.5), architecture decision (5.5), TDD gates for bugs (3, 9), gap analysis for all. | `skills/development-orchestrator/SKILL.md` |
-| `performance-orchestrator` | Profiling, benchmarking, load testing with metrics | `skills/performance-orchestrator/skill.md` |
+| `performance-orchestrator` | Static code analysis for bottleneck detection, reuses standard spec/plan/implement/verify pipeline | `skills/performance-orchestrator/SKILL.md` |
 | `security-orchestrator` | CVSS-scored vulnerability remediation, compliance audit | `skills/security-orchestrator/skill.md` |
 | `documentation-orchestrator` | User docs with Playwright screenshots, readability validation | `skills/documentation-orchestrator/skill.md` |
 | `migration-orchestrator` | Code/data/architecture migrations with rollback plans | `skills/migration-orchestrator/skill.md` |
@@ -797,9 +797,7 @@ Subagents are specialized AI agents invoked by skills and orchestrators. All age
 
 | Agent | Purpose | Invoked By | Details |
 |-------|---------|------------|---------|
-| `performance-profiler` | Measures p50/p95/p99, throughput, CPU, memory, queries | performance-orchestrator | `agents/performance-profiler.md` |
-| `bottleneck-analyzer` | Detects N+1 queries, missing indexes, memory leaks | performance-orchestrator | `agents/bottleneck-analyzer.md` |
-| `performance-verifier` | Verifies optimizations meet targets with metrics | performance-orchestrator | `agents/performance-verifier.md` |
+| `bottleneck-analyzer` | Static code analysis detecting N+1 queries, missing indexes, O(n^2) algorithms, blocking I/O, memory leak patterns. Optionally incorporates user-provided profiling data. | performance-orchestrator | `agents/bottleneck-analyzer.md` |
 
 ### Security Agents
 

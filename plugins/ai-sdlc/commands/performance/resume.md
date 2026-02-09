@@ -17,18 +17,18 @@ Resume an interrupted performance optimization from where it left off.
 
 ### Options
 
-- `--from=PHASE`: Override resume point (baseline, analysis, implementation, verification, load-testing)
+- `--from=PHASE`: Override resume point (analysis, specification, planning, implementation, verification)
 - `--reset-attempts`: Reset auto-fix attempt counters
 
 ## Examples
 
 ```bash
-/ai-sdlc:performance:resume .ai-sdlc/tasks/performance/2025-11-16-dashboard-perf
-/ai-sdlc:performance:resume --from=verification
+/ai-sdlc:performance:resume .ai-sdlc/tasks/performance/2026-02-09-dashboard-perf
+/ai-sdlc:performance:resume --from=implementation
 /ai-sdlc:performance:resume --reset-attempts
 ```
 
 ## See Also
 
-- Workflow details: `skills/performance-orchestrator/skill.md`
+- Workflow details: `skills/performance-orchestrator/SKILL.md`
 - Task output: `.ai-sdlc/tasks/performance/YYYY-MM-DD-name/`
