@@ -128,7 +128,7 @@ This phase executes 4 sequential steps. On resume, check existing artifacts to s
 **Artifacts**: `planning/research-plan.md`, `planning/sources.md`
 **Resume check**: If `planning/research-plan.md` AND `planning/sources.md` exist, skip to Step 3
 
-**Reference**: Read `references/research-methodologies.md` — research type classification, methodology selection, gathering strategies
+**Read `references/research-methodologies.md` NOW using the Read tool** — research type classification, methodology selection, gathering strategies
 
 **INVOKE NOW**: Use Task tool with `subagent_type: ai-sdlc:research-planner`
 
@@ -237,7 +237,7 @@ Update state: `research_context.confidence_level`
 
 **Skip if**: `brainstorming_enabled = false` (user chose to skip in Phase 1, or `--no-brainstorm` flag)
 
-**Reference**: Read `references/brainstorming-techniques.md` — divergent/convergent thinking techniques, scope guardrails, interactive exploration patterns
+**Read `references/brainstorming-techniques.md` NOW using the Read tool** — divergent/convergent thinking techniques, scope guardrails, interactive exploration patterns
 
 **Part A — HMW Generation (Direct)**:
 1. Read `analysis/synthesis.md` + `analysis/research-report.md`
@@ -289,7 +289,7 @@ Update state: `research_context.confidence_level`
 
 **Skip if**: Phase 2 was skipped (brainstorming_enabled = false)
 
-**Reference**: Read `references/design-techniques.md` — MADR format, ADR guidance, decision documentation patterns
+**Read `references/design-techniques.md` NOW using the Read tool** — MADR format, ADR guidance, decision documentation patterns
 
 **Part A — Design Direction (Direct)**:
 1. Confirm selected approach from Phase 2
