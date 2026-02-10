@@ -91,7 +91,7 @@ Use for:
 **Output**: `analysis/codebase-analysis.md`
 **State**: Update `performance_context.phase_summaries.codebase_analysis`
 
-Pass `task_type="enhancement"` and the performance-focused description. The codebase-analyzer uses 3 parallel Explore agents. For performance tasks, the description should guide agents toward: database query patterns, hot code paths, I/O operations, caching layers, connection management, schema/migration files.
+Pass `task_type="enhancement"` and the performance-focused description. The codebase-analyzer adaptively selects parallel Explore agents based on task complexity. For performance tasks, the description should guide agents toward: database query patterns, hot code paths, I/O operations, caching layers, connection management, schema/migration files.
 
 → Pause
 

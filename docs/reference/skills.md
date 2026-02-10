@@ -201,12 +201,14 @@ This is a **non-executable reference skill** - it provides documentation, not wo
 ### codebase-analyzer
 **Purpose**: Deep codebase analysis using parallel exploration agents
 
-**Process**: Launch 3 parallel Explore subagents → Aggregate findings → Generate analysis report
+**Process**: Adaptively select agent roles from a pool based on task complexity → Launch parallel Explore subagents → Delegate to `codebase-analysis-reporter` subagent for report synthesis
 
-**Subagents**:
-- **File Discovery Agent**: Locate relevant files by patterns and keywords
-- **Code Analysis Agent**: Deep dive into file implementations
-- **Context Discovery Agent**: Build integration patterns and dependencies
+**Agent Roles** (selected per task):
+- **File Discovery**: Locate relevant files by patterns and keywords
+- **Code Analysis**: Deep dive into file implementations
+- **Context Discovery**: Build integration patterns and dependencies
+- **Pattern Mining**: Find similar implementations to use as templates
+- **Migration Target**: Analyze target technology and compatibility
 
 **Key Feature**: Task-type aware prompts (bug vs enhancement vs feature focus)
 

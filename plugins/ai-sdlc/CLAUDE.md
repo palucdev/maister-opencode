@@ -605,7 +605,7 @@ Skills are automatically invoked by Claude when appropriate. Details live in eac
 
 | Skill | Purpose | Details |
 |-------|---------|---------|
-| `codebase-analyzer` | Phase 1 analysis using adaptive parallel Explore subagents selected from a role pool based on task complexity | `skills/codebase-analyzer/SKILL.md` |
+| `codebase-analyzer` | Thin dispatcher: selects agent roles adaptively, launches parallel Explore subagents, delegates report synthesis to `codebase-analysis-reporter` subagent | `skills/codebase-analyzer/SKILL.md` |
 | `implementer` | Executes plans with **mandatory** standards reading (INDEX.md + implementation-plan.md Standards Compliance section + keyword-triggered) and **test step enforcement** (requires user approval to skip N.1 tests) | `skills/implementer/SKILL.md` |
 | `implementation-verifier` | Read-only QA orchestrator: delegates completeness checks, test execution, code review, and production readiness to specialized subagents; compiles results into verification report | `skills/implementation-verifier/SKILL.md` |
 | `docs-manager` | Manages standards in `.ai-sdlc/docs/`, handles discovery and updates | `skills/docs-manager/skill.md` |
@@ -770,6 +770,7 @@ Subagents are specialized AI agents invoked by skills and orchestrators. All age
 | `gap-analyzer` | Compares current vs desired state with task-type support (bug/enhancement/feature) | development-orchestrator | `agents/gap-analyzer.md` |
 | `specification-creator` | Creates specs from gathered requirements with reusability search and self-verification | development-orchestrator, migration-orchestrator | `agents/specification-creator.md` |
 | `implementation-planner` | Breaks specs into task groups with test-driven steps and dependency chains | development-orchestrator, migration-orchestrator | `agents/implementation-planner.md` |
+| `codebase-analysis-reporter` | Merges raw Explore agent findings into structured analysis report with deduplication, cross-referencing, and risk assessment | codebase-analyzer skill | `agents/codebase-analysis-reporter.md` |
 
 **Deprecated Agent**:
 - `existing-feature-analyzer` → Replaced by `codebase-analyzer` skill (uses adaptive parallel Explore subagents)
