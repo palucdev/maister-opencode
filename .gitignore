@@ -6,34 +6,6 @@
 
 # Claude local settings
 .claude/settings.local.json
-sdlc-plugin-generator/.claude/settings.local.json
-/plugins/ai-sdlc/docs/diagrams/slides/pl/01-czym-jest-ai-sdlc.md
-/plugins/ai-sdlc/docs/diagrams/slides/pl/02-filozofia.md
-/plugins/ai-sdlc/docs/diagrams/slides/pl/03-jak-to-dziala.md
-/plugins/ai-sdlc/docs/diagrams/slides/pl/04-przeplyw-pracy.md
-/plugins/ai-sdlc/docs/diagrams/slides/pl/05-orkiestratory.md
-/plugins/ai-sdlc/docs/diagrams/slides/pl/06-korzysci.md
-/plugins/ai-sdlc/docs/diagrams/slides/pl/07-jak-zaczac.md
-/plugins/ai-sdlc/docs/diagrams/slides/pl/08-dwa-tryby.md
-/plugins/ai-sdlc/docs/diagrams/slides/pl/README.md
-/plugins/ai-sdlc/docs/diagrams/slides/01-what-is-ai-sdlc.md
-/plugins/ai-sdlc/docs/diagrams/slides/02-core-philosophy.md
-/plugins/ai-sdlc/docs/diagrams/slides/03-how-it-works.md
-/plugins/ai-sdlc/docs/diagrams/slides/04-development-flow.md
-/plugins/ai-sdlc/docs/diagrams/slides/05-orchestrators.md
-/plugins/ai-sdlc/docs/diagrams/slides/06-key-benefits.md
-/plugins/ai-sdlc/docs/diagrams/slides/07-getting-started.md
-/plugins/ai-sdlc/docs/diagrams/slides/08-interactive-vs-yolo.md
-/plugins/ai-sdlc/docs/diagrams/slides/INDEX.md
-/plugins/ai-sdlc/docs/diagrams/slides/README.md
-/plugins/ai-sdlc/docs/diagrams/01-plugin-architecture.md
-/plugins/ai-sdlc/docs/diagrams/02-philosophy-principles.md
-/plugins/ai-sdlc/docs/diagrams/03-component-invocation.md
-/plugins/ai-sdlc/docs/diagrams/04-development-orchestrator.md
-/plugins/ai-sdlc/docs/diagrams/05-core-workflow-pipeline.md
-/plugins/ai-sdlc/docs/diagrams/06-state-management.md
-/plugins/ai-sdlc/docs/diagrams/07-orchestrator-ecosystem.md
-/plugins/ai-sdlc/docs/diagrams/08-agent-ecosystem.md
-/plugins/ai-sdlc/docs/diagrams/09-standards-discovery.md
-/plugins/ai-sdlc/docs/diagrams/10-task-classification.md
-/plugins/ai-sdlc/docs/diagrams/README.md
+
+# AI SDLC task tracking (generated per-project, not part of plugin source)
+.ai-sdlc/
