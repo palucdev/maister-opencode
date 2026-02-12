@@ -248,11 +248,17 @@ Update state: `research_context.confidence_level`
 
 > **SELF-CHECK**: After Task tool returns, verify `outputs/solution-exploration.md` exists and contains alternatives. If missing, this is a CRITICAL failure.
 
-**Part D — Convergence (Direct)**:
+**Part D — Summary & Convergence (Direct)**:
 8. Read `outputs/solution-exploration.md`
-9. Present recommended approach to user via AskUserQuestion
-10. Options: "Proceed with recommended approach" / "Choose different alternative" / "Explore further"
-11. If user chooses different: update state with chosen approach
+9. Present executive summary to user before asking for decisions:
+   - Number of alternatives generated
+   - Name and 1-sentence description of each alternative
+   - Key trade-offs identified
+   - Recommended approach and why
+   - Any deferred ideas or open questions
+10. Present recommended approach to user via AskUserQuestion
+11. Options: "Proceed with recommended approach" / "Choose different alternative" / "Explore further"
+12. If user chooses different: update state with chosen approach
 
 **YOLO mode**: Skip Parts A+B+D. Subagent runs autonomously using research recommendations as defaults. Auto-accept recommended approach.
 
@@ -291,6 +297,14 @@ Update state: `research_context.confidence_level`
 - Accumulated context: `research_type`, `research_question`, `confidence_level`, `phase_summaries` (Phase 0-2 including brainstorming summary and chosen approach)
 
 > **SELF-CHECK**: After Task tool returns, verify both `outputs/high-level-design.md` and `outputs/decision-log.md` exist. If missing, this is a CRITICAL failure.
+
+**Part C — Summary (Direct)**:
+3. Read `outputs/high-level-design.md` and `outputs/decision-log.md`
+4. Present executive summary to user:
+   - Architecture style and key components
+   - Number of architectural decisions recorded
+   - Key decision highlights (1 line each)
+   - Integration points with existing system (if applicable)
 
 **YOLO mode**: Skip Part A design preferences question. Subagent generates design, present summary checkpoint only.
 
