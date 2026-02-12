@@ -336,9 +336,9 @@ warnings: ["any non-critical observations"]
 
 **Prerequisites**:
 - Task directory exists with `analysis/` and `outputs/` subdirectories
-- `outputs/solution-exploration.md` exists (Phase 2 output)
-- `analysis/synthesis.md` exists (Phase 0 output)
-- `outputs/research-report.md` exists (Phase 0 output)
+- `outputs/solution-exploration.md` exists (Phase 3 output)
+- `analysis/synthesis.md` exists (Phase 1 output)
+- `outputs/research-report.md` exists (Phase 1 output)
 
 **Input**: Task path, solution exploration, research artifacts, selected approach, design preferences, accumulated context
 
@@ -349,7 +349,7 @@ warnings: ["any non-critical observations"]
 **Downstream consumption**:
 - `specification-creator` reads `high-level-design.md` as primary architectural input
 - `specification-creator` references `decision-log.md` to avoid re-deciding settled questions
-- Development orchestrator Phase 5.5 (Architecture Decision) can be lighter when comprehensive ADRs exist
+- Development orchestrator Phase 5 (Specification) incorporates architecture decisions, which can be lighter when comprehensive ADRs exist
 
 ---
 

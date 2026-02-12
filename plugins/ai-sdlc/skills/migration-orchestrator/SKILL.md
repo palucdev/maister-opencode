@@ -36,7 +36,7 @@ Task: [migration description]
 Mode: [Interactive/YOLO]
 Directory: [task-path]
 
-Starting Phase 0: Analyze current state...
+Starting Phase 1: Analyze current state...
 ```
 
 ---
@@ -77,20 +77,20 @@ Use for:
 
 | Phase | content | activeForm | Agent/Skill |
 |-------|---------|------------|-------------|
-| 0 | "Analyze current state" | "Analyzing current state" | codebase-analyzer |
-| 1 | "Plan target state and gaps" | "Planning target state and gaps" | gap-analyzer |
-| 2 | "Gather requirements & create migration strategy" | "Gathering requirements & creating migration strategy" | Direct + specification-creator (subagent) |
-| 3 | "Plan implementation" | "Planning implementation" | implementation-planner (subagent) |
-| 4 | "Execute migration" | "Executing migration" | implementer |
-| 5 | "Verify and test compatibility" | "Verifying and testing compatibility" | implementation-verifier |
-| 5.5 | "Resolve verification issues" | "Resolving verification issues" | Direct (conditional) |
-| 6 | "Generate documentation" | "Generating documentation" | user-docs-generator (optional) |
+| 1 | "Analyze current state" | "Analyzing current state" | codebase-analyzer |
+| 2 | "Plan target state and gaps" | "Planning target state and gaps" | gap-analyzer |
+| 3 | "Gather requirements & create migration strategy" | "Gathering requirements & creating migration strategy" | Direct + specification-creator (subagent) |
+| 4 | "Plan implementation" | "Planning implementation" | implementation-planner (subagent) |
+| 5 | "Execute migration" | "Executing migration" | implementer |
+| 6 | "Verify and test compatibility" | "Verifying and testing compatibility" | implementation-verifier |
+| 7 | "Resolve verification issues" | "Resolving verification issues" | Direct (conditional) |
+| 8 | "Generate documentation" | "Generating documentation" | user-docs-generator (optional) |
 
 ---
 
 ## Workflow Phases
 
-### Phase 0: Current State Analysis & Clarifications
+### Phase 1: Current State Analysis & Clarifications
 
 **Purpose**: Comprehensive analysis of current system before migration, followed by scope/requirements clarification
 **Execute**:
@@ -107,7 +107,7 @@ Use for:
 
 ---
 
-### Phase 1: Target State Planning & Gap Analysis
+### Phase 2: Target State Planning & Gap Analysis
 
 **Purpose**: Define target system and identify migration gaps
 **Execute**: Task tool - `ai-sdlc:gap-analyzer` subagent
@@ -124,11 +124,11 @@ Use for:
 → Pause
 
 **Interactive**: AskUserQuestion - "Gap analysis complete. Continue to migration strategy?"
-**YOLO**: "→ Continuing to Phase 2..."
+**YOLO**: "→ Continuing to Phase 3..."
 
 ---
 
-### Phase 2: Migration Requirements & Strategy Specification
+### Phase 3: Migration Requirements & Strategy Specification
 
 **Purpose**: Gather migration requirements, then create detailed migration specification with rollback procedures
 **Execute**:
@@ -156,11 +156,11 @@ Use for:
 → Pause
 
 **Interactive**: AskUserQuestion - "Migration specification complete. Continue to implementation planning?"
-**YOLO**: "→ Continuing to Phase 3..."
+**YOLO**: "→ Continuing to Phase 4..."
 
 ---
 
-### Phase 3: Implementation Planning
+### Phase 4: Implementation Planning
 
 **Purpose**: Break migration into task groups with rollback steps
 **Execute**: Task tool - `ai-sdlc:implementation-planner` subagent
@@ -172,11 +172,11 @@ Use for:
 → Pause
 
 **Interactive**: AskUserQuestion - "Implementation plan ready. Continue to execute migration?"
-**YOLO**: "→ Continuing to Phase 4..."
+**YOLO**: "→ Continuing to Phase 5..."
 
 ---
 
-### Phase 4: Migration Execution
+### Phase 5: Migration Execution
 
 **Purpose**: Execute migration steps with incremental verification
 **Execute**: Skill tool - `ai-sdlc:implementer`
@@ -188,11 +188,11 @@ Use for:
 → Pause
 
 **Interactive**: AskUserQuestion - "Migration execution complete. Continue to verification?"
-**YOLO**: "→ Continuing to Phase 5..."
+**YOLO**: "→ Continuing to Phase 6..."
 
 ---
 
-### Phase 5: Verification + Compatibility Testing
+### Phase 6: Verification + Compatibility Testing
 
 **Purpose**: Verify migration success with compatibility and rollback testing
 **Execute**: Skill tool - `ai-sdlc:implementation-verifier`
@@ -205,11 +205,11 @@ Use for:
 - Validate data integrity (for data migrations)
 - Check performance benchmarks (before/after)
 
-→ Conditional: if verdict=PASS skip to Phase 6, if fixable issues continue to Phase 5.5, otherwise stop workflow
+→ Conditional: if verdict=PASS skip to Phase 8, if fixable issues continue to Phase 7, otherwise stop workflow
 
 ---
 
-### Phase 5.5: Migration Issue Resolution (Conditional)
+### Phase 7: Migration Issue Resolution (Conditional)
 
 **Purpose**: Fix verification issues through direct editing and re-verification
 **Execute**: Direct - apply fixes, re-verify
@@ -227,18 +227,18 @@ Use for:
 **Data Safety Critical**: HALT on any data integrity issue - never auto-fix data problems.
 
 **Exit Conditions**:
-- ✅ New verdict = PASS → Proceed to Phase 6
+- ✅ New verdict = PASS → Proceed to Phase 8
 - ⚠️ Max iterations (3) reached → Ask user: proceed with warnings or rollback
 - ❌ Data integrity issues → HALT immediately, recommend rollback
 
 → Pause
 
 **Interactive**: AskUserQuestion - "Issues resolved. Continue to documentation?"
-**YOLO**: "→ Continuing to Phase 6..."
+**YOLO**: "→ Continuing to Phase 8..."
 
 ---
 
-### Phase 6: Documentation (Optional)
+### Phase 8: Documentation (Optional)
 
 **Purpose**: Create migration guide for end users
 **Execute**: Task tool - `ai-sdlc:user-docs-generator` subagent
@@ -304,20 +304,20 @@ options:
 .ai-sdlc/tasks/migrations/YYYY-MM-DD-migration-name/
 ├── orchestrator-state.yml
 ├── analysis/
-│   ├── current-state-analysis.md     # Phase 0
-│   ├── target-state-plan.md          # Phase 1
-│   ├── requirements.md               # Phase 2
-│   ├── rollback-plan.md              # Phase 2
-│   └── dual-run-plan.md              # Phase 2 (if dual-run)
+│   ├── current-state-analysis.md     # Phase 1
+│   ├── target-state-plan.md          # Phase 2
+│   ├── requirements.md               # Phase 3
+│   ├── rollback-plan.md              # Phase 3
+│   └── dual-run-plan.md              # Phase 3 (if dual-run)
 ├── implementation/
-│   ├── spec.md                       # Phase 2
-│   ├── implementation-plan.md        # Phase 3
-│   └── work-log.md                   # Phase 4
+│   ├── spec.md                       # Phase 3
+│   ├── implementation-plan.md        # Phase 4
+│   └── work-log.md                   # Phase 5
 ├── verification/
-│   ├── implementation-verification.md    # Phase 5
-│   └── compatibility-test-results.md     # Phase 5
+│   ├── implementation-verification.md    # Phase 6
+│   └── compatibility-test-results.md     # Phase 6
 └── documentation/
-    └── migration-guide.md            # Phase 6 (optional)
+    └── migration-guide.md            # Phase 8 (optional)
 ```
 
 ---
@@ -326,13 +326,13 @@ options:
 
 | Phase | Max Attempts | Strategy |
 |-------|--------------|----------|
-| 0 | 2 | Expand search patterns, prompt user for file paths |
-| 1 | 2 | Re-prompt for target details |
-| 2 | 2 | Re-gather requirements, re-invoke spec-creator subagent, regenerate rollback plan |
-| 3 | 2 | Regenerate with migration constraints |
-| 4 | 5 | Fix syntax errors, prompt user on repeated failure |
-| 5 | 3 | Fix-then-reverify. **HALT on data integrity issues** |
-| 6 | 1 | Generate text-only without screenshots |
+| 1 | 2 | Expand search patterns, prompt user for file paths |
+| 2 | 2 | Re-prompt for target details |
+| 3 | 2 | Re-gather requirements, re-invoke spec-creator subagent, regenerate rollback plan |
+| 4 | 2 | Regenerate with migration constraints |
+| 5 | 5 | Fix syntax errors, prompt user on repeated failure |
+| 6 | 3 | Fix-then-reverify. **HALT on data integrity issues** |
+| 8 | 1 | Generate text-only without screenshots |
 
 ---
 

@@ -228,13 +228,13 @@ warnings: ["any non-critical observations"]
 
 ## Integration
 
-**Invoked by**: research-orchestrator (Phase 2, Part C)
+**Invoked by**: research-orchestrator (Phase 3, Part C)
 
 **Prerequisites**:
 - Task directory exists with `analysis/` and `outputs/` subdirectories
-- `analysis/synthesis.md` exists (Phase 0 output)
-- `outputs/research-report.md` exists (Phase 0 output)
-- `analysis/brainstorm-dialogue.md` may exist (Phase 2 Parts A-B output, interactive mode only)
+- `analysis/synthesis.md` exists (Phase 1 output)
+- `outputs/research-report.md` exists (Phase 1 output)
+- `analysis/brainstorm-dialogue.md` may exist (Phase 3 Parts A-B output, interactive mode only)
 
 **Input**: Task path, research artifacts, validated HMW questions, user preferences, accumulated context
 

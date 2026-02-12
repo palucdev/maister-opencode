@@ -637,13 +637,13 @@ analysis/findings/
 
 ## Integration with Research Orchestrator
 
-**Input from Phase 0, Step 2**:
+**Input from Phase 1, Step 2**:
 - `planning/research-plan.md` (methodology + gathering strategy)
 - `planning/sources.md` (data sources)
 
-**Output to Phase 0, Step 4** (via merge in Step 3):
+**Output to Phase 1, Step 4** (via merge in Step 3):
 - `analysis/findings/*.md` (detailed findings by source category)
 
-**State Update**: Report back to orchestrator (Phase 0, Step 3 gathering complete)
+**State Update**: Report back to orchestrator (Phase 1, Step 3 gathering complete)
 
 **Next Step**: Orchestrator merges findings into `00-summary.md` and `99-verification.md`, then invokes research-synthesizer

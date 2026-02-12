@@ -37,7 +37,7 @@ Task: [performance issue description]
 Mode: [Interactive/YOLO]
 Directory: [task-path]
 
-Starting Phase 0: Codebase Analysis...
+Starting Phase 1: Codebase Analysis...
 ```
 
 ---
@@ -70,21 +70,21 @@ Use for:
 
 | Phase | content | activeForm | Agent/Skill |
 |-------|---------|------------|-------------|
-| 0 | "Analyze codebase" | "Analyzing codebase" | codebase-analyzer |
-| 1 | "Analyze performance bottlenecks" | "Analyzing performance bottlenecks" | bottleneck-analyzer |
-| 2 | "Gather requirements & create specification" | "Gathering requirements & creating specification" | specification-creator |
-| 3 | "Audit specification" | "Auditing specification" | spec-auditor (conditional) |
-| 4 | "Plan implementation" | "Planning implementation" | implementation-planner |
-| 5 | "Execute implementation" | "Executing implementation" | implementation-plan-executor |
-| 5.5 | "Prompt verification options" | "Prompting verification options" | Direct |
-| 6 | "Verify implementation & resolve issues" | "Verifying implementation" | implementation-verifier |
-| 7 | "Finalize workflow" | "Finalizing workflow" | Direct |
+| 1 | "Analyze codebase" | "Analyzing codebase" | codebase-analyzer |
+| 2 | "Analyze performance bottlenecks" | "Analyzing performance bottlenecks" | bottleneck-analyzer |
+| 3 | "Gather requirements & create specification" | "Gathering requirements & creating specification" | specification-creator |
+| 4 | "Audit specification" | "Auditing specification" | spec-auditor (conditional) |
+| 5 | "Plan implementation" | "Planning implementation" | implementation-planner |
+| 6 | "Execute implementation" | "Executing implementation" | implementation-plan-executor |
+| 7 | "Prompt verification options" | "Prompting verification options" | Direct |
+| 8 | "Verify implementation & resolve issues" | "Verifying implementation" | implementation-verifier |
+| 9 | "Finalize workflow" | "Finalizing workflow" | Direct |
 
 ---
 
 ## Workflow Phases
 
-### Phase 0: Codebase Analysis & Clarifications
+### Phase 1: Codebase Analysis & Clarifications
 
 **Purpose**: Comprehensive codebase exploration for performance context, followed by scope/requirements clarification
 **Execute**:
@@ -103,7 +103,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 ---
 
-### Phase 1: Static Performance Analysis
+### Phase 2: Static Performance Analysis
 
 **Purpose**: Identify bottlenecks through static code analysis + optional user profiling data
 **Execute**: Task tool - `ai-sdlc:bottleneck-analyzer` subagent
@@ -125,18 +125,18 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 4. Task tool - `ai-sdlc:bottleneck-analyzer` subagent
 
-**Context to pass**: task_path, description, codebase analysis summary from Phase 0, user data paths (if any)
+**Context to pass**: task_path, description, codebase analysis summary from Phase 1, user data paths (if any)
 
 **SELF-CHECK**: Did you just invoke the Task tool with `ai-sdlc:bottleneck-analyzer`? Or did you start analyzing code yourself? If the latter, STOP and invoke the Task tool.
 
 → Pause
 
 **Interactive**: AskUserQuestion - "Performance analysis complete. [N] bottlenecks identified ([P0 count] P0, [P1 count] P1). Continue to specification?"
-**YOLO**: "→ Continuing to Phase 2..."
+**YOLO**: "→ Continuing to Phase 3..."
 
 ---
 
-### Phase 2: Requirements & Specification
+### Phase 3: Requirements & Specification
 
 **Purpose**: Gather optimization requirements and create specification
 **Output**: `analysis/requirements.md`, `implementation/spec.md`
@@ -144,7 +144,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 **Part A — Requirements Gathering (inline)**:
 
-1. Present bottleneck summary from Phase 1 to user
+1. Present bottleneck summary from Phase 2 to user
 2. Use AskUserQuestion for optimization priorities:
    - Which bottleneck priorities to address? (All P0+P1, P0 only, specific ones)
    - Any constraints? (backward compatibility, memory limits, no new dependencies)
@@ -171,12 +171,12 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Specification created. Continue to Phase 3?"
-**YOLO**: "→ Continuing to Phase 3..."
+**Interactive**: AskUserQuestion - "Specification created. Continue to Phase 4?"
+**YOLO**: "→ Continuing to Phase 4..."
 
 ---
 
-### Phase 3: Specification Audit (Conditional)
+### Phase 4: Specification Audit (Conditional)
 
 **Purpose**: Independent review of optimization specification
 **Execute**: Task tool - `ai-sdlc:spec-auditor` subagent
@@ -191,12 +191,12 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Audit complete. Continue to Phase 4?"
-**YOLO**: "→ Continuing to Phase 4..."
+**Interactive**: AskUserQuestion - "Audit complete. Continue to Phase 5?"
+**YOLO**: "→ Continuing to Phase 5..."
 
 ---
 
-### Phase 4: Implementation Planning
+### Phase 5: Implementation Planning
 
 **Purpose**: Break optimization specification into implementation steps
 
@@ -218,12 +218,12 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Implementation plan created. Continue to Phase 5?"
-**YOLO**: "→ Continuing to Phase 5..."
+**Interactive**: AskUserQuestion - "Implementation plan created. Continue to Phase 6?"
+**YOLO**: "→ Continuing to Phase 6..."
 
 ---
 
-### Phase 5: Implementation
+### Phase 6: Implementation
 
 **Purpose**: Execute the optimization plan
 
@@ -233,11 +233,11 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 **Output**: Implemented optimizations, `implementation/work-log.md`
 **State**: Update implementation progress
 
-→ Continue to Phase 5.5
+→ Continue to Phase 7
 
 ---
 
-### Phase 5.5: Verification Options
+### Phase 7: Verification Options
 
 **Purpose**: Determine which verification checks to run
 **Execute**: Direct - use AskUserQuestion for options
@@ -254,12 +254,12 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Options selected. Continue to Phase 6?"
-**YOLO**: "→ Continuing to Phase 6..."
+**Interactive**: AskUserQuestion - "Options selected. Continue to Phase 8?"
+**YOLO**: "→ Continuing to Phase 8..."
 
 ---
 
-### Phase 6: Verification & Issue Resolution
+### Phase 8: Verification & Issue Resolution
 
 **Purpose**: Comprehensive implementation verification with fix-then-reverify cycles
 **Execute**:
@@ -273,11 +273,11 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 → Pause
 
 **Interactive**: AskUserQuestion - "Verification complete. Continue to finalization?"
-**YOLO**: "→ Continuing to Phase 7..."
+**YOLO**: "→ Continuing to Phase 9..."
 
 ---
 
-### Phase 7: Finalization
+### Phase 9: Finalization
 
 **Purpose**: Complete workflow and provide next steps
 **Execute**: Direct - create summary, update state, guide commit
@@ -340,17 +340,17 @@ options:
 .ai-sdlc/tasks/performance/YYYY-MM-DD-task-name/
 ├── orchestrator-state.yml
 ├── analysis/
-│   ├── codebase-analysis.md           # Phase 0
-│   ├── performance-analysis.md        # Phase 1
+│   ├── codebase-analysis.md           # Phase 1
+│   ├── performance-analysis.md        # Phase 2
 │   ├── user-profiling-data/           # Optional user-provided data
-│   └── requirements.md                # Phase 2
+│   └── requirements.md                # Phase 3
 ├── implementation/
-│   ├── spec.md                        # Phase 2
-│   ├── implementation-plan.md         # Phase 4
-│   └── work-log.md                    # Phase 5
+│   ├── spec.md                        # Phase 3
+│   ├── implementation-plan.md         # Phase 5
+│   └── work-log.md                    # Phase 6
 └── verification/
-    ├── spec-audit.md                  # Phase 3 (conditional)
-    └── implementation-verification.md # Phase 6
+    ├── spec-audit.md                  # Phase 4 (conditional)
+    └── implementation-verification.md # Phase 8
 ```
 
 ---
@@ -359,12 +359,12 @@ options:
 
 | Phase | Max Attempts | Strategy |
 |-------|--------------|----------|
-| 0 | 2 | Expand search scope, prompt user for hints |
-| 1 | 2 | Re-analyze with broader patterns, ask user |
-| 2 | 2 | Regenerate spec with adjusted requirements |
-| 4 | 2 | Regenerate plan |
-| 5 | 5 | Fix syntax, imports, tests |
-| 6 | 3 | Fix-then-reverify cycles |
+| 1 | 2 | Expand search scope, prompt user for hints |
+| 2 | 2 | Re-analyze with broader patterns, ask user |
+| 3 | 2 | Regenerate spec with adjusted requirements |
+| 5 | 2 | Regenerate plan |
+| 6 | 5 | Fix syntax, imports, tests |
+| 8 | 3 | Fix-then-reverify cycles |
 
 ---
 

@@ -7,7 +7,7 @@ All orchestrators follow this initialization sequence before executing any workf
 ## Initialization Steps
 
 1. **Parse Command Arguments**: Extract description, mode (`--yolo`), type, entry point (`--from`), optional flags
-2. **Determine Starting Phase**: New task starts Phase 0; resume reads state and finds first incomplete phase
+2. **Determine Starting Phase**: New task starts Phase 1; resume reads state and finds first incomplete phase
 3. **Create Task Directory**: Standard structure with analysis/, implementation/, verification/, documentation/
 4. **Create State File**: `orchestrator-state.yml` (see state-management.md for schema)
 5. **Create Task Items**: Use `TaskCreate` for all phases as pending tasks for progress visibility, then set dependencies with `TaskUpdate addBlockedBy`
@@ -35,9 +35,9 @@ Store task IDs in `orchestrator-state.yml` under `orchestrator.task_ids`:
 ```yaml
 orchestrator:
   task_ids:
-    phase-0: "1"    # populated with TaskCreate IDs during init
-    phase-1: "2"
-    phase-2: "3"
+    phase-1: "1"    # populated with TaskCreate IDs during init
+    phase-2: "2"
+    phase-3: "3"
     # ... one entry per phase
 ```
 
@@ -86,7 +86,7 @@ Generate task directory name from description:
 
 ## Initialization Summary Output
 
-Output this summary before starting Phase 0:
+Output this summary before starting Phase 1:
 
 ```
 🚀 [Orchestrator Name] Started
@@ -95,7 +95,7 @@ Task: [description]
 Mode: [Interactive/YOLO]
 Directory: [task-path]
 
-Starting Phase 0: [Phase Name]...
+Starting Phase 1: [Phase Name]...
 ```
 
 ---
@@ -106,7 +106,7 @@ If starting mid-workflow with missing prerequisites:
 
 1. List required files with status (missing/found)
 2. Use AskUserQuestion with options:
-   - "Start from Phase 0"
+   - "Start from Phase 1"
    - "Specify different phase"
    - "Exit"
 

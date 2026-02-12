@@ -84,23 +84,23 @@ Different types require different:
 
 ### Workflow Adaptations
 
-**Phase 0 (Current State Analysis)**:
+**Phase 1 (Current State Analysis)**:
 - Focus: Locate all source files using old framework/library
 - Analyze: Dependency tree, API usage patterns, deprecated features used
 
-**Phase 1 (Target State Planning)**:
+**Phase 2 (Target State Planning)**:
 - Focus: Breaking changes between versions, API equivalents
 - Output: Breaking changes list, API migration map
 
-**Phase 2 (Specification)**:
+**Phase 3 (Specification)**:
 - Include: Compatibility shim requirements (if needed)
 - Rollback: Simple (revert code via git)
 
-**Phase 4 (Execution)**:
+**Phase 5 (Execution)**:
 - Strategy: Incremental (by module/component)
 - Testing: Functional tests per module
 
-**Phase 5 (Verification)**:
+**Phase 6 (Verification)**:
 - Focus: Functional equivalence (behavior unchanged)
 - Tests: Full test suite, manual testing of critical flows
 
@@ -157,24 +157,24 @@ Different types require different:
 
 ### Workflow Adaptations
 
-**Phase 0 (Current State Analysis)**:
+**Phase 1 (Current State Analysis)**:
 - Focus: Database schema, row counts, data volume, stored procedures
 - Analyze: Data relationships, foreign keys, indexes, constraints
 
-**Phase 1 (Target State Planning)**:
+**Phase 2 (Target State Planning)**:
 - Focus: Data transformation requirements, data mapping (old → new schema)
 - Output: Data transformation specification, estimated migration time
 
-**Phase 2 (Specification)**:
+**Phase 3 (Specification)**:
 - Include: Data validation procedures, integrity checks, rollback procedures
 - Rollback: Complex (requires backup/restore strategies)
 - Dual-Run: Often required (zero-downtime)
 
-**Phase 4 (Execution)**:
+**Phase 5 (Execution)**:
 - Strategy: Incremental + Dual-Run (high confidence in strategy choice)
 - Testing: Data integrity checks after each batch
 
-**Phase 5 (Verification)**:
+**Phase 6 (Verification)**:
 - Focus: Data integrity (100% row count match, checksums, data validation)
 - Tests: Full test suite + data integrity tests + performance benchmarks
 - Critical: If data integrity fails, HALT (don't auto-fix, prompt user)
@@ -239,24 +239,24 @@ Different types require different:
 
 ### Workflow Adaptations
 
-**Phase 0 (Current State Analysis)**:
+**Phase 1 (Current State Analysis)**:
 - Focus: System components, communication patterns, dependencies between components
 - Analyze: Coupling/cohesion, service boundaries, data flow
 
-**Phase 1 (Target State Planning)**:
+**Phase 2 (Target State Planning)**:
 - Focus: New architecture structure, component boundaries, communication patterns
 - Output: Architecture diagram, component mapping (old → new)
 
-**Phase 2 (Specification)**:
+**Phase 3 (Specification)**:
 - Include: Strangler fig pattern (if applicable), component interaction diagrams
 - Rollback: Moderate to complex (depends on dual-run feasibility)
 - Dual-Run: Often required (old and new architectures in parallel)
 
-**Phase 4 (Execution)**:
+**Phase 5 (Execution)**:
 - Strategy: Incremental (by component/service) + Dual-Run (if possible)
 - Testing: Integration tests, end-to-end tests, performance tests
 
-**Phase 5 (Verification)**:
+**Phase 6 (Verification)**:
 - Focus: System-level behavior (end-to-end flows work), performance comparison
 - Tests: Full test suite + integration tests + E2E tests
 
@@ -293,7 +293,7 @@ Different types require different:
 
 ### Workflow Adaptations
 
-**Phase 0-1 (Analysis + Planning)**:
+**Phase 1-2 (Analysis + Planning)**:
 - Spend extra time clarifying scope
 - Prompt user to specify what's changing (code, data, architecture, or all)
 - May reclassify after analysis
@@ -375,7 +375,7 @@ Terms: "refactor to", "architecture", "pattern", "system design", "restructure"
 
 ## Web Research Requirements by Type
 
-External research is automatically triggered by the gap-analyzer during Phase 1 (Target State Planning). The level of research depends on migration type.
+External research is automatically triggered by the gap-analyzer during Phase 2 (Target State Planning). The level of research depends on migration type.
 
 | Migration Type | External Research | Query Focus | Priority Sources |
 |---------------|-------------------|-------------|------------------|
@@ -432,6 +432,6 @@ External research is automatically triggered by the gap-analyzer during Phase 1 
 
 **References in SKILL.md**:
 - Initialization (Step 2): Type detection algorithm
-- Phase 0 (Analysis): Type-specific analysis focus
-- Phase 1 (Target Planning): Type-specific gap analysis + external research
-- Phase 5 (Verification): Type-specific verification requirements
+- Phase 1 (Analysis): Type-specific analysis focus
+- Phase 2 (Target Planning): Type-specific gap analysis + external research
+- Phase 6 (Verification): Type-specific verification requirements

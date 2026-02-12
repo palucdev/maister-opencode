@@ -27,8 +27,8 @@ orchestrator:
 
   # Auto-fix tracking (per phase)
   auto_fix_attempts:
-    phase-0: 0
     phase-1: 0
+    phase-2: 0
     # ... one entry per phase
 
   # Optional phase flags
@@ -45,8 +45,8 @@ orchestrator:
 
   # Task tracking IDs (maps phase names to TaskCreate IDs)
   task_ids:
-    phase-0: null    # populated during initialization
-    phase-1: null
+    phase-1: null    # populated during initialization
+    phase-2: null
     # ... one entry per phase
 
 # Task metadata
@@ -190,7 +190,7 @@ When resuming:
 | Implementation | spec.md + implementation-plan.md |
 | Verification | Implementation complete |
 
-If prerequisites missing, use AskUserQuestion to let user choose: start from Phase 0, specify different phase, or exit.
+If prerequisites missing, use AskUserQuestion to let user choose: start from Phase 1, specify different phase, or exit.
 
 ---
 

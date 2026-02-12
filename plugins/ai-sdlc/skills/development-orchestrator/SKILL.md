@@ -86,7 +86,6 @@ Use for **all development tasks**:
 | 3 | "Write failing test (TDD Red)" | "Writing failing test" | Bug only |
 | 4 | "Generate UI mockups" | "Generating UI mockups" | Enhancement, Feature (if ui_heavy) |
 | 5 | "Gather requirements & create specification" | "Gathering requirements & creating specification" | All |
-| 5.5 | "Decide architecture" | "Deciding architecture" | Feature, Enhancement (conditional) |
 | 6 | "Audit specification" | "Auditing specification" | All (conditional) |
 | 7 | "Plan implementation" | "Planning implementation" | All |
 | 8 | "Execute implementation" | "Executing implementation" | All |
@@ -192,9 +191,10 @@ Use for **all development tasks**:
 **Purpose**: Resolve technical decisions, gather specification requirements, then create comprehensive specification
 **Execute**:
 
-**Part A — Technical Clarification (inline, conditional)**:
+**Part A — Technical & Architecture Clarification (inline, conditional)**:
 1. If complex task with multiple approaches: Direct - use AskUserQuestion for 3-5 technical questions
-2. Save to `analysis/technical-clarifications.md` (conditional)
+2. If multiple valid architectural approaches exist (feature/enhancement): Present 2-3 approaches via AskUserQuestion. The chosen approach is passed to specification-creator so the spec is written with the decided architecture.
+3. Save to `analysis/technical-clarifications.md` (conditional)
 
 **Skip technical clarification if**: Simple task, risk_level = low, no multiple approaches detected
 
@@ -230,31 +230,13 @@ Use for **all development tasks**:
 **SELF-CHECK**: Did you just invoke the Task tool with `ai-sdlc:specification-creator`? Or did you start writing spec.md yourself? If the latter, STOP immediately and invoke the Task tool instead.
 
 **Output**: `analysis/technical-clarifications.md` (conditional), `analysis/requirements.md`, `implementation/spec.md`
-**State**: Update `task_context.tech_clarified`, `phase_summaries.specification`
+**State**: Update `task_context.tech_clarified`, `task_context.architecture_decision`, `phase_summaries.specification`
 
-**YOLO Mode**: Accept recommended defaults for all questions, then invoke subagent
-
-→ Pause
-
-**Interactive**: AskUserQuestion - "Specification created. Continue to Phase 5.5?"
-**YOLO**: "→ Continuing to Phase 5.5..."
-
----
-
-### Phase 5.5: Architecture Decision (Conditional)
-
-**Purpose**: Choose between multiple valid architectural approaches
-**Execute**: Direct - present 2-3 approaches via AskUserQuestion
-**Output**: Update `implementation/spec.md` Technical Approach section
-**State**: Set `task_context.architecture_decision`
-
-**Skip if**: Bug fix, straightforward task, or approach already clear
-
-**YOLO Mode**: Auto-select recommended approach
+**YOLO Mode**: Accept recommended defaults for all questions (including architecture), then invoke subagent
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Architecture decided. Continue to Phase 6?"
+**Interactive**: AskUserQuestion - "Specification created. Continue to Phase 6?"
 **YOLO**: "→ Continuing to Phase 6..."
 
 ---
@@ -546,9 +528,9 @@ When research context is detected, read these files from the research folder:
 |----------|------|---------|
 | State | `orchestrator-state.yml` | research_type, confidence_level |
 | Report | `outputs/research-report.md` | Main findings and conclusions |
-| Solution Exploration | `outputs/solution-exploration.md` | Alternatives and trade-offs (input to Phase 5.5) |
+| Solution Exploration | `outputs/solution-exploration.md` | Alternatives and trade-offs (input to Phase 5) |
 | High-Level Design | `outputs/high-level-design.md` | C4 architecture (input to Phase 5) |
-| Decision Log | `outputs/decision-log.md` | ADR decisions (input to Phase 5.5) |
+| Decision Log | `outputs/decision-log.md` | ADR decisions (input to Phase 5) |
 
 ### How Research Informs Each Phase
 
@@ -558,8 +540,7 @@ When research context is detected, read these files from the research folder:
 |-------|------------------------------|
 | Phase 1 | Codebase analyzer receives research findings as search guidance |
 | Phase 2 | Gap analyzer uses research recommendations for comparison |
-| Phase 5 | Specification creator uses high-level-design.md as INPUT (still creates full spec) |
-| Phase 5.5 | Architecture decision uses research report AND decision-log.md (lighter when ADRs comprehensive) |
+| Phase 5 | Specification creator uses high-level-design.md as INPUT (still creates full spec). Architecture decisions use research report AND decision-log.md (lighter when ADRs comprehensive) |
 | Phase 7 | Implementation planner references research approach for task grouping |
 
 ---

@@ -387,13 +387,13 @@ Combine relevant elements from above frameworks based on research objectives.
 
 ## Integration with Research Orchestrator
 
-**Input from Phase 0, Step 3** (Information Gathering):
+**Input from Phase 1, Step 3** (Information Gathering):
 - `analysis/findings/*.md` (all finding files)
 
-**Output to Phase 1** (Brainstorming Decision) / **Phase 2** (Brainstorming):
+**Output to Phase 2** (Brainstorming Decision) / **Phase 3** (Brainstorming):
 - `analysis/synthesis.md` (patterns and insights)
 - `outputs/research-report.md` (comprehensive report)
 
-**State Update**: Report back to orchestrator (Phase 0, Step 4 complete)
+**State Update**: Report back to orchestrator (Phase 1, Step 4 complete)
 
-**Next Step**: Orchestrator evaluates brainstorming value (Phase 1) then creates deliverables
+**Next Step**: Orchestrator evaluates brainstorming value (Phase 2) then creates deliverables

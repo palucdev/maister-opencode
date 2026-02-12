@@ -152,6 +152,6 @@ risk_level: low|low-medium|medium|medium-high|high
 
 | Orchestrator | Phase | artifact_name |
 |-------------|-------|---------------|
-| development-orchestrator | Phase 0 | `codebase-analysis.md` (default) |
-| migration-orchestrator | Phase 0 | `current-state-analysis.md` |
-| performance-orchestrator | Phase 0 | `codebase-analysis.md` (default) |
+| development-orchestrator | Phase 1 | `codebase-analysis.md` (default) |
+| migration-orchestrator | Phase 1 | `current-state-analysis.md` |
+| performance-orchestrator | Phase 1 | `codebase-analysis.md` (default) |

@@ -44,23 +44,23 @@ Analyzes multiple project sources in parallel to discover coding standards, conv
 
 | Phase | Subject | activeForm |
 |-------|---------|------------|
-| 0 | Plan discovery scope | Planning discovery scope |
-| 1 | Analyze configuration files | Analyzing configuration files |
-| 2 | Mine code patterns | Mining code patterns |
-| 3 | Extract documentation standards | Extracting documentation standards |
-| 4 | Analyze external sources | Analyzing external sources |
-| 5 | Aggregate & deduplicate findings | Aggregating findings |
-| 6 | Review findings with user | Reviewing findings |
-| 7 | Apply approved standards | Applying standards |
-| 8 | Generate summary report | Generating summary |
+| 1 | Plan discovery scope | Planning discovery scope |
+| 2 | Analyze configuration files | Analyzing configuration files |
+| 3 | Mine code patterns | Mining code patterns |
+| 4 | Extract documentation standards | Extracting documentation standards |
+| 5 | Analyze external sources | Analyzing external sources |
+| 6 | Aggregate & deduplicate findings | Aggregating findings |
+| 7 | Review findings with user | Reviewing findings |
+| 8 | Apply approved standards | Applying standards |
+| 9 | Generate summary report | Generating summary |
 
-**Task Tracking**: At start of Phase 0, use `TaskCreate` for all phases above (pending). Set dependencies: Phases 1-4 blocked by Phase 0 (they run in parallel after planning). Phase 5 blocked by Phases 1-4. Phases 6-8 sequential. At each phase start: `TaskUpdate` to `in_progress`. At each phase end: `TaskUpdate` to `completed`. For phases skipped due to scope (e.g., Phases 2-3 when `--scope=quick`), mark `completed` with `metadata: {skipped: true, reason: "scope=quick"}`.
+**Task Tracking**: At start of Phase 1, use `TaskCreate` for all phases above (pending). Set dependencies: Phases 2-5 blocked by Phase 1 (they run in parallel after planning). Phase 6 blocked by Phases 2-5. Phases 7-9 sequential. At each phase start: `TaskUpdate` to `in_progress`. At each phase end: `TaskUpdate` to `completed`. For phases skipped due to scope (e.g., Phases 3-4 when `--scope=quick`), mark `completed` with `metadata: {skipped: true, reason: "scope=quick"}`.
 
 ---
 
 ## Execution Workflow
 
-### Phase 0: Planning & Initialization
+### Phase 1: Planning & Initialization
 
 1. **Parse options** from command arguments
 2. **Check prerequisites**: Verify `.ai-sdlc/docs/` exists. If not, offer to run `/init-sdlc` first
@@ -70,7 +70,7 @@ Analyzes multiple project sources in parallel to discover coding standards, conv
 
 ---
 
-### Phase 1-4: Parallel Discovery
+### Phase 2-5: Parallel Discovery
 
 > **CRITICAL: Launch all applicable subagents in ONE message for parallel execution.**
 
@@ -84,10 +84,10 @@ Use the Read tool to load ONLY the reference files for phases you will execute:
 
 | Phase | Condition | Read This File |
 |-------|-----------|----------------|
-| 1: Config Analysis | Always | `references/config-analyzer-prompt.md` |
-| 2: Code Patterns | scope != `quick` | `references/code-pattern-prompt.md` |
-| 3: Documentation | scope != `quick` | `references/docs-extractor-prompt.md` |
-| 4: External Sources | `--skip-external` not set | `references/external-analyzer-prompt.md` |
+| 2: Config Analysis | Always | `references/config-analyzer-prompt.md` |
+| 3: Code Patterns | scope != `quick` | `references/code-pattern-prompt.md` |
+| 4: Documentation | scope != `quick` | `references/docs-extractor-prompt.md` |
+| 5: External Sources | `--skip-external` not set | `references/external-analyzer-prompt.md` |
 
 **SELF-CHECK**: Did you read the template files with the Read tool? If not, go back and read them now.
 
@@ -101,11 +101,11 @@ Use the Read tool to load ONLY the reference files for phases you will execute:
 
 ---
 
-### Phase 5: Aggregation & Deduplication
+### Phase 6: Aggregation & Deduplication
 
 **Read** `references/aggregation-strategy.md` for confidence scoring methodology.
 
-1. **Combine** all findings from Phases 1-4
+1. **Combine** all findings from Phases 2-5
 2. **Deduplicate** by grouping on `category + standard_name` — merge evidence and sources
 3. **Calculate final confidence** using multi-factor scoring from the reference
 4. **Detect conflicts** — flag contradictory standards (e.g., ESLint says semicolons, Prettier says no)
@@ -116,7 +116,7 @@ Display aggregation summary: total raw findings, unique standards, conflicts det
 
 ---
 
-### Phase 6: User Review & Approval
+### Phase 7: User Review & Approval
 
 Present findings grouped by confidence level, highest first.
 
@@ -132,7 +132,7 @@ If `--auto-apply` is set, automatically approve findings with confidence >= 90% 
 
 ---
 
-### Phase 7: Application
+### Phase 8: Application
 
 For each approved standard:
 
@@ -146,7 +146,7 @@ Display application summary: created count, updated count, total active.
 
 ---
 
-### Phase 8: Summary Report
+### Phase 9: Summary Report
 
 Display final results:
 - Sources analyzed (config files, code files sampled, docs parsed, PRs reviewed)

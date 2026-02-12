@@ -397,9 +397,9 @@ When the planner does not include a Gathering Strategy section, the orchestrator
 
 ## Integration with Research Orchestrator
 
-**Input from Phase 0, Step 1**: `planning/research-brief.md`
-**Output to Phase 0, Step 3**: `planning/research-plan.md`, `planning/sources.md`
+**Input from Phase 1, Step 1**: `planning/research-brief.md`
+**Output to Phase 1, Step 3**: `planning/research-plan.md`, `planning/sources.md`
 
-**State Update**: Report back to orchestrator (Phase 0, Step 2 complete)
+**State Update**: Report back to orchestrator (Phase 1, Step 2 complete)
 
 **Next Step**: Orchestrator reads gathering strategy and launches information-gatherer agents
