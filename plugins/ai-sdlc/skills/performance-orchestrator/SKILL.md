@@ -99,7 +99,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 **YOLO Mode**: Accept all recommended defaults for clarifications
 
-→ Continue
+→ **AUTO-CONTINUE** — Do NOT end turn, do NOT prompt user. Proceed immediately to Phase 2.
 
 ---
 
@@ -233,7 +233,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 **Output**: Implemented optimizations, `implementation/work-log.md`
 **State**: Update implementation progress
 
-→ Continue to Phase 7
+→ **AUTO-CONTINUE** — Do NOT end turn, do NOT prompt user. Proceed immediately to Phase 7.
 
 ---
 

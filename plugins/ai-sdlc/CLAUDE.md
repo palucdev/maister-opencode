@@ -575,7 +575,7 @@ Before considering an orchestrator complete, verify ALL items:
 ❌ **Missing context passing**: Subagent prompts without ACCUMULATED CONTEXT section (Pattern 7)
 ❌ **Missing context extraction**: Not extracting key findings to phase_summaries after each phase (Pattern 8)
 ❌ **File paths only**: Passing just file paths to subagents without state summaries and prior phase summaries
-❌ **Stopping at Continue transitions**: Outputting phase summaries or ending turn at `→ Continue` points (must proceed immediately)
+❌ **Stopping at AUTO-CONTINUE transitions**: Ending turn or prompting user at `→ **AUTO-CONTINUE**` points (brief summary is fine, but must proceed immediately — no prompt, no turn end)
 ❌ **Missing standards**: Not referencing INDEX.md in relevant phases
 ❌ **Incomplete verification**: Running tests without reality check and pragmatic review
 ❌ **No state management**: Not creating/updating orchestrator-state.yml

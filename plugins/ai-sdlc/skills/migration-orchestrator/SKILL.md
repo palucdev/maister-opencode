@@ -103,7 +103,7 @@ Use for:
 
 **YOLO Mode**: Accept all recommended defaults for clarifications
 
-→ Continue
+→ **AUTO-CONTINUE** — Do NOT end turn, do NOT prompt user. Proceed immediately to Phase 2.
 
 ---
 

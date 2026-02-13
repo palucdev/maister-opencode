@@ -29,15 +29,22 @@ Each phase ends with ONE transition instruction:
 | **Pause** | `→ Pause` | Check mode, then continue or prompt |
 | **Conditional** | `→ Conditional: if [condition] then [action] else [action]` | Evaluate condition first |
 
-### Continue Transitions
+### Continue Transitions (AUTO-CONTINUE)
 
 Use when the next phase handles user interaction or when phases are tightly coupled:
 
 ```markdown
-→ Continue to Phase 3 (evaluation handles conditional logic)
+→ **AUTO-CONTINUE** — Do NOT summarize, do NOT end turn, do NOT prompt user. Proceed immediately to next phase.
 ```
 
-The orchestrator proceeds immediately without stopping or prompting. Do not output a phase completion summary or end the turn. If the next phase handles user interaction, it will prompt the user itself.
+**Rules**:
+- You MAY output a brief phase summary (1-2 lines)
+- Do NOT end your turn
+- Do NOT use AskUserQuestion
+- Do NOT wait for user input
+- After any summary, proceed immediately to the next phase
+
+**Common mistake**: Outputting a summary and then stopping/ending the turn. The summary is fine — stopping is not.
 
 ### Pause Transitions
 
