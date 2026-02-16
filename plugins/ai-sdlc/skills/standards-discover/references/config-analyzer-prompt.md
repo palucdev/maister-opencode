@@ -27,11 +27,13 @@ For each config file found, extract rules/settings that indicate coding standard
 
 ## Categorization
 
-Assign each finding to one of:
+Discover existing categories from `.ai-sdlc/docs/standards/*/`. Baseline categories:
 - `global/` — Language-agnostic (indentation, line endings, general error handling)
 - `frontend/` — UI-specific (React rules, CSS conventions, component patterns)
 - `backend/` — Server-specific (API rules, database conventions)
 - `testing/` — Test-related (test frameworks, coverage requirements)
+
+Propose new categories if findings don't fit existing ones.
 
 ## Confidence Range
 

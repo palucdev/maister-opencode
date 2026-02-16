@@ -29,7 +29,7 @@ Look for explicit standard statements:
 
 ## Categorization
 
-Same categories: `global/`, `frontend/`, `backend/`, `testing/`
+Discover existing categories from `.ai-sdlc/docs/standards/*/`. Baseline categories: `global/`, `frontend/`, `backend/`, `testing/`. Propose new categories if patterns don't fit existing ones.
 
 ## Confidence Range
 

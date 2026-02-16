@@ -596,7 +596,9 @@ Skills are automatically invoked by Claude when appropriate. Details live in eac
 | `implementer` | Executes plans with **mandatory** standards reading (INDEX.md + implementation-plan.md Standards Compliance section + keyword-triggered) and **test step enforcement** (requires user approval to skip N.1 tests) | `skills/implementer/SKILL.md` |
 | `implementation-verifier` | Read-only QA orchestrator: delegates completeness checks, test execution, code review, and production readiness to specialized subagents; compiles results into verification report | `skills/implementation-verifier/SKILL.md` |
 | `standards-discover` | Parallel multi-source standards discovery (config, code, docs, PRs/CI) with confidence scoring | `skills/standards-discover/SKILL.md` |
-| `docs-manager` | Manages standards in `.ai-sdlc/docs/`, handles discovery and updates | `skills/docs-manager/skill.md` |
+| `docs-manager` | Internal engine for doc file operations, INDEX.md generation, CLAUDE.md integration. Not user-invocable — called by init-sdlc, standards-update, standards-discover | `skills/docs-manager/skill.md` |
+| `init-sdlc` | Initialize `.ai-sdlc/docs/` with project analysis, documentation generation, and baseline standards | `skills/init-sdlc/SKILL.md` |
+| `standards-update` | Update or create standards from conversation context or explicit input | `skills/standards-update/SKILL.md` |
 
 ### Orchestrator Framework
 
@@ -654,9 +656,11 @@ Commands invoke orchestrators and utilities. All orchestrators support `--yolo` 
 
 | Command | Usage | Purpose |
 |---------|-------|---------|
-| `/init-sdlc` | `/init-sdlc` | Initialize framework with smart defaults for docs/standards |
+| `/init-sdlc` | `/init-sdlc` | Initialize framework with project analysis and smart defaults for docs/standards |
 | `/ai-sdlc:standards:update` | `/ai-sdlc:standards:update [path]` | Update/create standards from conversation context |
-| `/ai-sdlc:standards-discover` | `/ai-sdlc:standards-discover [--scope=SCOPE]` | Discover standards from config files and code patterns (invokes `standards-discover` skill) |
+| `/ai-sdlc:standards-discover` | `/ai-sdlc:standards-discover [--scope=SCOPE]` | Discover standards from config files and code patterns |
+
+> **Note**: These are all skills (not commands). `/init-sdlc`, `/ai-sdlc:standards:update`, and `/ai-sdlc:standards-discover` invoke their respective skills which delegate file operations to the internal `docs-manager` skill.
 
 ### Workflow Commands
 

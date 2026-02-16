@@ -1,25 +1,18 @@
 ---
 name: docs-manager
-description: Manages project documentation and technical standards in .ai-sdlc/docs/. Use this skill to initialize docs, maintain INDEX.md, manage project documentation (vision, roadmap, tech-stack), and technical standards (coding conventions, best practices).
+description: Internal engine for managing project documentation and technical standards in .ai-sdlc/docs/. Handles file operations, INDEX.md generation, and CLAUDE.md integration. Invoked by init-sdlc, standards-update, and standards-discover skills.
+user-invocable: false
 ---
 
-# Documentation Manager
+# Documentation Manager (Internal Engine)
 
-This skill manages comprehensive project documentation and technical standards. It bundles baseline standards and templates as resources within the plugin.
+Internal skill that manages documentation file operations in `.ai-sdlc/docs/`. Not directly user-invocable — called by `init-sdlc`, `standards-update`, and `standards-discover` skills.
 
 ## Core Principles
 
-**PROJECT DOCUMENTATION IS SUPERIOR**: This skill operates under the principle that project-level documentation in `.ai-sdlc/docs/` is the source of truth. Plugin-bundled documentation serves as:
-- **Initial baseline** when setting up a new project
-- **Reference material** for teams creating their own documentation
-- **Optional fallback** if a project wants to reset to defaults
-
-The documentation manager helps teams:
-- Maintain current project documentation (vision, roadmap, tech-stack)
-- Keep technical standards up-to-date (coding conventions, best practices)
-- Ensure INDEX.md provides a clear map of all documentation
-- Integrate documentation references into CLAUDE.md for AI assistance
-- Use plugin documentation as a starting point, not an ongoing sync source
+- **Project documentation is source of truth** — plugin-bundled docs are baseline/reference only
+- **INDEX.md is the master map** — always kept up-to-date after changes
+- **CLAUDE.md integration is mandatory** — ensures AI reads documentation
 
 ## Documentation Structure
 
@@ -114,21 +107,13 @@ Use this when a project doesn't have `.ai-sdlc/docs/` or needs documentation for
    - Check if `CLAUDE.md` exists in the project root; if not, ask the user if they want to create it
    - Add the documentation reference section (see "Manage CLAUDE.md Integration" operation)
    - Ensure it emphasizes reading INDEX.md at the beginning of any task
-7. Inform the user about the documentation structure and encourage customization
-8. **IMPORTANT - Gather project information:**
-   - Ask the user key questions about their project:
-     - Project name and description
-     - Primary goals and vision
-     - Current tech stack
-     - Team size and structure
-   - Update the project documentation files (vision.md, tech-stack.md) with this information
-   - This makes the documentation immediately useful rather than just placeholder templates
+7. Inform the caller about the documentation structure created
 
 **Parameters:**
 - `standards_selection` (optional, array of strings): Standard categories to initialize
-  - Valid values: `['global', 'frontend', 'backend', 'testing']`
-  - If omitted or empty: Initialize all standards (backward compatible)
-  - If provided: Only initialize specified categories
+  - Array of category names (e.g., `['global', 'frontend', 'backend', 'testing']`). Baseline categories: global, frontend, backend, testing. Custom categories are also supported.
+  - If omitted or empty: Initialize all baseline standards (backward compatible)
+  - If provided: Only initialize specified categories (creates directories for custom ones)
 
 **Result:** The project now has baseline documentation in `.ai-sdlc/docs/`, a comprehensive INDEX.md, and CLAUDE.md integration that ensures AI assistance is documentation-aware. Only selected standard categories are initialized.
 
@@ -149,94 +134,11 @@ Use this to create or update the INDEX.md file that serves as the master documen
 2. For each documentation file found:
    - Read the file content to extract description
    - Determine the file's purpose and category
-   - **For technical standards**: The description MUST enumerate the specific practices/conventions documented in the file, not just a generic category description. Example: "Observable cleanup with takeUntilDestroyed, reactive form typed access patterns, smart vs presentational component separation" — not just "Standards for UI component structure."
-3. Generate or update INDEX.md with this structure:
-
-```markdown
-# Documentation Index
-
-**IMPORTANT**: Read this file at the beginning of any development task to understand available documentation and standards.
-
-## Quick Reference
-
-### Project Documentation
-Project-level documentation covering vision, goals, architecture, and technology choices.
-
-### Technical Standards
-Coding standards, conventions, and best practices organized by domain.
-
----
-
-## Project Documentation
-
-Located in `.ai-sdlc/docs/project/`
-
-### Vision (`project/vision.md`)
-[Brief description of what this file contains]
-
-### Roadmap (`project/roadmap.md`)
-[Brief description of what this file contains]
-
-### Tech Stack (`project/tech-stack.md`)
-[Brief description of what this file contains]
-
-### Architecture (`project/architecture.md`)
-[Brief description of what this file contains - if exists]
-
----
-
-## Technical Standards
-
-### Global Standards
-
-Located in `.ai-sdlc/docs/standards/global/`
-
-#### Error Handling (`standards/global/error-handling.md`)
-[Brief description]
-
-#### Validation (`standards/global/validation.md`)
-[Brief description]
-
-[... continue for all standards ...]
-
-### Frontend Standards
-
-Located in `.ai-sdlc/docs/standards/frontend/`
-
-[... list all frontend standards ...]
-
-### Backend Standards
-
-Located in `.ai-sdlc/docs/standards/backend/`
-
-[... list all backend standards ...]
-
-### Testing Standards
-
-Located in `.ai-sdlc/docs/standards/testing/`
-
-[... list all testing standards ...]
-
----
-
-## How to Use This Documentation
-
-1. **Start Here**: Always read this INDEX.md first to understand what documentation exists
-2. **Project Context**: Read relevant project documentation before starting work
-3. **Standards**: Reference appropriate standards when writing code
-4. **Keep Updated**: Update documentation when making significant changes
-5. **Customize**: Adapt all documentation to your project's specific needs
-
-## Updating Documentation
-
-- Project documentation should be updated when goals, tech stack, or architecture changes
-- Technical standards should be updated when team conventions evolve
-- Always update INDEX.md when adding, removing, or significantly changing documentation
-- Run the Documentation Manager skill to help maintain this index
-```
-
-4. Write the generated INDEX.md to `.ai-sdlc/docs/INDEX.md`
-5. Verify that CLAUDE.md references this index (see "Manage CLAUDE.md Integration" operation)
+   - **For technical standards**: The description MUST enumerate the specific practices/conventions documented in the file, not just a generic category description.
+3. Read `references/index-md-template.md` for the INDEX.md structure template
+4. Generate INDEX.md by populating the template with discovered files and descriptions
+5. Write the generated INDEX.md to `.ai-sdlc/docs/INDEX.md`
+6. Verify that CLAUDE.md references this index (see "Manage CLAUDE.md Integration" operation)
 
 **Result:** A comprehensive, up-to-date INDEX.md that provides a clear map of all project documentation.
 
@@ -249,7 +151,7 @@ Use this to add new documentation to the project, either from plugin baseline or
 **What to do:**
 1. Determine the type of documentation to add:
    - Project documentation (vision, roadmap, tech-stack, architecture, custom)
-   - Technical standard (global, frontend, backend, testing)
+   - Technical standard (any category under standards/)
 2. If adding from plugin baseline:
    - Check if the requested documentation exists in this skill's bundled `docs/` directory
    - Copy it to the appropriate location in `.ai-sdlc/docs/`
@@ -341,56 +243,9 @@ Use this to ensure the project's CLAUDE.md properly integrates with the document
 1. Check if `CLAUDE.md` exists in the project root
 2. If it doesn't exist, ask the user if they want to create it
 3. Look for a documentation reference section in CLAUDE.md
-4. If the section doesn't exist or is incomplete, create/update it with this template:
-
-```markdown
-## Project Documentation
-
-**CRITICAL**: Before starting any task, read @.ai-sdlc/docs/INDEX.md to understand:
-- Project vision, goals, and roadmap
-- Technology stack and architectural decisions
-- Coding standards and conventions
-- Best practices and patterns
-
-### Documentation Structure
-
-All project documentation is located in `.ai-sdlc/docs/`:
-
-- **@.ai-sdlc/docs/INDEX.md** - Master documentation map (READ THIS FIRST)
-- **project/** - Project vision, roadmap, tech stack, architecture
-- **standards/** - Technical standards organized by domain (global, frontend, backend, testing)
-
-### Using Documentation
-
-1. **Always start** by reading @.ai-sdlc/docs/INDEX.md
-2. **Load relevant documentation** based on the task:
-   - For project context: Read `.ai-sdlc/docs/project/vision.md`, `.ai-sdlc/docs/project/tech-stack.md`
-   - For architecture decisions: Read `.ai-sdlc/docs/project/architecture.md`
-   - For coding patterns: Read appropriate standards from `.ai-sdlc/docs/standards/`
-3. **Follow standards** when writing code - they represent team decisions and conventions
-4. **Keep documentation updated** - update docs when making significant changes
-5. **Ask if unclear** - if documentation conflicts or is unclear, ask the user for clarification
-
-### Documentation Priority
-
-When in doubt, this is the priority order:
-1. Project documentation in `.ai-sdlc/docs/` (highest priority)
-2. Code patterns and conventions visible in the codebase
-3. User's direct instructions
-4. General best practices (lowest priority)
-
-**The documentation in `.ai-sdlc/docs/` represents team decisions and should be followed unless the user explicitly overrides them.**
-
-## AI SDLC Workflows
-
-This project uses the ai-sdlc plugin for structured development. Available orchestrators:
-- `/ai-sdlc:development:new` - Development workflow for features, enhancements, and bug fixes
-- `/ai-sdlc:migration:new` - Technology/platform migrations (with rollback planning)
-
-All orchestrators read @.ai-sdlc/docs/INDEX.md continuously to apply project standards.
-Use interactive mode (default) or `--yolo` for continuous execution.
-```
-
+4. If the section doesn't exist or is incomplete:
+   - Read `references/claude-md-template.md` for the template
+   - Add the template section to CLAUDE.md
 5. Ensure the documentation section is placed prominently in CLAUDE.md (near the top)
 6. Verify that the INDEX.md path is correct and the file exists
 7. If `.ai-sdlc/docs/` doesn't exist, suggest running the initialization operation first
@@ -481,51 +336,8 @@ Claude: [Executes Manage INDEX.md - scans .ai-sdlc/docs/, regenerates comprehens
 
 ## Important Notes
 
-- **PROJECT DOCUMENTATION IS SUPERIOR**: This skill operates on the principle that project-level documentation in `.ai-sdlc/docs/` is the source of truth. Plugin-bundled documentation serves as baseline/reference only.
+- **Project documentation is source of truth** — plugin-bundled docs are baseline/reference only
+- **INDEX.md must stay current** — regenerate after any documentation change
+- **CLAUDE.md integration is mandatory** — ensures AI reads documentation at task start
+- **This skill is an internal engine** — called by init-sdlc, standards-update, and standards-discover. Not directly user-invocable.
 
-- **One-time baseline setup**: The "Initialize Documentation" operation is typically used once when setting up a project. After that, project documentation should be maintained by the team.
-
-- **Customization encouraged**: Teams should customize their documentation in `.ai-sdlc/docs/` to fit their specific needs, tech stack, and preferences.
-
-- **INDEX.md is critical**: INDEX.md serves as the master map. It should always be up-to-date and referenced in CLAUDE.md. This ensures AI assistance starts with proper context.
-
-- **CLAUDE.md integration is essential**: The documentation system only works effectively if CLAUDE.md instructs AI to read INDEX.md first. This integration is mandatory for the system to function.
-
-- **Documentation vs. Skills**:
-  - Documentation in `.ai-sdlc/docs/standards/` describes team conventions and standards
-  - Claude Code Skills in `.claude/skills/` provide AI with actionable guidance based on those standards
-  - These should be kept in sync - if standards change, corresponding skills should be updated
-
-- **Living documentation**: Documentation should be updated as the project evolves. Outdated documentation is worse than no documentation. Encourage regular reviews and updates.
-
-- **Project documentation first**: When starting any task, AI should read INDEX.md first, then load relevant project and standards documentation. This ensures consistency with team decisions.
-
----
-
-## Relationship with Standards Manager
-
-The Documentation Manager and Standards Manager work together:
-
-- **Documentation Manager** (this skill):
-  - Manages `.ai-sdlc/docs/` - documentation and standards as markdown files
-  - Focuses on human-readable documentation
-  - Maintains INDEX.md for documentation discovery
-  - Provides baseline standards as reference material
-
-- **Standards Manager**:
-  - Manages `.claude/skills/` - Claude Code Skills
-  - Focuses on AI-actionable guidance
-  - Converts standards into skill descriptions
-  - Ensures skills are discoverable by Claude Code
-
-**Workflow:**
-1. Initialize documentation → Baseline standards copied to `.ai-sdlc/docs/standards/`
-2. Initialize standards (Standards Manager) → Corresponding skills created in `.claude/skills/`
-3. Update standard in `.ai-sdlc/docs/` → Run improve-skills to sync the skill
-4. Both INDEX.md and CLAUDE.md should reference both systems
-
-This separation ensures:
-- Documentation is version-controlled and human-readable
-- Skills provide AI with contextual, actionable guidance
-- Teams can customize both independently
-- Both systems reference the same source of truth (project standards)

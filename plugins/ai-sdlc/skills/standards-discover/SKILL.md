@@ -21,7 +21,7 @@ Analyzes multiple project sources in parallel to discover coding standards, conv
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `--scope` | `full` | Discovery scope: `full`, `global`, `frontend`, `backend`, `testing`, `quick` |
+| `--scope` | `full` | Discovery scope: `full`, `quick`, or any category name (baseline: `global`, `frontend`, `backend`, `testing`; custom categories also supported) |
 | `--confidence` | `60` | Minimum confidence threshold (0-100) for displaying findings |
 | `--auto-apply` | `false` | Auto-apply standards with confidence >= 90% without asking |
 | `--skip-external` | `false` | Skip GitHub PR analysis and CI/CD sources |
@@ -37,6 +37,9 @@ Analyzes multiple project sources in parallel to discover coding standards, conv
 | `backend` | BE configs | BE files | Yes | Yes |
 | `testing` | Test configs | Test files | Yes | Yes |
 | `quick` | Yes | No | No | No |
+| `[custom]` | Relevant configs | Filtered files | Yes | Yes |
+
+Custom scope values are matched against existing `.ai-sdlc/docs/standards/*/` directories and filter analysis to relevant files.
 
 ---
 
