@@ -97,7 +97,7 @@ Store selection for Phase 5.
 
 **Invoke docs-manager skill** via Skill tool with context:
 
-> "Initialize documentation structure. Standards selection: [array from Phase 4]. Use project-analyzer report to inform structure. Only copy selected standard categories. Create placeholder sections in INDEX.md for skipped categories."
+> "Initialize documentation structure. Standards selection: [array from Phase 4]. Only copy selected standard categories. Do NOT copy project templates — only create the project/ directory. Project documentation will be generated in Phase 6 with real content from project analysis. Create placeholder sections in INDEX.md for skipped categories."
 
 Wait for docs-manager to complete.
 
