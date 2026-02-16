@@ -324,6 +324,7 @@ Target lengths for different documentation types:
 | Orchestrator sections (in CLAUDE.md) | 20-30 lines | Overview, key features, reference skill |
 | Reference files (in skills/) | <1,000 lines | Conceptual patterns, not implementations |
 | Agent files (in agents/) | 300-450 lines | Core mission, decision frameworks, workflow principles |
+| Individual standards (### sections in standard files) | 1-10 lines (excluding code snippets) | ### heading + description + optional code example. Multiple standards per topic file. |
 
 ### When Adding New Content
 
