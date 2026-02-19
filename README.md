@@ -1,8 +1,12 @@
+<div align="center">
+
 # Maister
 
-> Structured, standards-aware development workflows for Claude Code
+**Structured, standards-aware development workflows for Claude Code**
 
-Maister brings guided workflows to your Claude Code projects. Describe what you want to build, and the plugin handles the rest — from specification through implementation to verification — while enforcing your project's coding standards at every step.
+Describe what you want to build, and the plugin handles the rest — from specification through implementation to verification — while enforcing your project's coding standards at every step.
+
+</div>
 
 ## What You Get
 
@@ -14,36 +18,37 @@ Maister brings guided workflows to your Claude Code projects. Describe what you 
 
 ## Getting Started
 
-**1. Add the marketplace**
+### Prerequisites
 
-```
-/plugin marketplace add SkillPanel/Maister
-```
+- [Claude Code](https://claude.ai/code) CLI installed and configured
 
-**2. Install the plugin**
+### Installation
 
-```
+```bash
+/plugin marketplace add SkillPanel/maister
 /plugin install maister@maister-plugins
 ```
 
-**3. Initialize your project**
+### Setup
 
-```
+Initialize your project to auto-detect coding standards and generate project documentation:
+
+```bash
 /maister:init
 ```
 
-This scans your codebase and creates `.maister/` with auto-detected coding standards, project documentation, and task folders. It may take a few minutes on larger projects.
+This scans your codebase and creates `.maister/` with standards, docs, and task folders. May take a few minutes on larger projects.
 
-**4. Start working**
+### First Workflow
 
-```
-/maister:work "Add user profile page with avatar upload"
+```bash
+/maister:development-new Add user profile page with avatar upload
 ```
 
 Or just discuss your task with Claude and then run:
 
-```
-/maister:work
+```bash
+/maister:development-new
 ```
 
 The plugin picks up context from your conversation — no arguments needed.
@@ -77,16 +82,23 @@ You can always be explicit when you prefer — arguments and flags simply overri
 
 ## Supported Workflows
 
-| Type | Command | Use When |
-|------|---------|----------|
-| **Feature** | `/maister:development-new` | Adding new capabilities |
-| **Bug Fix** | `/maister:development-new` | Fixing defects with TDD Red→Green |
-| **Enhancement** | `/maister:development-new` | Improving existing features |
-| **Performance** | `/maister:performance-new` | Optimizing speed or resource usage |
-| **Migration** | `/maister:migration-new` | Changing technologies or patterns |
-| **Research** | `/maister:research-new` | Investigating questions or gathering requirements |
+| Command | Use When |
+|---------|----------|
+| `/maister:development-new` | Features, bug fixes, enhancements — auto-detects type from context |
+| `/maister:research-new` | Investigating questions or gathering requirements |
+| `/maister:performance-new` | Optimizing speed or resource usage |
+| `/maister:migration-new` | Changing technologies or patterns |
 
 Task type (feature/bug/enhancement) is auto-detected from context. Override with `--type=feature|bug|enhancement` if needed. Or use `/maister:work` as a single entry point that routes to the right workflow.
+
+### Quick Commands
+
+For smaller tasks that don't need a full workflow:
+
+| Command | Use When |
+|---------|----------|
+| `/maister:quick-plan` | You want a plan with standards awareness before coding |
+| `/maister:quick-dev` | You know what to do — just implement with standards applied |
 
 ## Standards-Aware Development
 
