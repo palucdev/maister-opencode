@@ -1,5 +1,5 @@
 ---
-name: standards-discover
+name: maister:standards-discover
 description: Discover coding standards from project configuration files, code patterns, documentation, and external sources (PRs, CI/CD)
 ---
 

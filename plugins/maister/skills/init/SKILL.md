@@ -1,5 +1,5 @@
 ---
-name: init
+name: maister:init
 description: Initialize AI SDLC framework with intelligent project analysis and documentation generation
 argument-hint: (no arguments)
 ---

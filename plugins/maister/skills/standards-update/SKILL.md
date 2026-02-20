@@ -1,5 +1,5 @@
 ---
-name: standards-update
+name: maister:standards-update
 description: Update or create project standards from conversation context or explicit description
 argument-hint: "[description of standard/convention]"
 ---
