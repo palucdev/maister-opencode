@@ -245,17 +245,26 @@ Generate alternatives purely from research evidence, without user preference bia
 
 **Part B — Present & Converge (Direct)**:
 
+> **ANTI-PATTERN**: Do NOT present all decision areas in a single summary table and ask one combined "do you agree?" question. Each area MUST get its own detailed presentation and its own AskUserQuestion call.
+>
+> **ANTI-PATTERN**: Do NOT show full alternatives/pros/cons for the first area and then shortcut remaining areas to just a recommendation line + question. EVERY area gets the SAME level of detail — all alternatives with descriptions, pros, and cons. No exceptions.
+
 1. Read `outputs/solution-exploration.md`
-2. Present full executive summary grouped by decision area:
-   - For each decision area: name, alternatives with 1-sentence descriptions, key trade-offs
-   - Overall recommendation and rationale
-   - Any deferred ideas
-3. For each decision area sequentially, use AskUserQuestion:
-   - Show the area's alternatives as options + "Need more info" option
-   - If user picks → record choice, move to next area
-   - If "Need more info" → present detailed pros/cons for that alternative, then re-ask
-4. After all areas resolved, summarize chosen approaches
-5. Update state with chosen approaches per decision area
+2. For each decision area sequentially, output ALL of the following (steps a-d) BEFORE calling AskUserQuestion:
+   a. **Area header**: area name and why this decision matters (1-2 sentences of context)
+   b. **Alternatives detail**: For EVERY alternative in this area, show:
+      - Name and description (2-3 sentences)
+      - Pros (bullet list)
+      - Cons (bullet list)
+   c. **Recommendation**: which alternative is recommended and why (1 sentence)
+   d. **AskUserQuestion**: this area's alternatives as options (mark recommended with "(Recommended)") + "Need more info" option
+   e. If user picks → record choice, move to next area
+   f. If "Need more info" → present the detailed trade-off analysis for the requested alternative, then re-ask
+
+> **SELF-CHECK before each AskUserQuestion**: Did you output the alternatives with pros/cons for THIS area? If you only showed a recommendation line without listing all alternatives and their pros/cons, STOP and output the full detail before asking.
+
+3. After all areas resolved, present a brief summary of the chosen combination
+4. Update state with chosen approaches per decision area
 
 **YOLO mode**: Subagent runs autonomously. Auto-accept recommended approach for all decision areas. Skip Part B convergence.
 
