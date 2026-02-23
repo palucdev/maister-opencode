@@ -29,6 +29,8 @@ Describe what you want to build, and the plugin handles the rest - from specific
 /plugin install maister@maister-plugins
 ```
 
+After installing, restart Claude Code (`/exit` and relaunch) to ensure the plugin is fully loaded.
+
 ### Initial project setup
 
 Initialize your project to auto-detect coding standards and generate project documentation:
@@ -115,6 +117,8 @@ Standards live in `.maister/docs/standards/` and are indexed in `.maister/docs/I
 
 - **Interactive** (default): pauses between phases for your review and input
 - **YOLO** (`--yolo` flag): runs continuously through all phases, asking only critical questions
+
+**Important**: Run workflows with **auto-accept edits** enabled. Do not use Claude Code's plan mode -- the orchestrators handle their own planning phases internally, and plan mode will interfere with execution.
 
 ## Learn More
 
