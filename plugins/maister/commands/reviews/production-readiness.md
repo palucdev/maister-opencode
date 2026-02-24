@@ -53,7 +53,7 @@ The production-readiness-checker subagent will:
 
 **Example 1**: Check specific task for production
 ```
-User: /maister:reviews-production-readiness .maister/tasks/new-features/2025-10-24-payment-api/
+User: /maister:reviews-production-readiness .maister/tasks/development/2025-10-24-payment-api/
 ```
 
 **Example 2**: Check feature for staging

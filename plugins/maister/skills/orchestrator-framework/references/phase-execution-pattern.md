@@ -69,7 +69,7 @@ Use at phase boundaries where user review is valuable:
 Use when different paths are needed based on state:
 
 ```markdown
-→ Conditional: if task_type=bug AND tdd_enabled then continue to Phase 3, else skip to Phase 4
+→ Conditional: if task_characteristics.has_reproducible_defect then continue to Phase 3, else skip to Phase 4
 
 **Evaluation**:
 1. Read `orchestrator-state.yml` for condition values

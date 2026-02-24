@@ -52,7 +52,7 @@ The code-reviewer subagent will:
 
 **Example 1**: Review specific task
 ```
-User: /maister:reviews-code .maister/tasks/new-features/2025-10-24-auth/
+User: /maister:reviews-code .maister/tasks/development/2025-10-24-auth/
 ```
 
 **Example 2**: Review with specific scope

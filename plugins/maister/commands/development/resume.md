@@ -27,7 +27,7 @@ Resume an interrupted development workflow from where it left off.
 /maister:development-resume
 
 # Resume specific task
-/maister:development-resume .maister/tasks/enhancements/2025-01-15-add-sorting/
+/maister:development-resume .maister/tasks/development/2025-01-15-add-sorting/
 
 # Resume from specific phase
 /maister:development-resume --from=implement

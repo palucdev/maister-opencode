@@ -71,12 +71,12 @@ The spec-auditor agent will:
 
 **Example 1**: Pre-implementation spec audit
 ```
-User: /maister:reviews-spec-audit .maister/tasks/new-features/2025-11-17-user-auth/implementation/spec.md
+User: /maister:reviews-spec-audit .maister/tasks/development/2025-11-17-user-auth/implementation/spec.md
 ```
 
 **Example 2**: Post-implementation audit
 ```
-User: /maister:reviews-spec-audit .maister/tasks/new-features/2025-11-17-user-auth/ --post-implementation
+User: /maister:reviews-spec-audit .maister/tasks/development/2025-11-17-user-auth/ --post-implementation
 ```
 
 **Example 3**: Audit with clarification focus

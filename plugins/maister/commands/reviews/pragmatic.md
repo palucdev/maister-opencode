@@ -58,7 +58,7 @@ The code-quality-pragmatist agent will:
 
 **Example 1**: Review specific feature
 ```
-User: /maister:reviews-pragmatic .maister/tasks/new-features/2025-11-17-user-management/
+User: /maister:reviews-pragmatic .maister/tasks/development/2025-11-17-user-management/
 ```
 
 **Example 2**: Review source directory

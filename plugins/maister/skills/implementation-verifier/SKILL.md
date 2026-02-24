@@ -104,7 +104,7 @@ If prerequisites missing, report and stop.
 Task tool call (if NOT skip_test_suite):
 - subagent_type: `maister:test-suite-runner`
 - description: `Run full test suite`
-- prompt: Include task_path, task_type, test_command (if known). The subagent runs ALL tests, analyzes results, and writes results to `verification/test-suite-results.md`.
+- prompt: Include task_path, task_description, test_command (if known). The subagent runs ALL tests, analyzes results, and writes results to `verification/test-suite-results.md`.
 
 **Wait for test-suite-runner to complete** before proceeding to Step 3b. Mark the test suite task as `completed` with results.
 
@@ -117,7 +117,7 @@ Task tool call (if NOT skip_test_suite):
 Task tool call (always):
 - subagent_type: `maister:implementation-completeness-checker`
 - description: `Check implementation completeness`
-- prompt: Include task_path, task_type. The subagent checks plan completion, standards compliance, and documentation completeness.
+- prompt: Include task_path. The subagent checks plan completion, standards compliance, and documentation completeness.
 
 Task tool call (if code_review_enabled):
 - subagent_type: `maister:code-reviewer`
