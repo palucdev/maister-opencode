@@ -172,13 +172,17 @@ Pre-deployment verification across 7 dimensions: configuration, monitoring, erro
 
 ## Standards
 
-### `/maister:init`
+### `/maister:init [--standards-from=PATH]`
 
 Initialize the Maister framework. Scans your codebase with a project-analyzer subagent, presents findings for confirmation, then generates:
 
 - `.maister/docs/` with INDEX.md, project docs (vision, roadmap, tech-stack), and coding standards
 - `.maister/tasks/` directory structure
 - CLAUDE.md integration
+
+| Flag | Description |
+|------|-------------|
+| `--standards-from=PATH` | Copy standards from another project's `.maister/docs/standards/` instead of built-in defaults. Useful when starting a new project that should follow the same conventions as an existing one. |
 
 If `.maister/` already exists, offers to backup, update, or cancel.
 

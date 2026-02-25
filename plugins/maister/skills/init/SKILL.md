@@ -1,7 +1,7 @@
 ---
 name: maister:init
 description: Initialize AI SDLC framework with intelligent project analysis and documentation generation
-argument-hint: (no arguments)
+argument-hint: [--standards-from=PATH]
 ---
 
 # Initialize AI SDLC Framework
@@ -28,6 +28,11 @@ Initialize `.maister/docs/` with intelligent project analysis and meaningful doc
 ---
 
 ## PHASE 1: Pre-flight Checks
+
+**If `--standards-from=PATH` is provided:**
+1. Resolve the path (absolute or relative to current working directory)
+2. Check if `PATH/.maister/docs/standards/` exists. If not, inform the user and stop — the specified project doesn't have maister standards initialized.
+3. Store the resolved standards source path for use in Phases 4 and 5.
 
 Check if `.maister/` directory already exists.
 
@@ -78,17 +83,21 @@ Store selections for Phase 6.
 
 Before presenting options, explain to the user:
 - **What standards are**: Coding standards are documented conventions and best practices (naming, error handling, testing patterns, etc.) that guide consistent development across the project.
-- **Built-in starting point**: The plugin includes generic built-in standards for common categories. These serve as a starting point and can be fully customized or extended later as the project evolves.
+- **Starting point**: If `--standards-from` was provided, standards come from the referenced project. Otherwise, the plugin includes generic built-in standards. Either way, they serve as a starting point and can be fully customized or extended later.
 
-Calculate smart defaults from baseline categories based on analysis:
-- **Global**: Always recommended
-- **Frontend**: If frontend framework detected or projectArchitectureType includes frontend
-- **Backend**: If backend framework detected or projectArchitectureType includes backend
-- **Testing**: Always recommended
+**Determine available categories:**
+- **If `--standards-from` was provided**: Scan `PATH/.maister/docs/standards/*/` to discover all available categories from the external project (may include custom categories beyond the baseline global/frontend/backend/testing).
+- **Otherwise**: Use built-in baseline categories (global, frontend, backend, testing).
+
+Calculate smart defaults based on analysis:
+- **Global**: Always recommended (if available)
+- **Frontend**: If frontend framework detected or projectArchitectureType includes frontend (if available)
+- **Backend**: If backend framework detected or projectArchitectureType includes backend (if available)
+- **Testing**: Always recommended (if available)
 
 Also scan `.maister/docs/standards/*/` for any existing custom categories to include.
 
-Show smart defaults summary, then use AskUserQuestion:
+Show smart defaults summary (noting the source: external project or built-in), then use AskUserQuestion:
 - "Use smart defaults" → proceed with calculated defaults
 - "Customize selection" → show multi-select with all discovered categories + "Add custom category" option
 
@@ -102,7 +111,7 @@ Store selection for Phase 5.
 
 **Invoke docs-manager skill** via Skill tool with context:
 
-> "Initialize documentation structure. Standards selection: [array from Phase 4]. Only copy selected standard categories. Do NOT copy project templates — only create the project/ directory. Project documentation will be generated in Phase 6 with real content from project analysis. Create placeholder sections in INDEX.md for skipped categories."
+> "Initialize documentation structure. Standards selection: [array from Phase 4]. [If --standards-from was provided: Standards source path: [resolved path]/.maister/docs/standards/. Copy standards from this external path instead of built-in defaults.] Only copy selected standard categories. Do NOT copy project templates — only create the project/ directory. Project documentation will be generated in Phase 6 with real content from project analysis. Create placeholder sections in INDEX.md for skipped categories."
 
 Wait for docs-manager to complete.
 

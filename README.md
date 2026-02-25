@@ -41,6 +41,12 @@ Initialize your project to auto-detect coding standards and generate project doc
 
 This scans your codebase and creates `.maister/` with standards, docs, and task folders. May take a few minutes on larger projects.
 
+If you have another project already using Maister, you can reuse its standards as a starting point:
+
+```bash
+/maister:init --standards-from=/path/to/other-project
+```
+
 ### First Workflow
 
 ```bash

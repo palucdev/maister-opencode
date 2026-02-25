@@ -650,7 +650,7 @@ Commands invoke orchestrators and utilities. All orchestrators support `--yolo` 
 
 | Command | Usage | Purpose |
 |---------|-------|---------|
-| `/maister-init` | `/maister-init` | Initialize framework with project analysis and smart defaults for docs/standards |
+| `/maister-init` | `/maister-init [--standards-from=PATH]` | Initialize framework with project analysis and smart defaults for docs/standards. Optionally copy standards from another project's `.maister/docs/standards/` instead of built-in defaults. |
 | `/maister-standards-update` | `/maister-standards-update [path]` | Update/create standards from conversation context |
 | `/maister-standards-discover` | `/maister-standards-discover [--scope=SCOPE]` | Discover standards from config files and code patterns |
 
