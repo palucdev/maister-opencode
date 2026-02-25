@@ -65,3 +65,4 @@ findings:
 - Only report patterns with >= 60% consistency
 - Return empty findings list if no clear patterns emerge
 - Focus on actionable, consistent patterns — not one-off occurrences
+- Do NOT write any files to the project directory. Write your YAML results to: `[output_file]` (the orchestrator replaces this placeholder with an actual temp file path when invoking you).

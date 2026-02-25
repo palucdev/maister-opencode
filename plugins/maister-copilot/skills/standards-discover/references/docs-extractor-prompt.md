@@ -61,3 +61,4 @@ findings:
 - Return empty findings list if no documentation files found
 - Prioritize actionable, clear standards over vague guidance
 - Do not duplicate what config files already enforce — focus on human-written guidelines
+- Do NOT write any files to the project directory. Write your YAML results to: `[output_file]` (the orchestrator replaces this placeholder with an actual temp file path when invoking you).

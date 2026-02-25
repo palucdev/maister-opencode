@@ -63,3 +63,4 @@ findings:
 - Include exact file paths in evidence
 - Return empty findings list if no config files found
 - Focus on actionable, verifiable standards
+- Do NOT write any files to the project directory. Write your YAML results to: `[output_file]` (the orchestrator replaces this placeholder with an actual temp file path when invoking you).

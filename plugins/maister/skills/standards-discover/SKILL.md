@@ -79,6 +79,8 @@ Custom scope values are matched against existing `.maister/docs/standards/*/` di
 
 **Step 1: Determine which phases to run** based on scope and flags.
 
+**Step 1.5: Create temp output directory** — Run `mktemp -d` via Bash to create a unique temp directory for this invocation. Store the path (e.g., `/tmp/abc123`). Each subagent will write its results to a dedicated file in this directory: `{tmpdir}/config.yml`, `{tmpdir}/code.yml`, `{tmpdir}/docs.yml`, `{tmpdir}/external.yml`.
+
 **Step 2: Read prompt templates**
 
 > **STOP — Do NOT skip this step. Do NOT write prompts from memory.**
@@ -94,11 +96,14 @@ Use the Read tool to load ONLY the reference files for phases you will execute:
 
 **SELF-CHECK**: Did you read the template files with the Read tool? If not, go back and read them now.
 
-**Step 3: Adapt templates** — Replace `[scope]`, `[confidence]`, and other placeholders with actual values.
+**Step 3: Adapt templates** — Replace `[scope]`, `[confidence]`, and other placeholders with actual values. Replace the `[output_file]` placeholder in each template with the actual temp file path for that phase (e.g., `{tmpdir}/config.yml`).
 
-**Step 4: Launch subagents** — Use the Task tool with `subagent_type: general-purpose` and `model: haiku` for each phase. Launch ALL applicable agents in a SINGLE message.
+**Step 4: Launch subagents in parallel** — Use the Task tool with `subagent_type: general-purpose` for each phase.
 
-**Step 5: Wait** for ALL subagents to complete, then collect findings from each.
+> ❌ **WRONG** — launching one agent per message, waiting for result, then launching the next.
+> ✅ **CORRECT** — launching ALL applicable agents (2–4 Task calls) in a SINGLE message.
+
+**Step 5: Wait** for ALL subagents to complete, then read each temp file using the Read tool to collect findings.
 
 **Step 6: Display progress** — Show count of findings per phase.
 

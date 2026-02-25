@@ -72,3 +72,4 @@ findings:
 - For CI/CD: extract specific thresholds and rules, not just "runs tests"
 - Return empty findings list if no external sources available
 - Be specific: "80% coverage required" not "has coverage check"
+- Do NOT write any files to the project directory. Write your YAML results to: `[output_file]` (the orchestrator replaces this placeholder with an actual temp file path when invoking you).
