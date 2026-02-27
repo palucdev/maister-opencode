@@ -6,12 +6,16 @@ Orchestrators must delegate work to skills and subagents instead of executing in
 
 **Always use Skill/Task tools to delegate. Never execute delegated work inline.**
 
-When a phase requires a skill or subagent:
-1. Use the `Skill` tool for skills **that are the last step in a phase/workflow** (Skill tool does not return control to the caller)
-2. Use the `Task` tool for subagents **and for mid-workflow skill operations** (Task tool returns control after completion)
+When a phase requires delegation:
+1. Use the **Skill tool** for **skills** — loads SKILL.md instructions into the main agent's context; the main agent executes the skill's instructions and continues with the orchestrator workflow afterward
+2. Use the **Task tool** for **subagents/agents** — spawns an isolated subprocess that returns results when complete
 3. Wait for completion before continuing
 
-**Important**: The Skill tool replaces the active execution context. Use it only when nothing needs to execute after it in the same workflow. For internal service skills that are invoked mid-workflow (like `docs-manager`), create a companion agent that preloads the skill via the `skills` frontmatter field and invoke it via Task tool instead.
+**Skills and agents are NOT interchangeable.** Skills always use Skill tool; agents always use Task tool. Never invoke a skill via Task tool (`subagent_type`) — it will fail with "Agent type not found."
+
+**Why skills MUST use Skill tool**: Skills like `codebase-analyzer`, `implementer`, and `implementation-verifier` spawn their own subagents (Explore agents, reporters, planners). Subagents cannot spawn other subagents — so these skills must run in the main agent context via Skill tool.
+
+**Companion agent pattern** (e.g., `docs-operator`): Only works for skills that do NOT spawn subagents (like `docs-manager` which only does file operations). A companion agent preloads the skill via the `skills` frontmatter field and is invoked via Task tool. This pattern fails for any skill that needs to spawn subagents.
 
 ---
 
