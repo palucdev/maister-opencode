@@ -24,7 +24,6 @@ Starts the unified development workflow (14 adaptive phases) or resumes an exist
 | Flag | Description |
 |------|-------------|
 | `--type=bug\|enhancement\|feature` | Specify task type (auto-detected if omitted) |
-| `--yolo` | Continuous execution, skip phase-by-phase pauses |
 | `--e2e` | Include E2E testing phase |
 | `--user-docs` | Generate user documentation phase |
 | `--code-review` | Include code review phase |
@@ -45,7 +44,6 @@ Starts performance optimization with static bottleneck analysis (9 phases) or re
 
 | Flag | Description |
 |------|-------------|
-| `--yolo` | Continuous execution |
 | `--from=PHASE` | Start from or resume at a specific phase |
 | `--reset-attempts` | Reset failed attempt counters (resume) |
 
@@ -64,7 +62,6 @@ Starts migration workflow (8 phases) with mandatory rollback planning and risk a
 
 | Flag | Description |
 |------|-------------|
-| `--yolo` | Continuous execution |
 | `--type=code\|data\|architecture\|general` | Migration type (affects risk focus) |
 | `--from=PHASE` | Start from or resume at a specific phase |
 | `--reset-attempts` | Reset failed attempt counters (resume) |
@@ -82,7 +79,6 @@ Starts research workflow (8 phases) with multi-source gathering, synthesis, and 
 
 | Flag | Description |
 |------|-------------|
-| `--yolo` | Continuous execution |
 | `--type=technical\|requirements\|literature\|mixed` | Research methodology type |
 | `--brainstorm` | Force brainstorming + design phases |
 | `--no-brainstorm` | Skip brainstorming phases |

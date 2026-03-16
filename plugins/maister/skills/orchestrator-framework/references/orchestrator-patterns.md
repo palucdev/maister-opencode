@@ -55,13 +55,11 @@ For all analysis, planning, implementation, and verification phases: **ALWAYS DE
 
 ---
 
-## 2. Interactive Mode
+## 2. Phase Gate Behavior
 
-**In interactive mode, `→ Pause` means STOP and USE AskUserQuestion.** This is NOT optional. You MUST invoke the `AskUserQuestion` tool and WAIT for user response. Proceeding without it is a protocol violation.
+**`→ Pause` means STOP and USE AskUserQuestion.** This is NOT optional. You MUST invoke the `AskUserQuestion` tool and WAIT for user response. Proceeding without it is a protocol violation.
 
-**Interactive Mode** (default): Pauses at `→ Pause` transitions for user review. Prompts for optional phases. Best for complex tasks and careful review.
-
-**YOLO Mode** (`--yolo`): Runs all phases continuously. Auto-decides on optional phases. Only stops for critical failures.
+All orchestrators pause at `→ Pause` transitions for user review and prompt for optional phases.
 
 ### AUTO-CONTINUE Rules
 
@@ -78,7 +76,7 @@ When a phase ends with `→ **AUTO-CONTINUE**`:
 
 | Anti-Pattern | Why It's Wrong |
 |--------------|----------------|
-| Proceeding without AskUserQuestion in interactive mode | User loses control, can't review or stop |
+| Proceeding without AskUserQuestion at phase gates | User loses control, can't review or stop |
 | Saying "I'll pause here" without tool call | Words are not pauses. Tool invocation required. |
 | Auto-accepting subagent decisions without asking | User must consent to scope/approach decisions |
 
@@ -123,23 +121,22 @@ This enables context passing to downstream phases and supports resume.
 
 ### Decision Enforcement
 
-When a subagent returns `decisions_needed` items, the orchestrator MUST present them to the user (interactive) or log them (YOLO). Decisions are never silently skipped.
+When a subagent returns `decisions_needed` items, the orchestrator MUST present them to the user via AskUserQuestion. Decisions are never silently skipped.
 
 **Anti-Patterns** (NEVER do this):
 
 | Anti-Pattern | Why It's Wrong |
 |---|---|
 | "I'll accept the recommended defaults" | User loses control over critical scope decisions |
-| Logging decisions without asking (interactive mode) | Documentation is not consent |
+| Logging decisions without asking | Documentation is not consent |
 | "The recommendations are clear, no need to ask" | Clarity is not consent. User may disagree. |
 | Skipping decisions because task seems simple | Simple tasks can have non-obvious scope implications |
 
 **Decision Gate Pattern**:
 
 1. **Parse**: Extract all critical and important decisions from subagent output
-2. **Present** (Interactive): Use `AskUserQuestion` for each critical decision; batch important decisions into multi-select
-3. **Accept** (YOLO): Auto-accept defaults, log each decision to `analysis/scope-clarifications.md`
-4. **SELF-CHECK**: "Did I present/log ALL decisions from `decisions_needed`? If not, STOP."
+2. **Present**: Use `AskUserQuestion` for each critical decision; batch important decisions into multi-select
+3. **SELF-CHECK**: "Did I present ALL decisions from `decisions_needed`? If not, STOP."
 
 ---
 
@@ -151,9 +148,6 @@ All orchestrators use `orchestrator-state.yml` at `.maister/tasks/[type]/YYYY-MM
 
 ```yaml
 orchestrator:
-  # Execution mode
-  mode: interactive | yolo
-
   # Phase tracking
   started_phase: [phase-name]
   completed_phases: []
@@ -243,12 +237,12 @@ verification_context:
 
 ### Initialization Steps
 
-1. **Parse arguments**: Extract description, mode (`--yolo`), type, entry point (`--from`), optional flags
+1. **Parse arguments**: Extract description, type, entry point (`--from`), optional flags
 2. **Determine starting phase**: New task starts Phase 1; resume reads state for first incomplete phase
 3. **Create task directory**: Standard structure with analysis/, implementation/, verification/, documentation/ *(skip on resume)*
 4. **Create state file**: `orchestrator-state.yml` *(skip on resume)*
 5. **Create task items**: `TaskCreate` for all phases, then `TaskUpdate addBlockedBy` for dependencies. On resume, also restore completed phase statuses.
-6. **Output summary**: Show task info, mode, phases, starting message
+6. **Output summary**: Show task info, phases, starting message
 
 ### Task Name Generation
 

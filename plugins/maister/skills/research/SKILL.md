@@ -22,14 +22,13 @@ Systematic research workflow from question definition to evidence-based document
 
 1. **Create Task Items**: Use `TaskCreate` for all phases (see Phase Configuration), then set dependencies with `TaskUpdate addBlockedBy`
 2. **Create Task Directory**: `.maister/tasks/research/YYYY-MM-DD-task-name/`
-3. **Initialize State**: Create `orchestrator-state.yml` with mode and research context
+3. **Initialize State**: Create `orchestrator-state.yml` with research context
 
 **Output**:
 ```
 🚀 Research Orchestrator Started
 
 Task: [research question]
-Mode: [Interactive/YOLO]
 Directory: [task-path]
 
 Starting Phase 1: Initialize research...
@@ -173,8 +172,7 @@ Update state: `research_context.confidence_level`
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Research foundation complete (initialized, planned, gathered, synthesized). Continue to brainstorming evaluation?"
-**YOLO**: "→ Continuing to Phase 2..."
+AskUserQuestion - "Research foundation complete (initialized, planned, gathered, synthesized). Continue to brainstorming evaluation?"
 
 ---
 
@@ -204,8 +202,6 @@ Update state: `research_context.confidence_level`
    - "[Design recommendation]. Would you like to generate a high-level design?"
    - Options: "Yes, generate design" / "No, skip design"
 6. Update state: set `brainstorming_enabled` and `design_enabled`
-
-**YOLO**: Auto-enable both brainstorming and design.
 
 → If brainstorming enabled: continue to Phase 3
 → If brainstorming disabled AND design enabled: skip to Phase 4
@@ -261,12 +257,9 @@ Generate alternatives purely from research evidence, without user preference bia
 3. After all areas resolved, present a brief summary of the chosen combination
 4. Update state with chosen approaches per decision area
 
-**YOLO mode**: Subagent runs autonomously. Auto-accept recommended approach for all decision areas. Skip Part B convergence.
-
 → Pause
 
-**Interactive**: AskUserQuestion - "Brainstorming complete. Continue to high-level design?"
-**YOLO**: "→ Continuing to Phase 4..."
+AskUserQuestion - "Brainstorming complete. Continue to high-level design?"
 
 ---
 
@@ -309,12 +302,9 @@ Generate alternatives purely from research evidence, without user preference bia
    - Key decision highlights (1 line each)
    - Integration points with existing system (if applicable)
 
-**YOLO mode**: Skip Part A design preferences question. Subagent generates design, present summary checkpoint only.
-
 → Pause
 
-**Interactive**: AskUserQuestion - "Design complete. Continue to output generation?"
-**YOLO**: "→ Continuing to Phase 5..."
+AskUserQuestion - "Design complete. Continue to output generation?"
 
 ---
 
@@ -332,23 +322,19 @@ Generate alternatives purely from research evidence, without user preference bia
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Research outputs ready. Continue to verification?"
-**YOLO**: "→ Continuing to Phase 6..."
+AskUserQuestion - "Research outputs ready. Continue to verification?"
 
 ---
 
 ### Phase 6: Verification (Optional)
 
 **Purpose**: Verify research quality and completeness
-**Execute**: Direct - user review (interactive) or automated checks (YOLO)
+**Execute**: Direct - present report, request user review
 **Output**: `verification/verification-report.md`
 **State**: Update verification status
 
 **Skip if**: Technical research with high confidence, simple exploratory
 **Enable if**: Mixed research, medium/low confidence, critical gaps identified
-
-**Interactive Mode**: Present report, request user review
-**YOLO Mode**: Automated checks (citations present, evidence provided, question addressed)
 
 → Conditional: if integration_enabled continue to Phase 7, else skip to Phase 8 check
 
@@ -379,9 +365,8 @@ Generate alternatives purely from research evidence, without user preference bia
 **Output**: Development workflow started (if chosen)
 **State**: Track spawn decision
 
-**Skip if**: No design artifacts generated OR mode = yolo
+**Skip if**: No design artifacts generated
 
-**Interactive Mode**:
 ```
 AskUserQuestion:
   Question: "Research produced design artifacts. Start development workflow?"
@@ -517,7 +502,7 @@ research_outputs:
 ## Command Integration
 
 Invoked via:
-- `/maister:research [question] [--yolo] [--type=TYPE] [--brainstorm] [--no-brainstorm] [--design] [--no-design]` (new)
+- `/maister:research [question] [--type=TYPE] [--brainstorm] [--no-brainstorm] [--design] [--no-design]` (new)
 - `/maister:research [task-path] [--from=PHASE]` (resume)
 
 **Brainstorming flags**:

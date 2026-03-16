@@ -65,4 +65,4 @@ This plugin follows specific documentation guidelines (see @plugins/maister/CLAU
 1. Navigate to a test project
 2. Run `/maister:init` to initialize the framework
 3. Test commands like `/maister:development "test feature"`
-4. Use `--yolo` flag for continuous execution during testing
+4. Test workflows with different task types and complexity levels

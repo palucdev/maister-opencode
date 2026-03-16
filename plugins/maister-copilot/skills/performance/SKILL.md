@@ -23,14 +23,13 @@ Static-analysis-first performance optimization workflow. Identifies bottlenecks 
 1. **Create Task Items**: Use `TaskCreate` for all phases (see Phase Configuration), then set dependencies with `TaskUpdate addBlockedBy`
 2. **Create Task Directory**: `.maister/tasks/performance/YYYY-MM-DD-task-name/`
 3. **Create Subdirectories**: `analysis/`, `analysis/user-profiling-data/`, `implementation/`, `verification/`
-4. **Initialize State**: Create `orchestrator-state.yml` with mode and performance context
+4. **Initialize State**: Create `orchestrator-state.yml` with performance context
 
 **Output**:
 ```
 Performance Orchestrator Started
 
 Task: [performance issue description]
-Mode: [Interactive/YOLO]
 Directory: [task-path]
 
 Starting Phase 1: Codebase Analysis...
@@ -93,8 +92,6 @@ Use for:
 
 Pass `task_type="enhancement"` and the performance-focused description. The codebase-analyzer adaptively selects parallel Explore agents based on task complexity. For performance tasks, the description should guide agents toward: database query patterns, hot code paths, I/O operations, caching layers, connection management, schema/migration files.
 
-**YOLO Mode**: Accept all recommended defaults for clarifications
-
 → **AUTO-CONTINUE** — Do NOT end turn, do NOT prompt user. Proceed immediately to Phase 2.
 
 ---
@@ -127,8 +124,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: ask_user - "Performance analysis complete. [N] bottlenecks identified ([P0 count] P0, [P1 count] P1). Continue to specification?"
-**YOLO**: "→ Continuing to Phase 3..."
+ask_user - "Performance analysis complete. [N] bottlenecks identified ([P0 count] P0, [P1 count] P1). Continue to specification?"
 
 ---
 
@@ -146,8 +142,6 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
    - Any constraints? (backward compatibility, memory limits, no new dependencies)
    - Performance targets? (specific response time goals, if known)
 3. Save gathered requirements to `analysis/requirements.md` with: performance issue description, bottleneck analysis summary, optimization priorities, constraints, targets
-
-**YOLO Mode**: Address all P0+P1 bottlenecks, no special constraints
 
 **Part B — Specification Creation (subagent)**:
 
@@ -167,8 +161,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: ask_user - "Specification created. Continue to Phase 4?"
-**YOLO**: "→ Continuing to Phase 4..."
+ask_user - "Specification created. Continue to Phase 4?"
 
 ---
 
@@ -182,13 +175,11 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 **Run if**: >5 optimizations planned, spec >50 lines, or user requests
 **Skip if**: Simple optimization (1-3 changes)
 
-**Interactive**: ask_user to decide - "Run specification audit?"
-**YOLO**: Auto-decide based on optimization count
+ask_user to decide - "Run specification audit?"
 
 → Pause
 
-**Interactive**: ask_user - "Audit complete. Continue to Phase 5?"
-**YOLO**: "→ Continuing to Phase 5..."
+ask_user - "Audit complete. Continue to Phase 5?"
 
 ---
 
@@ -214,8 +205,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: ask_user - "Implementation plan created. Continue to Phase 6?"
-**YOLO**: "→ Continuing to Phase 6..."
+ask_user - "Implementation plan created. Continue to Phase 6?"
 
 ---
 
@@ -244,8 +234,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: ask_user - "Implementation complete. Continue to Phase 7?"
-**YOLO**: "→ Continuing to Phase 7..."
+ask_user - "Implementation complete. Continue to Phase 7?"
 
 ---
 
@@ -259,15 +248,13 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 **Always enabled**: Reality check, pragmatic review
 **Auto-set**: `skip_test_suite: true` (full test suite already passed during implementation phase; cleared before re-verification if fixes are applied)
 
-**Interactive**: ask_user with sequential single-select - "Which additional verification checks?"
+ask_user with sequential single-select - "Which additional verification checks?"
   - "Code review" (recommended)
   - "Production readiness check"
-**YOLO**: Auto-enable code review, skip production readiness
 
 → Pause
 
-**Interactive**: ask_user - "Options selected. Continue to Phase 8?"
-**YOLO**: "→ Continuing to Phase 8..."
+ask_user - "Options selected. Continue to Phase 8?"
 
 ---
 
@@ -284,8 +271,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: ask_user - "Verification complete. Continue to finalization?"
-**YOLO**: "→ Continuing to Phase 9..."
+ask_user - "Verification complete. Continue to finalization?"
 
 ---
 
@@ -383,7 +369,7 @@ options:
 ## Command Integration
 
 Invoked via:
-- `/maister-performance [description] [--yolo]` (new)
+- `/maister-performance [description]` (new)
 - `/maister-performance [task-path] [--from=PHASE]` (resume)
 
 Task directory: `.maister/tasks/performance/YYYY-MM-DD-task-name/`

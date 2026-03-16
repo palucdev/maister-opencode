@@ -14,7 +14,7 @@ Reduce duplication across orchestrators by documenting common patterns once:
 
 - **Phase Blocks**: Simple phase structure with inline transitions (`→ Continue`, `→ Pause`, `→ Conditional`)
 - **State Management**: `orchestrator-state.yml` schema and operations
-- **Interactive Mode**: Mode-aware pause behavior and user prompts
+- **Phase Gates**: Pause behavior and user prompts
 - **Initialization**: Task directory setup, metadata, task creation patterns
 
 ## How Orchestrators Use This
@@ -42,7 +42,7 @@ All orchestrators follow these principles:
 
 1. **State-Driven Execution**: `orchestrator-state.yml` is source of truth
 2. **Resume Capability**: Any orchestrator can be paused and resumed
-3. **Interactive by Default**: Pause after each phase for user review (unless YOLO)
+3. **Interactive**: Pause after each phase for user review
 4. **User-Confirmed Rollback**: Never auto-rollback without user approval
 5. **Task Progress**: Always track progress with TaskCreate/TaskUpdate tools
 6. **Standards Discovery**: Reference `.maister/docs/INDEX.md` throughout

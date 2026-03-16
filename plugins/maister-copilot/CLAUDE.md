@@ -467,7 +467,7 @@ All orchestrators share patterns documented in a single reference file:
 | `orchestrator-patterns.md` | Delegation rules, interactive mode, state schema, context passing, initialization, resume, issue resolution |
 | `orchestrator-creation-checklist.md` | Authoring checklist for new orchestrators (not loaded at runtime) |
 
-Each orchestrator reads `orchestrator-patterns.md` at initialization and implements domain-specific phases. Key principles: state-driven execution, resume capability, interactive-by-default, user-confirmed rollback, context passing between phases via `phase_summaries`, delegation enforcement (Skill tool for skills, Task tool for agents).
+Each orchestrator reads `orchestrator-patterns.md` at initialization and implements domain-specific phases. Key principles: state-driven execution, resume capability, interactive phase gates, user-confirmed rollback, context passing between phases via `phase_summaries`, delegation enforcement (Skill tool for skills, Task tool for agents).
 
 ### Orchestrator Skills
 
@@ -482,7 +482,7 @@ Orchestrators manage complete workflows with state management, auto-recovery, an
 
 ## Available Commands
 
-Commands invoke orchestrators and utilities. All orchestrators support `--yolo` (continuous) and `--from=phase` (resume point).
+Commands invoke orchestrators and utilities. All orchestrators support `--from=phase` (resume point).
 
 ### Setup & Standards
 
@@ -500,10 +500,10 @@ Each workflow skill handles both new tasks and resuming existing ones. Pass a ta
 
 | Command | Usage | Task Directory |
 |---------|-------|----------------|
-| `/maister-development` | `[desc] [--yolo] [--e2e] [--user-docs] [--research=PATH]` (new) / `[task-path] [--from=PHASE] [--reset-attempts]` (resume) | `.maister/tasks/development/` |
-| `/maister-performance` | `[desc] [--yolo]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/performance/` |
-| `/maister-migration` | `[desc] [--yolo] [--type=TYPE]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/migrations/` |
-| `/maister-research` | `[question] [--yolo] [--type=TYPE] [--brainstorm] [--no-brainstorm] [--design] [--no-design]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/research/` |
+| `/maister-development` | `[desc] [--e2e] [--user-docs] [--research=PATH]` (new) / `[task-path] [--from=PHASE] [--reset-attempts]` (resume) | `.maister/tasks/development/` |
+| `/maister-performance` | `[desc]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/performance/` |
+| `/maister-migration` | `[desc] [--type=TYPE]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/migrations/` |
+| `/maister-research` | `[question] [--type=TYPE] [--brainstorm] [--no-brainstorm] [--design] [--no-design]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/research/` |
 
 **Research-Based Development**: Start development informed by a completed research workflow:
 ```bash
@@ -643,7 +643,7 @@ The plugin includes hooks that fire at specific Claude Code lifecycle events.
 
 This hook fires after context compaction and injects a reminder into Claude's context to check the `orchestrator-state.yml` file for the active workflow.
 
-**Purpose**: Prevents interactive mode from being bypassed when Claude receives "continue without asking" instructions after compaction. The compacted context retains information about which task was being worked on, but may lose the explicit `mode: interactive` setting.
+**Purpose**: Reminds Claude to check `orchestrator-state.yml` for completed phases and use ask_user at phase gates after compaction, regardless of any "continue without asking" instructions in the compacted context.
 
 **See**: `hooks/hooks.json` for hook configuration (auto-discovered by Claude Code).
 

@@ -47,5 +47,4 @@ This project uses the maister plugin for structured development. Available orche
 - `/maister:migration` - Technology/platform migrations (with rollback planning)
 
 All orchestrators read @.maister/docs/INDEX.md continuously to apply project standards.
-Use interactive mode (default) or `--yolo` for continuous execution.
 ```

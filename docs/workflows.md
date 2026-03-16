@@ -1,6 +1,6 @@
 # Workflow Details
 
-Maister provides six workflow types, each with phases tailored to its needs. All workflows support **interactive mode** (pause between phases for review) and **YOLO mode** (`--yolo` for continuous execution).
+Maister provides six workflow types, each with phases tailored to its needs. All workflows pause between phases for your review and input.
 
 ## Development Workflow
 
@@ -14,7 +14,7 @@ The unified development workflow handles features, enhancements, and bug fixes t
 
 When run without arguments, the plugin extracts the task description from your conversation and auto-detects the type (feature, bug, or enhancement). Use `--type=` only when you want to override the auto-detection.
 
-**Flags**: `--type=bug|enhancement|feature`, `--yolo`, `--e2e`, `--user-docs`, `--code-review`, `--research=PATH`, `--from=PHASE`
+**Flags**: `--type=bug|enhancement|feature`, `--e2e`, `--user-docs`, `--code-review`, `--research=PATH`, `--from=PHASE`
 
 ### Phases
 
@@ -61,7 +61,7 @@ Static code analysis to detect bottlenecks, followed by standard spec/plan/imple
 
 ```
 /maister:performance
-/maister:performance "Optimize dashboard loading time" --yolo
+/maister:performance "Optimize dashboard loading time"
 ```
 
 ### Phases

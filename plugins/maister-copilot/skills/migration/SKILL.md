@@ -1,6 +1,6 @@
 ---
 name: migration
-description: Orchestrates the complete migration workflow from current state analysis through implementation to compatibility verification. Handles technology migrations, platform changes, and architecture pattern transitions with adaptive risk assessment, incremental execution, and rollback planning. Supports interactive mode (pause between phases) and YOLO mode (continuous execution). Use when migrating technologies, platforms, or architecture patterns.
+description: Orchestrates the complete migration workflow from current state analysis through implementation to compatibility verification. Handles technology migrations, platform changes, and architecture pattern transitions with adaptive risk assessment, incremental execution, and rollback planning. Use when migrating technologies, platforms, or architecture patterns.
 user-invocable: true
 ---
 
@@ -22,14 +22,13 @@ Systematic migration workflow from current state analysis to verified migration 
 
 1. **Create Task Items**: Use `TaskCreate` for all phases (see Phase Configuration), then set dependencies with `TaskUpdate addBlockedBy`
 2. **Create Task Directory**: `.maister/tasks/migrations/YYYY-MM-DD-task-name/`
-3. **Initialize State**: Create `orchestrator-state.yml` with mode and migration context
+3. **Initialize State**: Create `orchestrator-state.yml` with migration context
 
 **Output**:
 ```
 🚀 Migration Orchestrator Started
 
 Task: [migration description]
-Mode: [Interactive/YOLO]
 Directory: [task-path]
 
 Starting Phase 1: Analyze current state...
@@ -97,8 +96,6 @@ Use for:
 **Output**: `analysis/current-state-analysis.md`, `analysis/clarifications.md`
 **State**: Update task_context with current system info, `task_context.clarifications_resolved`
 
-**YOLO Mode**: Accept all recommended defaults for clarifications
-
 → **AUTO-CONTINUE** — Do NOT end turn, do NOT prompt user. Proceed immediately to Phase 2.
 
 ---
@@ -119,8 +116,7 @@ Use for:
 
 → Pause
 
-**Interactive**: ask_user - "Gap analysis complete. Continue to migration strategy?"
-**YOLO**: "→ Continuing to Phase 3..."
+ask_user - "Gap analysis complete. Continue to migration strategy?"
 
 ---
 
@@ -147,12 +143,9 @@ Use for:
 **Output**: `analysis/requirements.md`, `implementation/spec.md`, `analysis/rollback-plan.md`, optionally `analysis/dual-run-plan.md`
 **State**: Update `rollback_plan_created`, `dual_run_configured`
 
-**YOLO Mode**: Accept recommended defaults for all migration questions
-
 → Pause
 
-**Interactive**: ask_user - "Migration specification complete. Continue to implementation planning?"
-**YOLO**: "→ Continuing to Phase 4..."
+ask_user - "Migration specification complete. Continue to implementation planning?"
 
 ---
 
@@ -167,8 +160,7 @@ Use for:
 
 → Pause
 
-**Interactive**: ask_user - "Implementation plan ready. Continue to execute migration?"
-**YOLO**: "→ Continuing to Phase 5..."
+ask_user - "Implementation plan ready. Continue to execute migration?"
 
 ---
 
@@ -197,8 +189,7 @@ Use for:
 
 → Pause
 
-**Interactive**: ask_user - "Migration execution complete. Continue to verification?"
-**YOLO**: "→ Continuing to Phase 6..."
+ask_user - "Migration execution complete. Continue to verification?"
 
 ---
 
@@ -222,8 +213,7 @@ Use for:
 
 → Pause
 
-**Interactive**: ask_user - "Verification complete. [verdict summary]. Continue to Phase [7 or 8]?"
-**YOLO**: "→ Continuing to Phase [7 or 8]..."
+ask_user - "Verification complete. [verdict summary]. Continue to Phase [7 or 8]?"
 
 ---
 
@@ -251,8 +241,7 @@ Use for:
 
 → Pause
 
-**Interactive**: ask_user - "Issues resolved. Continue to documentation?"
-**YOLO**: "→ Continuing to Phase 8..."
+ask_user - "Issues resolved. Continue to documentation?"
 
 ---
 
@@ -357,7 +346,7 @@ options:
 ## Command Integration
 
 Invoked via:
-- `/maister-migration [description] [--yolo] [--type=TYPE]` (new)
+- `/maister-migration [description] [--type=TYPE]` (new)
 - `/maister-migration [task-path] [--from=PHASE]` (resume)
 
 Task directory: `.maister/tasks/migrations/YYYY-MM-DD-task-name/`

@@ -1,6 +1,6 @@
 ---
 name: development
-description: Unified orchestrator for all development tasks. Phases adapt based on detected task characteristics rather than predetermined types. Supports interactive mode (pause between phases) and YOLO mode (continuous execution). Use for any development work that modifies code.
+description: Unified orchestrator for all development tasks. Phases adapt based on detected task characteristics rather than predetermined types. Use for any development work that modifies code.
 user-invocable: true
 ---
 
@@ -34,14 +34,13 @@ Unified workflow for all development tasks — bug fixes, enhancements, and new 
 
 1. **Create Task Items**: Use `TaskCreate` for all phases (see Phase Configuration), then set dependencies with `TaskUpdate addBlockedBy`
 2. **Create Task Directory**: `.maister/tasks/development/YYYY-MM-DD-task-name/`
-3. **Initialize State**: Create `orchestrator-state.yml` with mode, task info, and research reference
+3. **Initialize State**: Create `orchestrator-state.yml` with task info and research reference
 
 **Output**:
 ```
 🚀 Development Orchestrator Started
 
 Task: [description]
-Mode: [Interactive/YOLO]
 Directory: [task-path]
 
 Starting Phase 1: Codebase Analysis...
@@ -91,8 +90,6 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 **Output**: `analysis/codebase-analysis.md`, `analysis/clarifications.md`
 **State**: Update `task_context.risk_level`, `phase_summaries.codebase_analysis`, `task_context.clarifications_resolved`
 
-**YOLO Mode**: Accept all recommended defaults for clarifications
-
 → **AUTO-CONTINUE** — Do NOT end turn, do NOT prompt user. Proceed immediately to Phase 2.
 
 ---
@@ -112,11 +109,10 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 **⛔ DECISION GATE** (mandatory — do NOT skip):
 - Parse `decisions_needed` from gap-analyzer output
 - If `decisions_needed.critical` OR `decisions_needed.important` is non-empty:
-  - **Interactive**: MUST use `ask_user` — one question per critical decision, batch important decisions into a single sequential single-select questions (one per option)
-  - **YOLO**: Accept recommended defaults, but LOG each decision (id, issue, chosen option, rationale) to `analysis/scope-clarifications.md`
+  - MUST use `ask_user` — one question per critical decision, batch important decisions into a single sequential single-select questions (one per option)
 - If both are empty: Note "No scope decisions needed" in state
 
-**SELF-CHECK** before continuing: "Did the gap-analyzer return `decisions_needed` items? If yes, did I invoke `ask_user` (interactive) or log decisions (YOLO)? If I skipped this, STOP and go back."
+**SELF-CHECK** before continuing: "Did the gap-analyzer return `decisions_needed` items? If yes, did I invoke `ask_user`? If I skipped this, STOP and go back."
 
 3. Save scope clarifications to `analysis/scope-clarifications.md`
 4. **Set optional phase defaults** based on detected characteristics:
@@ -131,9 +127,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause (when decisions exist), otherwise Conditional
 
-**Interactive** (decisions exist): ask_user - "Scope decisions resolved. Continue?"
-**Interactive** (no decisions): ask_user - "Gap analysis complete, no decisions needed. Continue?"
-**YOLO**: "→ Continuing..."
+ask_user - "Scope decisions resolved. Continue?" (or "Gap analysis complete, no decisions needed. Continue?")
 
 → Conditional: check `task_characteristics.has_reproducible_defect` → Phase 3, else check `task_characteristics.ui_heavy` → Phase 4, else skip to Phase 5
 
@@ -152,8 +146,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: ask_user - "TDD red gate complete. Continue to Phase 4?"
-**YOLO**: "→ Continuing to Phase 4..."
+ask_user - "TDD red gate complete. Continue to Phase 4?"
 
 ---
 
@@ -170,8 +163,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: ask_user - "UI mockups complete. Continue to Phase 5?"
-**YOLO**: "→ Continuing to Phase 5..."
+ask_user - "UI mockups complete. Continue to Phase 5?"
 
 ---
 
@@ -221,12 +213,9 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 **Output**: `analysis/technical-clarifications.md` (conditional), `analysis/requirements.md`, `implementation/spec.md`
 **State**: Update `task_context.tech_clarified`, `task_context.architecture_decision`, `phase_summaries.specification`
 
-**YOLO Mode**: Accept recommended defaults for all questions (including architecture), then invoke subagent
-
 → Pause
 
-**Interactive**: ask_user - "Specification created. Continue to Phase 6?"
-**YOLO**: "→ Continuing to Phase 6..."
+ask_user - "Specification created. Continue to Phase 6?"
 
 ---
 
@@ -239,13 +228,11 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 **Recommended**: Always. Present spec audit as the recommended default. User can skip if they choose.
 
-**Interactive**: ask_user - "Run specification audit? (Recommended)" with "Yes, run audit (Recommended)" as first option
-**YOLO**: Always run
+ask_user - "Run specification audit? (Recommended)" with "Yes, run audit (Recommended)" as first option
 
 → Pause
 
-**Interactive**: ask_user - "Audit complete. Continue to Phase 7?"
-**YOLO**: "→ Continuing to Phase 7..."
+ask_user - "Audit complete. Continue to Phase 7?"
 
 ---
 
@@ -270,8 +257,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: ask_user - "Plan created. Continue to Phase 8?"
-**YOLO**: "→ Continuing to Phase 8..."
+ask_user - "Plan created. Continue to Phase 8?"
 
 ---
 
@@ -298,8 +284,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: ask_user - "Implementation complete. Continue to Phase [9 or 10]?"
-**YOLO**: "→ Continuing to Phase [9 or 10]..."
+ask_user - "Implementation complete. Continue to Phase [9 or 10]?"
 
 ---
 
@@ -316,8 +301,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: ask_user - "TDD gate passed. Continue to Phase 10?"
-**YOLO**: "→ Continuing to Phase 10..."
+ask_user - "TDD gate passed. Continue to Phase 10?"
 
 ---
 
@@ -347,7 +331,7 @@ Verification Plan:
     [✓/—] User documentation — [reason]
 ```
 
-**Step 2** (interactive mode — 3 questions):
+**Step 2** (3 questions):
 
 **Q1** (always): ask_user (sequential single-select) — "Which standard verifications to run?"
 Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality check (Recommended)", "Production readiness (Recommended)". All pre-selected.
@@ -356,13 +340,7 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 
 **Q3** (SKIP if `options.user_docs_enabled: false` and no `--user-docs` flag): ask_user — "Generate user documentation?" Options: "Yes (Recommended)", "No, skip".
 
-**YOLO mode** — no questions, use auto-decided defaults:
-- Tier 2: all enabled (unless command flags override)
-- E2E: enabled if `options.e2e_enabled: true` (set by Phase 2 based on `ui_heavy`)
-- User docs: enabled if `options.user_docs_enabled: true` (set by Phase 2 based on `ui_heavy` or `creates_new_entities`)
-- Output: "→ Verification: completeness ✓, tests (skip) ✓, code review ✓, pragmatic ✓, reality ✓, production ✓, E2E [✓/✗], user docs [✓/✗]. Continuing to Phase 11..."
-
-→ Pause (interactive only; YOLO auto-continues)
+→ Pause
 
 ---
 
@@ -395,8 +373,6 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 - Max 3 iterations reached → ask_user: "Proceed with known issues?" / "Stop workflow"
 - **MUST NOT proceed with unresolved critical issues unless user explicitly approves**
 
-**YOLO mode**: Auto-fix all `fixable: true` issues, log `fixable: false` warnings, but STILL pause on `fixable: false` critical issues (critical issues need user awareness even in YOLO).
-
 **⚠️ POST-VERIFICATION CONTINUATION** — After issue resolution completes:
 1. Read `orchestrator-state.yml` to confirm you are the orchestrator
 2. Update state: add Phase 11 to `completed_phases`
@@ -404,8 +380,7 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 
 → Pause
 
-**Interactive**: ask_user - "Verification: [N] critical, [N] warnings [resolved/remaining]. Continue to Phase 12?"
-**YOLO**: "→ Verification: [summary]. Continuing to Phase 12..."
+ask_user - "Verification: [N] critical, [N] warnings [resolved/remaining]. Continue to Phase 12?"
 
 ---
 
@@ -421,8 +396,7 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 
 → Pause
 
-**Interactive**: ask_user - "E2E complete. Continue to Phase 13?"
-**YOLO**: "→ Continuing to Phase 13..."
+ask_user - "E2E complete. Continue to Phase 13?"
 
 ---
 
@@ -438,8 +412,7 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 
 → Pause
 
-**Interactive**: ask_user - "Documentation complete. Continue to Phase 14?"
-**YOLO**: "→ Continuing to Phase 14..."
+ask_user - "Documentation complete. Continue to Phase 14?"
 
 ---
 
@@ -553,7 +526,6 @@ orchestrator:
 
 | Flag | Effect |
 |------|--------|
-| `--yolo` | Continuous execution (TDD gates still enforced) |
 | `--from=PHASE` | Start from specific phase |
 | `--research=PATH` | Link to completed research task |
 | `--audit` / `--no-audit` | Force/skip specification audit |
@@ -610,7 +582,7 @@ When research context is detected, read these files from the research folder:
 ## Command Integration
 
 Invoked via:
-- `/maister-development [description] [--yolo] [--e2e] [--user-docs] [--research=PATH]` (new)
+- `/maister-development [description] [--e2e] [--user-docs] [--research=PATH]` (new)
 - `/maister-development [task-path] [--from=PHASE] [--reset-attempts]` (resume)
 
 ---
@@ -619,4 +591,3 @@ Invoked via:
 
 **Phase 3 (Red Gate)**: Test MUST FAIL before implementation (activated when gap-analyzer detects reproducible defect)
 **Phase 9 (Green Gate)**: Test MUST PASS after implementation (activated when Phase 3 was executed)
-**YOLO Mode**: TDD gates still enforced (cannot be bypassed)

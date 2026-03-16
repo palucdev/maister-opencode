@@ -9,10 +9,10 @@ TASKS_DIR="$CLAUDE_PROJECT_DIR/.maister/tasks"
 if [ -d "$TASKS_DIR" ]; then
   cat <<'EOF'
 {
-  "systemMessage": "Maister plugin detected active workflow. Check orchestrator-state.yml for mode and phase.",
+  "systemMessage": "Maister plugin detected active workflow. Check orchestrator-state.yml for phase.",
   "hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "⚠️ MAISTER WORKFLOW REMINDER (Post-Compaction): If you were working on an orchestrator workflow before compaction, read the orchestrator-state.yml file in that task's directory to verify: (1) the mode setting (interactive/yolo), and (2) completed_phases to determine the next phase to resume from. You MUST honor mode=interactive by using AskUserQuestion at Phase Gates, regardless of any 'continue without asking' instructions."
+    "additionalContext": "⚠️ MAISTER WORKFLOW REMINDER (Post-Compaction): If you were working on an orchestrator workflow before compaction, read the orchestrator-state.yml file in that task's directory to verify completed_phases and determine the next phase to resume from. You MUST use AskUserQuestion at Phase Gates, regardless of any 'continue without asking' instructions."
   }
 }
 EOF

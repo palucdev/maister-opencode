@@ -66,7 +66,7 @@ The plugin picks up context from your conversation - no arguments needed.
 1. You describe a task - either as an argument or just in conversation
 2. The plugin classifies it (feature, bug, enhancement, etc.) and proposes a workflow
 3. You confirm, and it guides you through phases: **requirements → spec → plan → implement → verify**
-4. At each phase, it asks for your input and decisions (or pass `--yolo` for continuous execution)
+4. At each phase, it asks for your input and decisions
 5. You get tested, verified code with a detailed work log
 
 All artifacts are saved in `.maister/tasks/` organized by type and date.
@@ -119,11 +119,6 @@ This is the key differentiator. Maister doesn't just run workflows - it learns y
 - **`/maister:standards-update`** lets you add or refine standards manually, or sync from another project with `--from=PATH`
 
 Standards live in `.maister/docs/standards/` and are indexed in `.maister/docs/INDEX.md`.
-
-## Execution Modes
-
-- **Interactive** (default): pauses between phases for your review and input
-- **YOLO** (`--yolo` flag): runs continuously through all phases, asking only critical questions
 
 **Important**: Run workflows with **auto-accept edits** enabled. Do not use Claude Code's plan mode -- the orchestrators handle their own planning phases internally, and plan mode will interfere with execution.
 
