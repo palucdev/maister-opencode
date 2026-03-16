@@ -17,7 +17,7 @@ You are performing comprehensive production readiness analysis covering configur
 
 1. **Path to analyze**:
    - If provided: Use the specified path
-   - If not provided: Use AskUserQuestion to ask what to check
+   - If not provided: Use ask_user to ask what to check
 
 2. **Target environment**:
    - If `--target=prod`: Full production checks (recommended)
@@ -33,7 +33,7 @@ Use Task tool:
   subagent_type: "maister-production-readiness-checker"
   description: "Production readiness check"
   prompt: |
-    Verify production readiness at: [path from user or from AskUserQuestion]
+    Verify production readiness at: [path from user or from ask_user]
     Target: [production|staging]
     Report path: [path]/production-readiness-report.md
 ```

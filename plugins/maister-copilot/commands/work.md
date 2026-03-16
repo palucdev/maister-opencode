@@ -101,7 +101,7 @@ Auto-classifies tasks and routes to the appropriate workflow orchestrator. Suppo
    - `completed_phases`: derive active phase as first phase not in this list
    - `failed_phases`: array of failed attempts
 
-4. Present status to user with AskUserQuestion:
+4. Present status to user with ask_user:
 
 **For In-Progress Tasks:**
 ```
@@ -200,7 +200,7 @@ If task-classifier returns error:
 Display:
 "Unable to automatically classify this task. Please select manually:"
 
-Use AskUserQuestion with options:
+Use ask_user with options:
 1. Development - Fix bugs, improve features, or add new capabilities
 2. Performance - Optimize speed/efficiency
 3. Migration - Move to new tech/pattern

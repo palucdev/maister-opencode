@@ -34,7 +34,7 @@ When a phase requires delegation:
 
 These do NOT require delegation:
 
-1. **Clarifying questions phases** — AskUserQuestion is direct
+1. **Clarifying questions phases** — ask_user is direct
 2. **State updates** — Reading/writing orchestrator-state.yml
 3. **Phase announcements** — Outputting status messages
 4. **Simple decisions** — Enabling/disabling optional phases
@@ -57,7 +57,7 @@ For all analysis, planning, implementation, and verification phases: **ALWAYS DE
 
 ## 2. Interactive Mode
 
-**In interactive mode, `→ Pause` means STOP and USE AskUserQuestion.** This is NOT optional. You MUST invoke the `AskUserQuestion` tool and WAIT for user response. Proceeding without it is a protocol violation.
+**In interactive mode, `→ Pause` means STOP and USE ask_user.** This is NOT optional. You MUST invoke the `ask_user` tool and WAIT for user response. Proceeding without it is a protocol violation.
 
 **Interactive Mode** (default): Pauses at `→ Pause` transitions for user review. Prompts for optional phases. Best for complex tasks and careful review.
 
@@ -68,7 +68,7 @@ For all analysis, planning, implementation, and verification phases: **ALWAYS DE
 When a phase ends with `→ **AUTO-CONTINUE**`:
 - You MAY output a brief phase summary (1-2 lines)
 - Do NOT end your turn
-- Do NOT use AskUserQuestion
+- Do NOT use ask_user
 - Do NOT wait for user input
 - After any summary, proceed immediately to the next phase
 
@@ -78,7 +78,7 @@ When a phase ends with `→ **AUTO-CONTINUE**`:
 
 | Anti-Pattern | Why It's Wrong |
 |--------------|----------------|
-| Proceeding without AskUserQuestion in interactive mode | User loses control, can't review or stop |
+| Proceeding without ask_user in interactive mode | User loses control, can't review or stop |
 | Saying "I'll pause here" without tool call | Words are not pauses. Tool invocation required. |
 | Auto-accepting subagent decisions without asking | User must consent to scope/approach decisions |
 
@@ -137,7 +137,7 @@ When a subagent returns `decisions_needed` items, the orchestrator MUST present 
 **Decision Gate Pattern**:
 
 1. **Parse**: Extract all critical and important decisions from subagent output
-2. **Present** (Interactive): Use `AskUserQuestion` for each critical decision; batch important decisions into sequential single-select
+2. **Present** (Interactive): Use `ask_user` for each critical decision; batch important decisions into sequential single-select
 3. **Accept** (YOLO): Auto-accept defaults, log each decision to `analysis/scope-clarifications.md`
 4. **SELF-CHECK**: "Did I present/log ALL decisions from `decisions_needed`? If not, STOP."
 
@@ -283,7 +283,7 @@ Task system IDs are ephemeral to a session. On resume:
 | Implementation | spec.md + implementation-plan.md |
 | Verification | Implementation complete |
 
-If prerequisites missing, use AskUserQuestion: "Start from Phase 1", "Specify different phase", or "Exit".
+If prerequisites missing, use ask_user: "Start from Phase 1", "Specify different phase", or "Exit".
 
 ---
 
@@ -294,7 +294,7 @@ If prerequisites missing, use AskUserQuestion: "Start from Phase 1", "Specify di
 ### Fix-Then-Reverify Loop
 
 1. Read verification results (structured issues)
-2. For each issue: trivial/auto-fixable → fix silently, log action; non-trivial → AskUserQuestion
+2. For each issue: trivial/auto-fixable → fix silently, log action; non-trivial → ask_user
 3. If fixes applied → set `skip_test_suite: false` (code changed) → re-run verification
 4. Loop until: passes OR user proceeds with known issues OR max iterations (3)
 

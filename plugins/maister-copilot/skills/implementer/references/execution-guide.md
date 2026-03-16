@@ -175,7 +175,7 @@ Before executing step N.2 or higher in any task group:
 ### User Prompt for Test Skip
 
 ```
-Use AskUserQuestion tool:
+Use ask_user tool:
   Question: "Test step [N.1] has not been completed. How would you like to proceed?"
   Header: "Test Step"
   Options:

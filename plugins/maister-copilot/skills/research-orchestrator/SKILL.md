@@ -173,7 +173,7 @@ Update state: `research_context.confidence_level`
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Research foundation complete (initialized, planned, gathered, synthesized). Continue to brainstorming evaluation?"
+**Interactive**: ask_user - "Research foundation complete (initialized, planned, gathered, synthesized). Continue to brainstorming evaluation?"
 **YOLO**: "→ Continuing to Phase 2..."
 
 ---
@@ -197,10 +197,10 @@ Update state: `research_context.confidence_level`
    - Whether research suggests architectural decisions (yes → valuable)
    - Research type (requirements/mixed → likely valuable; technical → depends)
    - Whether design artifacts would feed into development workflow
-4. If `brainstorming_enabled` not already set by flag, AskUserQuestion:
+4. If `brainstorming_enabled` not already set by flag, ask_user:
    - "[Brainstorming recommendation]. Would you like to explore solution alternatives?"
    - Options: "Yes, explore alternatives" / "No, skip brainstorming"
-5. If `design_enabled` not already set by flag, AskUserQuestion:
+5. If `design_enabled` not already set by flag, ask_user:
    - "[Design recommendation]. Would you like to generate a high-level design?"
    - Options: "Yes, generate design" / "No, skip design"
 6. Update state: set `brainstorming_enabled` and `design_enabled`
@@ -240,23 +240,23 @@ Generate alternatives purely from research evidence, without user preference bia
 
 **Part B — Present & Converge (Direct)**:
 
-> **ANTI-PATTERN**: Do NOT present all decision areas in a single summary table and ask one combined "do you agree?" question. Each area MUST get its own detailed presentation and its own AskUserQuestion call.
+> **ANTI-PATTERN**: Do NOT present all decision areas in a single summary table and ask one combined "do you agree?" question. Each area MUST get its own detailed presentation and its own ask_user call.
 >
 > **ANTI-PATTERN**: Do NOT show full alternatives/pros/cons for the first area and then shortcut remaining areas to just a recommendation line + question. EVERY area gets the SAME level of detail — all alternatives with descriptions, pros, and cons. No exceptions.
 
 1. Read `outputs/solution-exploration.md`
-2. For each decision area sequentially, output ALL of the following (steps a-d) BEFORE calling AskUserQuestion:
+2. For each decision area sequentially, output ALL of the following (steps a-d) BEFORE calling ask_user:
    a. **Area header**: area name and why this decision matters (1-2 sentences of context)
    b. **Alternatives detail**: For EVERY alternative in this area, show:
       - Name and description (2-3 sentences)
       - Pros (bullet list)
       - Cons (bullet list)
    c. **Recommendation**: which alternative is recommended and why (1 sentence)
-   d. **AskUserQuestion**: this area's alternatives as options (mark recommended with "(Recommended)") + "Need more info" option
+   d. **ask_user**: this area's alternatives as options (mark recommended with "(Recommended)") + "Need more info" option
    e. If user picks → record choice, move to next area
    f. If "Need more info" → present the detailed trade-off analysis for the requested alternative, then re-ask
 
-> **SELF-CHECK before each AskUserQuestion**: Did you output the alternatives with pros/cons for THIS area? If you only showed a recommendation line without listing all alternatives and their pros/cons, STOP and output the full detail before asking.
+> **SELF-CHECK before each ask_user**: Did you output the alternatives with pros/cons for THIS area? If you only showed a recommendation line without listing all alternatives and their pros/cons, STOP and output the full detail before asking.
 
 3. After all areas resolved, present a brief summary of the chosen combination
 4. Update state with chosen approaches per decision area
@@ -265,7 +265,7 @@ Generate alternatives purely from research evidence, without user preference bia
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Brainstorming complete. Continue to high-level design?"
+**Interactive**: ask_user - "Brainstorming complete. Continue to high-level design?"
 **YOLO**: "→ Continuing to Phase 4..."
 
 ---
@@ -284,7 +284,7 @@ Generate alternatives purely from research evidence, without user preference bia
 **Part A — Design Direction (Direct)**:
 1. If Phase 3 ran: confirm selected approaches from brainstorming convergence
 2. If Phase 3 was skipped: use research report recommendations as design input
-3. AskUserQuestion for any design preferences or constraints (e.g., "Any architectural constraints or preferences?")
+3. ask_user for any design preferences or constraints (e.g., "Any architectural constraints or preferences?")
 
 **Part B — Design Generation (Subagent)**:
 
@@ -313,7 +313,7 @@ Generate alternatives purely from research evidence, without user preference bia
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Design complete. Continue to output generation?"
+**Interactive**: ask_user - "Design complete. Continue to output generation?"
 **YOLO**: "→ Continuing to Phase 5..."
 
 ---
@@ -332,7 +332,7 @@ Generate alternatives purely from research evidence, without user preference bia
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Research outputs ready. Continue to verification?"
+**Interactive**: ask_user - "Research outputs ready. Continue to verification?"
 **YOLO**: "→ Continuing to Phase 6..."
 
 ---
@@ -375,7 +375,7 @@ Generate alternatives purely from research evidence, without user preference bia
 ### Phase 8: Spawn Development (Optional)
 
 **Purpose**: Offer to start development workflow with research context
-**Execute**: Direct - AskUserQuestion for user decision
+**Execute**: Direct - ask_user for user decision
 **Output**: Development workflow started (if chosen)
 **State**: Track spawn decision
 
@@ -383,7 +383,7 @@ Generate alternatives purely from research evidence, without user preference bia
 
 **Interactive Mode**:
 ```
-AskUserQuestion:
+ask_user:
   Question: "Research produced design artifacts. Start development workflow?"
   Options:
   - "Start development with this research"

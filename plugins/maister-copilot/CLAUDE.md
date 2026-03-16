@@ -32,7 +32,7 @@ All workflows in this plugin follow this pattern when failures occur:
 1. **STOP** - Don't attempt automatic fixes for critical failures
 2. **ANALYZE** - Examine the root cause (config issue? test setup? actual logic error?)
 3. **CHECK FOR EASY FIXES** - Often failures are simple config/setup issues
-4. **ASK USER** - Use `AskUserQuestion` with options:
+4. **ASK USER** - Use `ask_user` with options:
    - "Try suggested fix" (if easy fix identified)
    - "Rollback changes" (user confirms rollback)
    - "Let me investigate" (pause for manual investigation)
@@ -703,3 +703,4 @@ This is the Copilot CLI variant. Key differences from Claude Code:
 - **No multi-select**: When asking users to select multiple options, ask sequential single-select questions instead
 - **Command names**: No plugin prefix in names (e.g., `development-new`); the plugin system adds the plugin-id prefix automatically
 - **Project instructions file**: Use `.github/copilot-instructions.md` instead of `CLAUDE.md`. If the project uses `AGENTS.md`, support that as well.
+- **User questions**: Use `ask_user` tool instead of `ask_user`

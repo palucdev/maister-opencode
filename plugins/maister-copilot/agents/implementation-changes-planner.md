@@ -311,7 +311,7 @@ Read: [path to file being modified]
 
 ### Test Step Enforcement (MANDATORY)
 - Before executing ANY step N.2 or higher, verify test step N.1 is complete
-- If N.1 is not marked `[x]`, STOP and use AskUserQuestion
+- If N.1 is not marked `[x]`, STOP and use ask_user
 - Valid skip reasons: existing tests, third-party code, config-only changes
 - Document any test skips in work-log.md with justification
 - Mark skipped tests with `[~]` marker

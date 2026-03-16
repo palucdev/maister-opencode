@@ -17,7 +17,7 @@ You are performing automated code analysis to identify quality, security, and pe
 
 1. **Path to analyze**:
    - If provided: Use the specified path
-   - If not provided: Use AskUserQuestion to ask what to analyze
+   - If not provided: Use ask_user to ask what to analyze
 
 2. **Analysis scope**:
    - If `--scope=quality`: Only code quality analysis
@@ -34,7 +34,7 @@ Use Task tool:
   subagent_type: "maister-code-reviewer"
   description: "Code quality review"
   prompt: |
-    Analyze code at: [path from user or from AskUserQuestion]
+    Analyze code at: [path from user or from ask_user]
     Scope: [quality|security|performance|all]
     Report path: [path]/code-review-report.md
 ```

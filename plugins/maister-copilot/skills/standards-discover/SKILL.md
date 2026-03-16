@@ -69,7 +69,7 @@ Custom scope values are matched against existing `.maister/docs/standards/*/` di
 2. **Check prerequisites**: Verify `.maister/docs/` exists. If not, offer to run `/maister-init` first
 3. **Read existing standards** from `.maister/docs/INDEX.md` to identify updates vs creates and avoid duplicates
 4. **Display discovery plan** showing scope, sources, and estimated time
-5. **Get user confirmation** via AskUserQuestion before proceeding
+5. **Get user confirmation** via ask_user before proceeding
 
 ---
 
@@ -150,13 +150,13 @@ The **Sources** column lists all contributing sources for each finding (config, 
 
 **Step 2: Approval flow** — After the summary table:
 
-- **High confidence (>= 80%)**: Use AskUserQuestion offering batch approval ("Apply all N high-confidence standards") or individual drill-down review. For drill-down, show full detail per finding: all evidence items with source attribution, examples (preferred/avoid), and confidence score breakdown (which factors contributed how many points).
+- **High confidence (>= 80%)**: Use ask_user offering batch approval ("Apply all N high-confidence standards") or individual drill-down review. For drill-down, show full detail per finding: all evidence items with source attribution, examples (preferred/avoid), and confidence score breakdown (which factors contributed how many points).
 
-- **Medium confidence (60-79%)**: Present each individually with full detail (evidence, examples, confidence breakdown). Use AskUserQuestion with Accept/Modify/Skip options per finding.
+- **Medium confidence (60-79%)**: Present each individually with full detail (evidence, examples, confidence breakdown). Use ask_user with Accept/Modify/Skip options per finding.
 
 - **Low confidence (< threshold)**: Show the summary table rows only. Offer to expand details or skip all.
 
-- **Conflicts**: Present each conflict showing both sides with their evidence and sources. Use AskUserQuestion to resolve (pick side A, pick side B, skip, or custom).
+- **Conflicts**: Present each conflict showing both sides with their evidence and sources. Use ask_user to resolve (pick side A, pick side B, skip, or custom).
 
 If `--auto-apply` is set, automatically approve findings with confidence >= 90% and only prompt for the rest.
 

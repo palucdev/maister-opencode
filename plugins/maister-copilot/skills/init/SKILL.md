@@ -36,7 +36,7 @@ Initialize `.maister/docs/` with intelligent project analysis and meaningful doc
 
 Check if `.maister/` directory already exists.
 
-**If exists**, use AskUserQuestion:
+**If exists**, use ask_user:
 - Options: "Backup and reinitialize", "Update existing documentation", "Cancel"
 - If "Backup": Create `.maister.backup-$(date +%Y%m%d-%H%M%S)/` using Bash tool
 - If "Update": Skip to PHASE 6 (documentation generation only)
@@ -56,16 +56,16 @@ Wait for completion. Store analysis results for use in Phases 3 and 6.
 
 **Step 1**: Present analysis results to the user (project type, primary language/framework, architecture, tech stack, conventions, strengths/opportunities).
 
-**Step 2**: Use AskUserQuestion to confirm analysis accuracy. If corrections needed, collect them.
+**Step 2**: Use ask_user to confirm analysis accuracy. If corrections needed, collect them.
 
-**Step 3**: Gather additional context via AskUserQuestion (adapt to project type):
+**Step 3**: Gather additional context via ask_user (adapt to project type):
 1. Project name (if not obvious)
 2. Project description (1-2 sentences)
 3. Primary goals (adapt question to new/existing/legacy project)
 4. Team context (optional)
 5. Special requirements (optional)
 
-**Step 4**: Ask which project documentation to generate using AskUserQuestion (sequential single-select):
+**Step 4**: Ask which project documentation to generate using ask_user (sequential single-select):
 - "Vision" — Project vision, goals, and purpose
 - "Roadmap" — Development roadmap and planned features
 - "Tech Stack" — Technology choices and rationale (ALWAYS selected, required)
@@ -97,7 +97,7 @@ Calculate smart defaults based on analysis:
 
 Also scan `.maister/docs/standards/*/` for any existing custom categories to include.
 
-Show smart defaults summary (noting the source: external project or built-in), then use AskUserQuestion:
+Show smart defaults summary (noting the source: external project or built-in), then use ask_user:
 - "Use smart defaults" → proceed with calculated defaults
 - "Customize selection" → show sequential single-select with all discovered categories + "Add custom category" option
 

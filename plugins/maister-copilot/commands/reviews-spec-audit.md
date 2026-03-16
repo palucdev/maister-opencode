@@ -17,7 +17,7 @@ You are performing senior auditor review of specifications to verify completenes
 
 1. **Specification path**:
    - If provided: Use the specified spec file path
-   - If not provided: Use AskUserQuestion to ask for spec.md path
+   - If not provided: Use ask_user to ask for spec.md path
 
 2. **Audit type**:
    - **Pre-implementation**: Audit spec before building (default)

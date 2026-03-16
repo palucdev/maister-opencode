@@ -30,7 +30,7 @@ Enter Claude Code's planning mode for a task, with automatic discovery of projec
 **Get the task description:**
 
 - If provided as argument, use it directly
-- If not provided, use AskUserQuestion to prompt:
+- If not provided, use ask_user to prompt:
   ```
   "What would you like to plan? Please describe the task or feature."
   ```

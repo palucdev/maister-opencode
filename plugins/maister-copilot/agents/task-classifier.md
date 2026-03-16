@@ -186,7 +186,7 @@ This task will follow the [workflow type] workflow.
 Proceed with [workflow type] workflow?
 ```
 
-Use AskUserQuestion with options: "Yes, proceed" | "No, let me choose different type"
+Use ask_user with options: "Yes, proceed" | "No, let me choose different type"
 
 **Medium/Low Confidence Confirmation** (< 80%):
 ```
@@ -209,7 +209,7 @@ Please choose the workflow type that best fits:
 Which type best describes your task?
 ```
 
-Use AskUserQuestion with all 4 options
+Use ask_user with all 4 options
 
 **Handle User Override**:
 - Accept user's choice without question
@@ -301,7 +301,7 @@ B. Work on just the 2FA feature now
 C. Continue with both as a single task (not recommended)"
 ```
 
-Use AskUserQuestion to let user choose
+Use ask_user to let user choose
 
 ### Vague Descriptions
 
@@ -342,7 +342,7 @@ Is this about:
 - Documenting the schema? → Research"
 ```
 
-Use AskUserQuestion with relevant options
+Use ask_user with relevant options
 
 ---
 
@@ -378,7 +378,7 @@ Use AskUserQuestion with relevant options
 
 **Bash**: Execute git log for history analysis; CLI tools for issue fetching (`gh`, `acli`, `jira`, `az`)
 
-**AskUserQuestion**: Confirm classifications, resolve ambiguities, handle overrides
+**ask_user**: Confirm classifications, resolve ambiguities, handle overrides
 
 ---
 

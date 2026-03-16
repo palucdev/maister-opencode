@@ -86,7 +86,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 **Execute**:
 1. Skill tool - `maister-codebase-analyzer`
 2. Update state with analysis results
-3. Direct - use AskUserQuestion for max 5 critical clarifying questions
+3. Direct - use ask_user for max 5 critical clarifying questions
 4. Save clarifications to `analysis/clarifications.md`
 **Output**: `analysis/codebase-analysis.md`, `analysis/clarifications.md`
 **State**: Update `task_context.risk_level`, `phase_summaries.codebase_analysis`, `task_context.clarifications_resolved`
@@ -112,11 +112,11 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 **⛔ DECISION GATE** (mandatory — do NOT skip):
 - Parse `decisions_needed` from gap-analyzer output
 - If `decisions_needed.critical` OR `decisions_needed.important` is non-empty:
-  - **Interactive**: MUST use `AskUserQuestion` — one question per critical decision, batch important decisions into a single sequential single-select questions (one per option)
+  - **Interactive**: MUST use `ask_user` — one question per critical decision, batch important decisions into a single sequential single-select questions (one per option)
   - **YOLO**: Accept recommended defaults, but LOG each decision (id, issue, chosen option, rationale) to `analysis/scope-clarifications.md`
 - If both are empty: Note "No scope decisions needed" in state
 
-**SELF-CHECK** before continuing: "Did the gap-analyzer return `decisions_needed` items? If yes, did I invoke `AskUserQuestion` (interactive) or log decisions (YOLO)? If I skipped this, STOP and go back."
+**SELF-CHECK** before continuing: "Did the gap-analyzer return `decisions_needed` items? If yes, did I invoke `ask_user` (interactive) or log decisions (YOLO)? If I skipped this, STOP and go back."
 
 3. Save scope clarifications to `analysis/scope-clarifications.md`
 4. **Set optional phase defaults** based on detected characteristics:
@@ -131,8 +131,8 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause (when decisions exist), otherwise Conditional
 
-**Interactive** (decisions exist): AskUserQuestion - "Scope decisions resolved. Continue?"
-**Interactive** (no decisions): AskUserQuestion - "Gap analysis complete, no decisions needed. Continue?"
+**Interactive** (decisions exist): ask_user - "Scope decisions resolved. Continue?"
+**Interactive** (no decisions): ask_user - "Gap analysis complete, no decisions needed. Continue?"
 **YOLO**: "→ Continuing..."
 
 → Conditional: check `task_characteristics.has_reproducible_defect` → Phase 3, else check `task_characteristics.ui_heavy` → Phase 4, else skip to Phase 5
@@ -152,7 +152,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: AskUserQuestion - "TDD red gate complete. Continue to Phase 4?"
+**Interactive**: ask_user - "TDD red gate complete. Continue to Phase 4?"
 **YOLO**: "→ Continuing to Phase 4..."
 
 ---
@@ -170,7 +170,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: AskUserQuestion - "UI mockups complete. Continue to Phase 5?"
+**Interactive**: ask_user - "UI mockups complete. Continue to Phase 5?"
 **YOLO**: "→ Continuing to Phase 5..."
 
 ---
@@ -181,14 +181,14 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 **Execute**:
 
 **Part A — Technical & Architecture Clarification (inline, conditional)**:
-1. If complex task with multiple approaches: Direct - use AskUserQuestion for 3-5 technical questions
-2. If multiple valid architectural approaches exist: Present 2-3 approaches via AskUserQuestion. The chosen approach is passed to specification-creator so the spec is written with the decided architecture.
+1. If complex task with multiple approaches: Direct - use ask_user for 3-5 technical questions
+2. If multiple valid architectural approaches exist: Present 2-3 approaches via ask_user. The chosen approach is passed to specification-creator so the spec is written with the decided architecture.
 3. Save to `analysis/technical-clarifications.md` (conditional)
 
 **Skip technical clarification if**: Simple task, risk_level = low, no multiple approaches detected
 
 **Part B — Requirements Gathering (inline)**:
-3. Direct - use AskUserQuestion for specification requirements:
+3. Direct - use ask_user for specification requirements:
    - Adaptive question count based on description length:
      - Brief (<30 words): 6-8 questions
      - Standard (30-100 words): 4-6 questions
@@ -225,7 +225,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Specification created. Continue to Phase 6?"
+**Interactive**: ask_user - "Specification created. Continue to Phase 6?"
 **YOLO**: "→ Continuing to Phase 6..."
 
 ---
@@ -239,12 +239,12 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 **Recommended**: Always. Present spec audit as the recommended default. User can skip if they choose.
 
-**Interactive**: AskUserQuestion - "Run specification audit? (Recommended)" with "Yes, run audit (Recommended)" as first option
+**Interactive**: ask_user - "Run specification audit? (Recommended)" with "Yes, run audit (Recommended)" as first option
 **YOLO**: Always run
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Audit complete. Continue to Phase 7?"
+**Interactive**: ask_user - "Audit complete. Continue to Phase 7?"
 **YOLO**: "→ Continuing to Phase 7..."
 
 ---
@@ -270,7 +270,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Plan created. Continue to Phase 8?"
+**Interactive**: ask_user - "Plan created. Continue to Phase 8?"
 **YOLO**: "→ Continuing to Phase 8..."
 
 ---
@@ -298,7 +298,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Implementation complete. Continue to Phase [9 or 10]?"
+**Interactive**: ask_user - "Implementation complete. Continue to Phase [9 or 10]?"
 **YOLO**: "→ Continuing to Phase [9 or 10]..."
 
 ---
@@ -316,7 +316,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 
 → Pause
 
-**Interactive**: AskUserQuestion - "TDD gate passed. Continue to Phase 10?"
+**Interactive**: ask_user - "TDD gate passed. Continue to Phase 10?"
 **YOLO**: "→ Continuing to Phase 10..."
 
 ---
@@ -324,7 +324,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 ### Phase 10: Verification Options Prompt
 
 **Purpose**: Determine which verification checks to run using tiered decision matrix
-**Execute**: Direct - display plan, confirm/adjust via AskUserQuestion
+**Execute**: Direct - display plan, confirm/adjust via ask_user
 **Output**: Updated state with all verification options
 **State**: Set `options.code_review_enabled`, `options.pragmatic_review_enabled`, `options.reality_check_enabled`, `options.production_check_enabled`, `options.e2e_enabled`, `options.user_docs_enabled`
 **Auto-set**: `skip_test_suite: true` (full test suite already passed during implementation phase; cleared before re-verification if fixes are applied)
@@ -349,12 +349,12 @@ Verification Plan:
 
 **Step 2** (interactive mode — 3 questions):
 
-**Q1** (always): AskUserQuestion (sequential single-select) — "Which standard verifications to run?"
+**Q1** (always): ask_user (sequential single-select) — "Which standard verifications to run?"
 Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality check (Recommended)", "Production readiness (Recommended)". All pre-selected.
 
-**Q2** (SKIP if `options.e2e_enabled: false` and no `--e2e` flag): AskUserQuestion — "Enable E2E browser verification?" Options: "Yes (Recommended)", "No, skip".
+**Q2** (SKIP if `options.e2e_enabled: false` and no `--e2e` flag): ask_user — "Enable E2E browser verification?" Options: "Yes (Recommended)", "No, skip".
 
-**Q3** (SKIP if `options.user_docs_enabled: false` and no `--user-docs` flag): AskUserQuestion — "Generate user documentation?" Options: "Yes (Recommended)", "No, skip".
+**Q3** (SKIP if `options.user_docs_enabled: false` and no `--user-docs` flag): ask_user — "Generate user documentation?" Options: "Yes (Recommended)", "No, skip".
 
 **YOLO mode** — no questions, use auto-decided defaults:
 - Tier 2: all enabled (unless command flags override)
@@ -384,7 +384,7 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 
 **Step 4**: Fix-then-reverify loop (max 3 iterations):
 1. **Auto-fix** issues with `fixable: true` and severity `critical` or `warning` — apply the fix using the `suggestion` field, log each fix to `verification_context.fixes_applied`
-2. **Ask user** about `fixable: false` critical issues — AskUserQuestion: "Try to fix anyway" / "Accept and proceed" / "Let me investigate"
+2. **Ask user** about `fixable: false` critical issues — ask_user: "Try to fix anyway" / "Accept and proceed" / "Let me investigate"
 3. **Log** warning-level `fixable: false` issues and proceed (no user prompt needed)
 4. If fixes were applied: set `skip_test_suite: false` (code changed, tests must re-run) → re-invoke `maister-implementation-verifier` → return to Step 2
 5. Update `verification_context.reverify_count`
@@ -392,7 +392,7 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 **Exit conditions**:
 - No critical issues remain → proceed
 - User explicitly approves "Accept and proceed" for remaining critical issues → proceed with warning logged
-- Max 3 iterations reached → AskUserQuestion: "Proceed with known issues?" / "Stop workflow"
+- Max 3 iterations reached → ask_user: "Proceed with known issues?" / "Stop workflow"
 - **MUST NOT proceed with unresolved critical issues unless user explicitly approves**
 
 **YOLO mode**: Auto-fix all `fixable: true` issues, log `fixable: false` warnings, but STILL pause on `fixable: false` critical issues (critical issues need user awareness even in YOLO).
@@ -404,7 +404,7 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Verification: [N] critical, [N] warnings [resolved/remaining]. Continue to Phase 12?"
+**Interactive**: ask_user - "Verification: [N] critical, [N] warnings [resolved/remaining]. Continue to Phase 12?"
 **YOLO**: "→ Verification: [summary]. Continuing to Phase 12..."
 
 ---
@@ -421,7 +421,7 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 
 → Pause
 
-**Interactive**: AskUserQuestion - "E2E complete. Continue to Phase 13?"
+**Interactive**: ask_user - "E2E complete. Continue to Phase 13?"
 **YOLO**: "→ Continuing to Phase 13..."
 
 ---
@@ -438,7 +438,7 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Documentation complete. Continue to Phase 14?"
+**Interactive**: ask_user - "Documentation complete. Continue to Phase 14?"
 **YOLO**: "→ Continuing to Phase 14..."
 
 ---

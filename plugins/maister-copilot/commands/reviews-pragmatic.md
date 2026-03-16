@@ -17,7 +17,7 @@ You are performing pragmatic analysis to identify over-engineering, unnecessary 
 
 1. **Path to analyze**:
    - If provided: Use the specified path
-   - If not provided: Use AskUserQuestion to ask what to analyze (file, directory, or task path)
+   - If not provided: Use ask_user to ask what to analyze (file, directory, or task path)
 
 ## Your Instructions
 

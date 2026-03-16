@@ -239,9 +239,9 @@ Before each step N.2 or higher in a task group:
 2. **Verify N.1 is marked `[x]`** in implementation-plan.md
 3. **If N.1 is NOT checked**:
 
-   **STOP and use AskUserQuestion**:
+   **STOP and use ask_user**:
    ```
-   Use AskUserQuestion tool:
+   Use ask_user tool:
      Question: "Test step [N.1] has not been completed. How would you like to proceed?"
      Header: "Test Step"
      Options:

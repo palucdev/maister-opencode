@@ -86,7 +86,7 @@ Use for:
 **Execute**:
 1. Skill tool - `maister-codebase-analyzer`
 2. Update state with analysis results
-3. Direct - use AskUserQuestion for max 5 critical clarifying questions about performance concerns, hotspots, and optimization goals
+3. Direct - use ask_user for max 5 critical clarifying questions about performance concerns, hotspots, and optimization goals
 4. Save clarifications to `analysis/clarifications.md`
 **Output**: `analysis/codebase-analysis.md`, `analysis/clarifications.md`
 **State**: Update `performance_context.phase_summaries.codebase_analysis`, `task_context.clarifications_resolved`
@@ -108,7 +108,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 **Process**:
 1. Check if `analysis/user-profiling-data/` contains any files
-2. If empty, use AskUserQuestion:
+2. If empty, use ask_user:
    - Question: "Do you have profiling data to provide (flame graphs, APM screenshots, slow query logs)?"
    - Options: "Yes, let me add files to analysis/user-profiling-data/" | "No, proceed with static analysis only"
 3. If user chooses to add files, wait for them, then proceed
@@ -127,7 +127,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Performance analysis complete. [N] bottlenecks identified ([P0 count] P0, [P1 count] P1). Continue to specification?"
+**Interactive**: ask_user - "Performance analysis complete. [N] bottlenecks identified ([P0 count] P0, [P1 count] P1). Continue to specification?"
 **YOLO**: "→ Continuing to Phase 3..."
 
 ---
@@ -141,7 +141,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 **Part A — Requirements Gathering (inline)**:
 
 1. Present bottleneck summary from Phase 2 to user
-2. Use AskUserQuestion for optimization priorities:
+2. Use ask_user for optimization priorities:
    - Which bottleneck priorities to address? (All P0+P1, P0 only, specific ones)
    - Any constraints? (backward compatibility, memory limits, no new dependencies)
    - Performance targets? (specific response time goals, if known)
@@ -167,7 +167,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Specification created. Continue to Phase 4?"
+**Interactive**: ask_user - "Specification created. Continue to Phase 4?"
 **YOLO**: "→ Continuing to Phase 4..."
 
 ---
@@ -182,12 +182,12 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 **Run if**: >5 optimizations planned, spec >50 lines, or user requests
 **Skip if**: Simple optimization (1-3 changes)
 
-**Interactive**: AskUserQuestion to decide - "Run specification audit?"
+**Interactive**: ask_user to decide - "Run specification audit?"
 **YOLO**: Auto-decide based on optimization count
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Audit complete. Continue to Phase 5?"
+**Interactive**: ask_user - "Audit complete. Continue to Phase 5?"
 **YOLO**: "→ Continuing to Phase 5..."
 
 ---
@@ -214,7 +214,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Implementation plan created. Continue to Phase 6?"
+**Interactive**: ask_user - "Implementation plan created. Continue to Phase 6?"
 **YOLO**: "→ Continuing to Phase 6..."
 
 ---
@@ -244,7 +244,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Implementation complete. Continue to Phase 7?"
+**Interactive**: ask_user - "Implementation complete. Continue to Phase 7?"
 **YOLO**: "→ Continuing to Phase 7..."
 
 ---
@@ -252,21 +252,21 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 ### Phase 7: Verification Options
 
 **Purpose**: Determine which verification checks to run
-**Execute**: Direct - use AskUserQuestion for options
+**Execute**: Direct - use ask_user for options
 **Output**: Updated state with verification options
 **State**: Set `options.code_review_enabled`, `options.pragmatic_review_enabled`, `options.production_check_enabled`, `options.reality_check_enabled`
 
 **Always enabled**: Reality check, pragmatic review
 **Auto-set**: `skip_test_suite: true` (full test suite already passed during implementation phase; cleared before re-verification if fixes are applied)
 
-**Interactive**: AskUserQuestion with sequential single-select - "Which additional verification checks?"
+**Interactive**: ask_user with sequential single-select - "Which additional verification checks?"
   - "Code review" (recommended)
   - "Production readiness check"
 **YOLO**: Auto-enable code review, skip production readiness
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Options selected. Continue to Phase 8?"
+**Interactive**: ask_user - "Options selected. Continue to Phase 8?"
 **YOLO**: "→ Continuing to Phase 8..."
 
 ---
@@ -276,7 +276,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 **Purpose**: Comprehensive implementation verification with fix-then-reverify cycles
 **Execute**:
 1. Skill tool - `maister-implementation-verifier`
-2. If issues found: Fix trivial issues directly, AskUserQuestion for non-trivial
+2. If issues found: Fix trivial issues directly, ask_user for non-trivial
 3. Before re-verification: set `skip_test_suite: false` (code changed, tests must re-run)
 4. Re-verify after fixes (max 3 fix-then-reverify cycles)
 **Output**: `verification/implementation-verification.md`, optional review reports
@@ -284,7 +284,7 @@ Pass `task_type="enhancement"` and the performance-focused description. The code
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Verification complete. Continue to finalization?"
+**Interactive**: ask_user - "Verification complete. Continue to finalization?"
 **YOLO**: "→ Continuing to Phase 9..."
 
 ---

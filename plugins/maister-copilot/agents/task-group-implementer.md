@@ -279,4 +279,4 @@ During step N.3, realize auth pattern needed → Check INDEX.md → Find and rea
 
 ### Scenario 4: Blocking Issue
 
-Can't proceed due to missing dependency or unclear spec → Report FAILED with clear explanation → Main agent will use AskUserQuestion to decide path forward
+Can't proceed due to missing dependency or unclear spec → Report FAILED with clear explanation → Main agent will use ask_user to decide path forward

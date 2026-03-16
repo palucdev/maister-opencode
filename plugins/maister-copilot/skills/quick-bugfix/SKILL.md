@@ -40,7 +40,7 @@ For complex bugs that grow beyond a quick fix, suggests escalating to the full d
 
 - If provided as argument, use it directly
 - If not provided, scan the recent conversation for bug context (error messages, reproduction steps, discussed symptoms). If found, use that as the bug description.
-- Only if no argument AND no bug context in session, use AskUserQuestion:
+- Only if no argument AND no bug context in session, use ask_user:
   ```
   "Describe the bug — what's the expected behavior vs actual behavior?"
   ```
@@ -102,7 +102,7 @@ Assess whether this bug exceeds quick-fix scope. If **2 or more** of these signa
 
 **If escalation triggered:**
 
-Use AskUserQuestion:
+Use ask_user:
 - Question: "This bug appears more complex than a quick fix — [describe why]. How would you like to proceed?"
 - Options:
   1. "Continue with quick fix" — proceed, accepting the complexity
@@ -171,7 +171,7 @@ If any section is missing, add it before calling ExitPlanMode.
 **If the test passes:**
 - The bug may not be what we think, or it's already fixed
 - Investigate further — re-read the bug description, check if conditions are correct
-- Use AskUserQuestion: "The reproduction test passes — the expected behavior already works under these conditions. Is the bug description accurate, or are there additional conditions?"
+- Use ask_user: "The reproduction test passes — the expected behavior already works under these conditions. Is the bug description accurate, or are there additional conditions?"
 
 ### Step 6: Fix & Verify (TDD Green)
 

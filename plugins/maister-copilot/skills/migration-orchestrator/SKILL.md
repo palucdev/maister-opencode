@@ -92,7 +92,7 @@ Use for:
 **Execute**:
 1. Skill tool - `maister-codebase-analyzer`
 2. Update state with analysis results
-3. Direct - use AskUserQuestion for max 5 critical clarifying questions about migration scope, target system, and constraints
+3. Direct - use ask_user for max 5 critical clarifying questions about migration scope, target system, and constraints
 4. Save clarifications to `analysis/clarifications.md`
 **Output**: `analysis/current-state-analysis.md`, `analysis/clarifications.md`
 **State**: Update task_context with current system info, `task_context.clarifications_resolved`
@@ -119,7 +119,7 @@ Use for:
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Gap analysis complete. Continue to migration strategy?"
+**Interactive**: ask_user - "Gap analysis complete. Continue to migration strategy?"
 **YOLO**: "→ Continuing to Phase 3..."
 
 ---
@@ -130,7 +130,7 @@ Use for:
 **Execute**:
 
 **Part A — Migration Requirements Gathering (inline)**:
-1. Direct - use AskUserQuestion for migration-specific requirements (3-5 questions):
+1. Direct - use ask_user for migration-specific requirements (3-5 questions):
    - Migration scope and boundaries (what's in/out of migration)
    - Rollback expectations and downtime tolerance
    - Data migration specifics (if data migration type)
@@ -151,7 +151,7 @@ Use for:
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Migration specification complete. Continue to implementation planning?"
+**Interactive**: ask_user - "Migration specification complete. Continue to implementation planning?"
 **YOLO**: "→ Continuing to Phase 4..."
 
 ---
@@ -167,7 +167,7 @@ Use for:
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Implementation plan ready. Continue to execute migration?"
+**Interactive**: ask_user - "Implementation plan ready. Continue to execute migration?"
 **YOLO**: "→ Continuing to Phase 5..."
 
 ---
@@ -197,7 +197,7 @@ Use for:
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Migration execution complete. Continue to verification?"
+**Interactive**: ask_user - "Migration execution complete. Continue to verification?"
 **YOLO**: "→ Continuing to Phase 6..."
 
 ---
@@ -222,7 +222,7 @@ Use for:
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Verification complete. [verdict summary]. Continue to Phase [7 or 8]?"
+**Interactive**: ask_user - "Verification complete. [verdict summary]. Continue to Phase [7 or 8]?"
 **YOLO**: "→ Continuing to Phase [7 or 8]..."
 
 ---
@@ -239,7 +239,7 @@ Use for:
 **Process**:
 1. Parse issues (categorize: auto-fixable, needs decision, not fixable)
 2. Apply auto-fixes (test fixes, config adjustments, deprecation warnings)
-3. For user decisions: AskUserQuestion with rollback option
+3. For user decisions: ask_user with rollback option
 4. Re-verify after fixes (max 3 iterations)
 
 **Data Safety Critical**: HALT on any data integrity issue - never auto-fix data problems.
@@ -251,7 +251,7 @@ Use for:
 
 → Pause
 
-**Interactive**: AskUserQuestion - "Issues resolved. Continue to documentation?"
+**Interactive**: ask_user - "Issues resolved. Continue to documentation?"
 **YOLO**: "→ Continuing to Phase 8..."
 
 ---

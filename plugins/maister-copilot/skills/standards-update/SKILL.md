@@ -36,7 +36,7 @@ When `--from=PATH` is provided, the skill switches to **sync mode** — importin
    - **Missing locally**: Category or file doesn't exist in the current project
    - **Differs**: Both exist but content differs (read and compare)
    - **Identical**: No action needed
-4. Present a summary to the user via AskUserQuestion (sequential single-select):
+4. Present a summary to the user via ask_user (sequential single-select):
    - Group by status: "New standards to add" and "Standards that differ"
    - Each item shows: `[category]/[file]` with brief description of what it contains
    - Options: individual files to sync, plus "Select all new" / "Select all different" convenience options
@@ -46,7 +46,7 @@ When `--from=PATH` is provided, the skill switches to **sync mode** — importin
 
 For each selected standard:
 - **Missing locally**: Copy the file from source. Create category directory if needed.
-- **Differs**: Show a brief diff summary and use AskUserQuestion per file:
+- **Differs**: Show a brief diff summary and use ask_user per file:
   - "Replace with source version" — overwrite local file
   - "Merge (append new sections)" — read both files, append `###` sections from source that don't exist locally
   - "Skip" — leave local file unchanged
@@ -88,8 +88,8 @@ Based on the topic detected, suggest the best-matching existing category and fil
 
 **Step 4: Present suggestion**
 
-- **If confident match** → AskUserQuestion: "This convention about [topic] fits [category/file]. Update it?" (Yes / Choose different / Cancel)
-- **If ambiguous** → AskUserQuestion listing possible categories/files + "Create new category" + "Create new file in [category]"
+- **If confident match** → ask_user: "This convention about [topic] fits [category/file]. Update it?" (Yes / Choose different / Cancel)
+- **If ambiguous** → ask_user listing possible categories/files + "Create new category" + "Create new file in [category]"
 - **If nothing detected** (no argument, no conversation context) → ask user to describe the convention they want to document
 
 ---

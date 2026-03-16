@@ -16,7 +16,7 @@ Before considering an orchestrator complete, verify ALL items:
 - [ ] **Context passing** — All subagent prompts include ACCUMULATED CONTEXT section with state summaries and prior phase summaries
 - [ ] **Context extraction** — Each phase's State Update extracts findings to `phase_summaries`
 - [ ] **Decision gates** — Phases receiving `decisions_needed` present to user (interactive) or log (YOLO)
-- [ ] **Interactive mode** — `AskUserQuestion` at every `→ Pause` transition
+- [ ] **Interactive mode** — `ask_user` at every `→ Pause` transition
 - [ ] **Standards discovery** — `.maister/docs/INDEX.md` referenced in spec, plan, implement, verify phases
 - [ ] **TaskCreate initialization** — Tasks created for all phases at workflow start with `addBlockedBy` dependencies
 - [ ] **Auto-recovery table** — Max attempts per phase with recovery strategies
@@ -30,7 +30,7 @@ Before considering an orchestrator complete, verify ALL items:
 |---|---|
 | Skipping Step 0 (not loading framework) | Causes AUTO-CONTINUE failures and delegation errors |
 | Defining phases without transitions | Ambiguous when to pause vs continue |
-| Implicit user prompts without AskUserQuestion | User loses control |
+| Implicit user prompts without ask_user | User loses control |
 | Inline STOP reminders at END of phases | Easily missed; use `→ Pause` transitions instead |
 | Vague subagent calls ("invoke X") | Must show explicit Skill/Task tool parameters |
 | Inline execution in YOLO mode | Must delegate even when running continuously |

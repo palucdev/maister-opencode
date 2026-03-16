@@ -134,7 +134,7 @@ For each task group:
 6. **If subagent reports failure**:
    - Do NOT auto-rollback (see Critical Principle in .github/copilot-instructions.md)
    - Assess: config issue? test setup? logic error?
-   - Use AskUserQuestion for recovery path
+   - Use ask_user for recovery path
    - Keep group task as `in_progress` with `metadata: {failed_at, failure_reason}`
 
 ## Continuous Standards Discovery
@@ -291,7 +291,7 @@ N.n  - Run tests (only this group's tests)
 Before executing step N.2 or higher:
 
 1. Verify N.1 (test step) is complete
-2. If not complete, use AskUserQuestion:
+2. If not complete, use ask_user:
    ```
    Question: "Test step N.1 not completed. How to proceed?"
    Header: "Tests"
@@ -360,7 +360,7 @@ If task-group-implementer reports failure:
 1. **Do NOT auto-rollback** - User-confirmed rollback only
 2. **Analyze root cause** from subagent output
 3. **Check for easy fixes**: config issues, missing dependencies, test setup
-4. **Use AskUserQuestion**:
+4. **Use ask_user**:
    ```
    Question: "Group [N] implementation failed: [brief reason]. How to proceed?"
    Header: "Failure"
@@ -378,7 +378,7 @@ If tests fail after implementation:
 
 1. Analyze failure output
 2. If obvious fix: apply and re-run
-3. If unclear: use AskUserQuestion with options
+3. If unclear: use ask_user with options
 
 ## Validation Checklist
 

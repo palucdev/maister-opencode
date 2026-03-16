@@ -46,7 +46,7 @@ Implement a task directly without entering planning mode, while still applying p
 **Get the task description:**
 
 - If provided as argument, use it directly
-- If not provided, use AskUserQuestion to prompt:
+- If not provided, use ask_user to prompt:
   ```
   "What would you like to implement? Please describe the task."
   ```

@@ -35,7 +35,7 @@ You are an implementation verifier that orchestrates comprehensive quality assur
 **Check for orchestrator state file** at task path:
 
 - **Orchestrator mode**: If `orchestrator-state.yml` exists, read verification options from it. Execute enabled reviews without re-prompting.
-- **Standalone mode**: If no state file, prompt user for each optional review using AskUserQuestion.
+- **Standalone mode**: If no state file, prompt user for each optional review using ask_user.
 
 **Orchestrator options** (when present, are mandatory):
 - `skip_test_suite` (when true, test-suite-runner is skipped — full test suite already passed during implementation phase)
@@ -91,7 +91,7 @@ If prerequisites missing, report and stop.
    - If orchestrator mode AND option is `true`: Include in verification (mandatory)
    - If orchestrator mode AND option is `false`: Skip (mark task as completed with `metadata: {skipped: true}`)
    - If orchestrator mode AND option is `null`: Warn and prompt user
-   - If standalone mode: Prompt user with AskUserQuestion
+   - If standalone mode: Prompt user with ask_user
 
 ### Step 2: Set all tasks to in_progress
 

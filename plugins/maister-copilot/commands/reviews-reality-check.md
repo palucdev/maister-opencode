@@ -17,7 +17,7 @@ You are performing no-nonsense reality assessment to determine if completed work
 
 1. **Task path**:
    - If provided: Use the specified task directory path
-   - If not provided: Use AskUserQuestion to ask for task path
+   - If not provided: Use ask_user to ask for task path
 
 ## Your Instructions
 

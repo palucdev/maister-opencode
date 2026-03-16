@@ -63,6 +63,12 @@ This is the Copilot CLI variant. Key differences from Claude Code:
 - **No multi-select**: When asking users to select multiple options, ask sequential single-select questions instead
 - **Command names**: No plugin prefix in names (e.g., `development-new`); the plugin system adds the plugin-id prefix automatically
 - **Project instructions file**: Use `.github/copilot-instructions.md` instead of `CLAUDE.md`. If the project uses `AGENTS.md`, support that as well.
+- **User questions**: Use `ask_user` tool instead of `AskUserQuestion`
 EOF
+
+# 8. Replace AskUserQuestion with copilot's ask_user tool
+find "$OUT" -name "*.md" | while read f; do
+  sedi 's/AskUserQuestion/ask_user/g' "$f"
+done
 
 echo "Built Copilot CLI variant at $OUT"
