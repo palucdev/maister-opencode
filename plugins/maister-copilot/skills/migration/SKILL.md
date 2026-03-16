@@ -122,6 +122,8 @@ ask_user - "Gap analysis complete. Continue to migration strategy?"
 
 ### Phase 3: Migration Requirements & Strategy Specification
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 2 before executing.
+
 **Purpose**: Gather migration requirements, then create detailed migration specification with rollback procedures
 **Execute**:
 
@@ -151,6 +153,8 @@ ask_user - "Migration specification complete. Continue to implementation plannin
 
 ### Phase 4: Implementation Planning
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 3 before executing.
+
 **Purpose**: Break migration into task groups with rollback steps
 **Execute**: Task tool - `maister-implementation-planner` subagent
 **Output**: `implementation/implementation-plan.md` with rollback procedures
@@ -165,6 +169,8 @@ ask_user - "Implementation plan ready. Continue to execute migration?"
 ---
 
 ### Phase 5: Migration Execution
+
+> **Phase gate**: Requires `ask_user` confirmation from Phase 4 before executing.
 
 **Purpose**: Execute migration steps with incremental verification
 
@@ -195,6 +201,8 @@ ask_user - "Migration execution complete. Continue to verification?"
 
 ### Phase 6: Verification + Compatibility Testing
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 5 before executing.
+
 **Purpose**: Verify migration success with compatibility and rollback testing
 **Execute**: Skill tool - `maister-implementation-verifier`
 **Output**: `verification/implementation-verification.md`, `verification/compatibility-test-results.md`
@@ -218,6 +226,8 @@ ask_user - "Verification complete. [verdict summary]. Continue to Phase [7 or 8]
 ---
 
 ### Phase 7: Migration Issue Resolution (Conditional)
+
+> **Phase gate**: Requires `ask_user` confirmation from Phase 6 before executing.
 
 **Purpose**: Fix verification issues through direct editing and re-verification
 **Execute**: Direct - apply fixes, re-verify
@@ -246,6 +256,8 @@ ask_user - "Issues resolved. Continue to documentation?"
 ---
 
 ### Phase 8: Documentation (Optional)
+
+> **Phase gate**: Requires `ask_user` confirmation from the preceding phase before executing.
 
 **Purpose**: Create migration guide for end users
 **Execute**: Task tool - `maister-user-docs-generator` subagent

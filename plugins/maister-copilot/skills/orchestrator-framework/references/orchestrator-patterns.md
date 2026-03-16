@@ -61,6 +61,18 @@ For all analysis, planning, implementation, and verification phases: **ALWAYS DE
 
 All orchestrators pause at `→ Pause` transitions for user review and prompt for optional phases.
 
+**State ordering rule**: Phase state MUST NOT be updated to 'completed' (via orchestrator-state.yml or TaskUpdate) until AFTER the user responds to the exit gate. Correct sequence: finish phase work → call ask_user → receive user response → update state to completed.
+
+### Phase Entry Checks
+
+Every phase that follows a `→ Pause` gate includes an entry check at its TOP:
+
+```
+> **Phase gate**: Confirm Phase N completion before executing.
+```
+
+This catches missed gates: if the previous phase's `→ Pause` was skipped (e.g., the model output a summary and moved on), the entry check forces the gate to fire before the next phase executes. If the gate already fired, continue normally.
+
 ### AUTO-CONTINUE Rules
 
 When a phase ends with `→ **AUTO-CONTINUE**`:
@@ -79,6 +91,8 @@ When a phase ends with `→ **AUTO-CONTINUE**`:
 | Proceeding without ask_user at phase gates | User loses control, can't review or stop |
 | Saying "I'll pause here" without tool call | Words are not pauses. Tool invocation required. |
 | Auto-accepting subagent decisions without asking | User must consent to scope/approach decisions |
+| Outputting a summary after phase work, then ending turn before reaching `→ Pause` | Gate is skipped; user loses control at the most critical review point. The gate must be the FIRST action after phase work completes — no summaries, no output before it. |
+| Marking phase as completed (state/TaskUpdate) before the exit gate executes | State corruption — downstream phases see false "completed" status. Gate → user response → state update. Never reverse this order. |
 
 ---
 

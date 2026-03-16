@@ -176,6 +176,8 @@ AskUserQuestion - "Research foundation complete (initialized, planned, gathered,
 
 ### Phase 2: Optional Phases Decision
 
+> **Phase gate**: Requires `AskUserQuestion` confirmation from Phase 1 before executing.
+
 **Purpose**: Evaluate whether brainstorming and/or design phases would be valuable (independently)
 **Execute**: Direct
 **Output**: Updated `orchestrator-state.yml`
@@ -274,6 +276,8 @@ AskUserQuestion - "Brainstorming complete. Continue to high-level design?"
 
 ### Phase 5: High-Level Design
 
+> **Phase gate**: Requires `AskUserQuestion` confirmation from the preceding phase before executing.
+
 **Purpose**: Create architecture design from selected solution approach
 **Execute**: Orchestrator-Direct Hybrid
 **Output**: `outputs/high-level-design.md`, `outputs/decision-log.md`
@@ -318,6 +322,8 @@ AskUserQuestion - "Design complete. Continue to output generation?"
 ---
 
 ### Phase 6: Completion
+
+> **Phase gate**: Requires `AskUserQuestion` confirmation from the preceding phase before executing.
 
 **Purpose**: Summarize research results and suggest next steps
 **Execute**: Direct

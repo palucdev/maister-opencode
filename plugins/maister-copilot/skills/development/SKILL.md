@@ -135,6 +135,8 @@ ask_user - "Scope decisions resolved. Continue?" (or "Gap analysis complete, no 
 
 ### Phase 3: TDD Red Gate (Conditional)
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 2 before executing.
+
 **Purpose**: Write a failing test that reproduces the defect
 **Execute**: Direct - write test, verify it FAILS
 **Output**: `implementation/tdd-red-gate.md`, failing test file
@@ -152,6 +154,8 @@ ask_user - "TDD red gate complete. Continue to Phase 4?"
 
 ### Phase 4: UI Mockup Generation (Conditional)
 
+> **Phase gate**: Requires `ask_user` confirmation from the preceding phase before executing.
+
 **Purpose**: Generate ASCII mockups showing UI integration
 **Execute**: Task tool - `maister-ui-mockup-generator` subagent
 **Output**: `analysis/ui-mockups.md`
@@ -168,6 +172,8 @@ ask_user - "UI mockups complete. Continue to Phase 5?"
 ---
 
 ### Phase 5: Technical Approach, Requirements & Specification
+
+> **Phase gate**: Requires `ask_user` confirmation from the preceding phase before executing.
 
 **Purpose**: Resolve technical decisions, gather specification requirements, then create comprehensive specification
 **Execute**:
@@ -221,6 +227,8 @@ ask_user - "Specification created. Continue to Phase 6?"
 
 ### Phase 6: Specification Audit (Recommended)
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 5 before executing.
+
 **Purpose**: Independent review of specification before implementation
 **Execute**: Task tool - `maister-spec-auditor` subagent
 **Output**: `verification/spec-audit.md`
@@ -237,6 +245,8 @@ ask_user - "Audit complete. Continue to Phase 7?"
 ---
 
 ### Phase 7: Implementation Planning
+
+> **Phase gate**: Requires `ask_user` confirmation from Phase 6 before executing.
 
 **Purpose**: Break specification into implementation steps
 
@@ -262,6 +272,8 @@ ask_user - "Plan created. Continue to Phase 8?"
 ---
 
 ### Phase 8: Implementation
+
+> **Phase gate**: Requires `ask_user` confirmation from Phase 7 before executing.
 
 **Purpose**: Execute the implementation plan
 
@@ -290,6 +302,8 @@ ask_user - "Implementation complete. Continue to Phase [9 or 10]?"
 
 ### Phase 9: TDD Green Gate (Conditional)
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 8 before executing.
+
 **Purpose**: Verify the failing test now passes
 **Execute**: Direct - run the test written in Phase 3
 **Output**: `implementation/tdd-green-gate.md`
@@ -306,6 +320,8 @@ ask_user - "TDD gate passed. Continue to Phase 10?"
 ---
 
 ### Phase 10: Verification Options Prompt
+
+> **Phase gate**: Requires `ask_user` confirmation from the preceding phase before executing.
 
 **Purpose**: Determine which verification checks to run using tiered decision matrix
 **Execute**: Direct - display plan, confirm/adjust via ask_user
@@ -345,6 +361,8 @@ Options: "Code review (Recommended)", "Pragmatic review (Recommended)", "Reality
 ---
 
 ### Phase 11: Verification & Issue Resolution
+
+> **Phase gate**: Requires `ask_user` confirmation from Phase 10 before executing.
 
 **Purpose**: Comprehensive implementation verification with fix-then-reverify cycles
 **Output**: `verification/implementation-verification.md`, optional code-review/pragmatic/reality reports, updated `implementation/work-log.md`
@@ -386,6 +404,8 @@ ask_user - "Verification: [N] critical, [N] warnings [resolved/remaining]. Conti
 
 ### Phase 12: E2E Testing (Optional)
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 11 before executing.
+
 **Purpose**: Runtime browser verification with screenshots (via Playwright MCP tools, not test file generation)
 **Execute**: Task tool - `maister-e2e-test-verifier` subagent
 **Prompt must include**: task_path (absolute), spec_path, base_url. Report saves to `{task_path}/verification/e2e-verification-report.md`.
@@ -402,6 +422,8 @@ ask_user - "E2E complete. Continue to Phase 13?"
 
 ### Phase 13: User Documentation (Optional)
 
+> **Phase gate**: Requires `ask_user` confirmation from the preceding phase before executing.
+
 **Purpose**: Generate user-facing documentation with screenshots
 **Execute**: Task tool - `maister-user-docs-generator` subagent
 **Prompt must include**: task_path (absolute), spec_path, base_url. Guide saves to `{task_path}/documentation/user-guide.md`.
@@ -417,6 +439,8 @@ ask_user - "Documentation complete. Continue to Phase 14?"
 ---
 
 ### Phase 14: Finalization
+
+> **Phase gate**: Requires `ask_user` confirmation from the preceding phase before executing.
 
 **Purpose**: Complete workflow and provide next steps
 **Execute**: Direct - create summary, update state, guide commit

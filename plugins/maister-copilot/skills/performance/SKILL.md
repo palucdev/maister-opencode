@@ -130,6 +130,8 @@ ask_user - "Performance analysis complete. [N] bottlenecks identified ([P0 count
 
 ### Phase 3: Requirements & Specification
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 2 before executing.
+
 **Purpose**: Gather optimization requirements and create specification
 **Output**: `analysis/requirements.md`, `implementation/spec.md`
 **State**: Update `performance_context.phase_summaries.specification`
@@ -167,6 +169,8 @@ ask_user - "Specification created. Continue to Phase 4?"
 
 ### Phase 4: Specification Audit (Conditional)
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 3 before executing.
+
 **Purpose**: Independent review of optimization specification
 **Execute**: Task tool - `maister-spec-auditor` subagent
 **Output**: `verification/spec-audit.md`
@@ -184,6 +188,8 @@ ask_user - "Audit complete. Continue to Phase 5?"
 ---
 
 ### Phase 5: Implementation Planning
+
+> **Phase gate**: Requires `ask_user` confirmation from Phase 4 before executing.
 
 **Purpose**: Break optimization specification into implementation steps
 
@@ -210,6 +216,8 @@ ask_user - "Implementation plan created. Continue to Phase 6?"
 ---
 
 ### Phase 6: Implementation
+
+> **Phase gate**: Requires `ask_user` confirmation from Phase 5 before executing.
 
 **Purpose**: Execute the optimization plan
 
@@ -240,6 +248,8 @@ ask_user - "Implementation complete. Continue to Phase 7?"
 
 ### Phase 7: Verification Options
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 6 before executing.
+
 **Purpose**: Determine which verification checks to run
 **Execute**: Direct - use ask_user for options
 **Output**: Updated state with verification options
@@ -260,6 +270,8 @@ ask_user - "Options selected. Continue to Phase 8?"
 
 ### Phase 8: Verification & Issue Resolution
 
+> **Phase gate**: Requires `ask_user` confirmation from Phase 7 before executing.
+
 **Purpose**: Comprehensive implementation verification with fix-then-reverify cycles
 **Execute**:
 1. Skill tool - `maister-implementation-verifier`
@@ -276,6 +288,8 @@ ask_user - "Verification complete. Continue to finalization?"
 ---
 
 ### Phase 9: Finalization
+
+> **Phase gate**: Requires `ask_user` confirmation from Phase 8 before executing.
 
 **Purpose**: Complete workflow and provide next steps
 **Execute**: Direct - create summary, update state, guide commit
