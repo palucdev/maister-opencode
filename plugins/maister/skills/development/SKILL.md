@@ -1,5 +1,5 @@
 ---
-name: development
+name: maister:development
 description: Unified orchestrator for all development tasks. Phases adapt based on detected task characteristics rather than predetermined types. Use for any development work that modifies code.
 user-invocable: true
 ---
