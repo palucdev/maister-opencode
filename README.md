@@ -122,6 +122,33 @@ Standards live in `.maister/docs/standards/` and are indexed in `.maister/docs/I
 
 **Important**: Run workflows with **auto-accept edits** enabled. Do not use Claude Code's plan mode -- the orchestrators handle their own planning phases internally, and plan mode will interfere with execution.
 
+## Beta Channel
+
+Want to try experimental features before they hit stable? Install from the beta channel:
+
+```bash
+# Add the beta marketplace
+/plugin marketplace add SkillPanel/Maister#beta
+
+# Install the beta plugin
+/plugin install maister@maister-plugins-beta
+```
+
+If you already have the stable version installed, uninstall it first to avoid conflicts:
+
+```bash
+/plugin uninstall maister@maister-plugins
+```
+
+To switch back to stable:
+
+```bash
+/plugin uninstall maister@maister-plugins-beta
+/plugin install maister@maister-plugins
+```
+
+Beta versions may contain features that are not yet fully tested. Use at your own discretion.
+
 ## Learn More
 
 - [Workflow Details](docs/workflows.md) - phases, examples, and task structure for each workflow type
