@@ -92,11 +92,11 @@ You can always be explicit when you prefer - arguments and flags simply override
 
 | Command | Use When |
 |---------|----------|
-| `/maister:development` | Features, bug fixes, enhancements - auto-detects type from context |
-| `/maister:research` | Evidence-based research with solution brainstorming and high-level design documents |
+| `/maister:development` | Features, bug fixes, enhancements |
+| `/maister:research` | Research with synthesis and solution design |
 | `/maister:performance` | Optimizing speed or resource usage |
 | `/maister:migration` | Changing technologies or patterns |
-| `/maister:product-design` | Designing features or products before building them |
+| `/maister:product-design` | Product and feature design |
 
 Task type (feature/bug/enhancement) is auto-detected from context. Override with `--type=feature|bug|enhancement` if needed. Or use `/maister:work` as a single entry point that routes to the right workflow.
 
