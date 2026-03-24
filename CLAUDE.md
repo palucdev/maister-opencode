@@ -60,6 +60,37 @@ This plugin follows specific documentation guidelines (see @plugins/maister/CLAU
 - Reference files guide implementation, not provide complete code
 - Single source of truth: technical details in `SKILL.md`, not scattered across files
 
+## Beta Branch Management
+
+The `beta` branch is used for developing and testing new features before they reach `master`.
+
+### Branch Conventions
+
+- **master**: Stable releases. Marketplace name: `maister-plugins`, versions: `X.Y.Z`
+- **beta**: Pre-release testing. Marketplace name: `maister-plugins-beta`, versions: `X.Y.Z-beta.N`
+
+### Merging beta to master (squash workflow)
+
+1. **Sync beta with master**: `git checkout beta && git merge master`
+2. **Squash-merge to master**: `git checkout master && git merge --squash beta`
+3. **Fix versions before committing**: Restore master's marketplace name (`maister-plugins`) and set the new release version (not beta version) in all three manifest files
+4. **Commit the feature**: `git commit -m "Feature description"`
+5. **Bump version**: Separate commit for the version bump
+6. **Reset beta**: `git checkout beta && git reset --hard master` — required because squash-merge doesn't track merge parents
+7. **Set beta version**: Update manifests to next beta version (e.g., `X.Y.Z-beta.1`) with marketplace name `maister-plugins-beta`, commit
+8. **Push both**: `git push origin master beta`
+
+### Why reset beta after squash?
+
+After `git merge --squash`, git doesn't record that beta's commits were merged. A regular `git merge master` back to beta would try to replay all old commits, causing conflicts. `reset --hard master` is safe because all beta work is preserved on master.
+
+### Manifest files to update
+
+These three files need version/name changes during the merge workflow:
+- `.claude-plugin/marketplace.json` — name + version + descriptions
+- `plugins/maister/.claude-plugin/plugin.json` — version + description
+- `plugins/maister-copilot/.claude-plugin/plugin.json` — version + description
+
 ## Testing Changes
 
 1. Navigate to a test project
