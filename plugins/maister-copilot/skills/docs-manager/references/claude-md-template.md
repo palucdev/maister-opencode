@@ -3,48 +3,25 @@
 Add this section to the project's `.github/copilot-instructions.md` file. Place it prominently near the top. Verify the INDEX.md path is correct and the file exists before adding.
 
 ```markdown
-## Project Documentation
+## Coding Standards & Conventions
 
-**CRITICAL**: Before starting any task, read @.maister/docs/INDEX.md to understand:
-- Project vision, goals, and roadmap
-- Technology stack and architectural decisions
-- Coding standards and conventions
-- Best practices and patterns
+Read @.maister/docs/INDEX.md before starting any task. It indexes the project's coding standards and conventions:
+- Coding standards organized by domain (frontend, backend, testing, etc.)
+- Project vision, tech stack, and architecture decisions
 
-### Documentation Structure
+Follow standards in `.maister/docs/standards/` when writing code — they represent team decisions. If standards conflict with the task, ask the user.
 
-All project documentation is located in `.maister/docs/`:
+### Standards Evolution
 
-- **@.maister/docs/INDEX.md** - Master documentation map (READ THIS FIRST)
-- **project/** - Project vision, roadmap, tech stack, architecture
-- **standards/** - Technical standards organized by domain
+When you notice recurring patterns, fixes, or conventions during implementation that aren't yet captured in standards — suggest adding them. Examples:
+- A bug fix reveals a pattern that should be standardized (e.g., "always validate X before Y")
+- PR review feedback identifies a convention the team wants enforced
+- The same type of fix is needed across multiple files
+- A new library/pattern is adopted that should be documented
 
-### Using Documentation
+When this happens, briefly suggest the standard to the user. If approved, invoke `/maister-standards-update` with the identified pattern.
 
-1. **Always start** by reading @.maister/docs/INDEX.md
-2. **Load relevant documentation** based on the task:
-   - For project context: Read `.maister/docs/project/vision.md`, `.maister/docs/project/tech-stack.md`
-   - For architecture decisions: Read `.maister/docs/project/architecture.md`
-   - For coding patterns: Read appropriate standards from `.maister/docs/standards/`
-3. **Follow standards** when writing code - they represent team decisions and conventions
-4. **Keep documentation updated** - update docs when making significant changes
-5. **Ask if unclear** - if documentation conflicts or is unclear, ask the user for clarification
+## Maister Workflows
 
-### Documentation Priority
-
-When in doubt, this is the priority order:
-1. Project documentation in `.maister/docs/` (highest priority)
-2. Code patterns and conventions visible in the codebase
-3. User's direct instructions
-4. General best practices (lowest priority)
-
-**The documentation in `.maister/docs/` represents team decisions and should be followed unless the user explicitly overrides them.**
-
-## AI SDLC Workflows
-
-This project uses the maister plugin for structured development. Available orchestrators:
-- `/maister-development` - Development workflow for features, enhancements, and bug fixes
-- `/maister-migration` - Technology/platform migrations (with rollback planning)
-
-All orchestrators read @.maister/docs/INDEX.md continuously to apply project standards.
+This project uses the maister plugin for structured development workflows. When any `/maister-*` command is invoked, execute it via the Skill tool immediately — do not skip workflows for "straightforward" tasks. The user chose the workflow intentionally; complexity assessment is the workflow's job.
 ```

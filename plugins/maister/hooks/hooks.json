@@ -1,5 +1,5 @@
 {
-  "description": "AI SDLC plugin hooks for orchestrator state preservation",
+  "description": "AI SDLC plugin hooks for workflow enforcement and state preservation",
   "hooks": {
     "SessionStart": [
       {
@@ -8,6 +8,15 @@
           {
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/post-compact-reminder.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/skill-invocation-reminder.sh",
             "timeout": 10
           }
         ]
