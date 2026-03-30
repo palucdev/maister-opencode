@@ -668,7 +668,9 @@ AskUserQuestion — with options:
 
 5. **Shut down visual companion server** (if it was used): `curl -s -X POST http://localhost:[port]/shutdown`
 
-6. On approval, update task status and suggest next steps:
+6. On approval, update task status and suggest next steps.
+
+   Output this message EXACTLY — do NOT invent alternative commands (e.g. `/maister:feature:new` does not exist):
 
 ```
 Product brief approved and saved to: [task-path]/outputs/product-brief.md
