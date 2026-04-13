@@ -36,6 +36,10 @@ find "$OUT/skills" -name "*.md" | while IFS= read -r f; do
   sedi 's/^name: maister:/name: /' "$f"
 done
 
+# 4b. Rename init skill to maister-init (avoids overriding OpenCode's built-in /init)
+#     Handle both LF and CRLF line endings (source files may have CRLF)
+sedi 's/^name: init\r\{0,1\}$/name: maister-init/' "$OUT/skills/init/SKILL.md"
+
 # 5. Replace maister: prefix with maister- for cross-references in content
 #    Run AFTER name: transforms so frontmatter name lines are already clean
 find "$OUT" -name "*.md" | while IFS= read -r f; do
