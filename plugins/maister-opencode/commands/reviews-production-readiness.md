@@ -30,7 +30,7 @@ You are performing comprehensive production readiness analysis covering configur
 
 ```
 Use Task tool:
-  subagent_type: "production-readiness-checker"
+  subagent_type: "maister-production-readiness-checker"
   description: "Production readiness check"
   prompt: |
     Verify production readiness at: [path from user or from question]

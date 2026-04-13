@@ -98,7 +98,7 @@ Use the Read tool to load ONLY the reference files for phases you will execute:
 
 **Step 3: Adapt templates** — Replace `[scope]`, `[confidence]`, and other placeholders with actual values. Replace the `[output_file]` placeholder in each template with the actual temp file path for that phase (e.g., `{tmpdir}/config.yml`).
 
-**Step 4: Launch subagents in parallel** — Use the Task tool with `subagent_type: general` for each phase.
+**Step 4: Launch subagents in parallel** — Use the Task tool with `subagent_type: general-purpose` for each phase.
 
 > ❌ **WRONG** — launching one agent per message, waiting for result, then launching the next.
 > ✅ **CORRECT** — launching ALL applicable agents (2–4 Task calls) in a SINGLE message.
@@ -172,7 +172,7 @@ For each approved standard:
 
 1. **Prepare content** — Standard name, description, examples (preferred/avoid), rationale from evidence, source citations. Format each standard as a `###` heading with 1-10 lines description (excluding code snippets). Group related standards into the same topic file. Add brief code examples only when they clarify the practice.
 2. **Check if file exists** — Determine create vs update action
-3. **Invoke `docs-operator` subagent** via Task tool (subagent_type: `docs-operator`) — Pass prepared content. For creates: new file. For updates: merge new findings with existing. Wait for completion, then continue with the next standard.
+3. **Invoke `docs-operator` subagent** via Task tool (subagent_type: `maister-docs-operator`) — Pass prepared content. For creates: new file. For updates: merge new findings with existing. Wait for completion, then continue with the next standard.
 4. **After all standards applied, invoke `docs-operator` subagent** via Task tool to regenerate INDEX.md. Wait for completion, then continue with step 5.
 5. **Invoke `docs-operator` subagent** via Task tool to verify AGENTS.md integration — ensure standards directory is referenced. Wait for completion, then display the application summary.
 

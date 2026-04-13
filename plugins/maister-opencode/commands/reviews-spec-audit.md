@@ -3,7 +3,7 @@ name: reviews-spec-audit
 description: Independent specification audit to verify completeness and clarity before implementation
 ---
 
-**ACTION REQUIRED**: This command delegates to a different skill. The `<command-name>` tag refers to THIS command, not the target. Call the Task tool with subagent_type="spec-auditor" NOW. Pass the spec path in the prompt. Do not read files, explore code, or execute workflow steps yourself.
+**ACTION REQUIRED**: This command delegates to a different skill. The `<command-name>` tag refers to THIS command, not the target. Call the Task tool with subagent_type="maister-spec-auditor" NOW. Pass the spec path in the prompt. Do not read files, explore code, or execute workflow steps yourself.
 
 You are running an independent specification audit using the `spec-auditor` agent.
 

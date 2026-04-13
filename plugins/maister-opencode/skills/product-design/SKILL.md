@@ -225,9 +225,9 @@ question — "I detected these design characteristics. Please confirm or correct
 - "I'll look through the project..." -- STOP. Delegate to codebase-analyzer.
 
 **INVOKE NOW** -- Skill tool call:
-1. Skill tool - `codebase-analyzer` (to understand existing product context, tech stack, UI patterns)
+1. Skill tool - `maister-codebase-analyzer` (to understand existing product context, tech stack, UI patterns)
 
-**SELF-CHECK**: Did you invoke the Skill tool with `codebase-analyzer`? Or did you start reading project files yourself? If the latter, STOP and invoke the Skill tool.
+**SELF-CHECK**: Did you invoke the Skill tool with `maister-codebase-analyzer`? Or did you start reading project files yourself? If the latter, STOP and invoke the Skill tool.
 
 **POST-SKILL CONTINUATION**: After codebase-analyzer returns control:
 1. Read `orchestrator-state.yml` to confirm you are the orchestrator
@@ -244,7 +244,7 @@ question — "I detected these design characteristics. Please confirm or correct
    - "I'll look that up..." -- STOP. Delegate to information-gatherer.
 
    **INVOKE NOW** -- Task tool call (parallel, one per topic):
-   Task tool - `information-gatherer` subagent per research topic
+   Task tool - `maister-information-gatherer` subagent per research topic
 
    **Context to pass**: research topic, scope constraints, task_path
 
@@ -377,7 +377,7 @@ question — "Personas defined. Continue to Idea Generation?"
 
 **INVOKE NOW** -- Task tool call:
 
-Task tool - `solution-brainstormer` subagent
+Task tool - `maister-solution-brainstormer` subagent
 
 **Context to pass** (Pattern 7):
 - `task_path`
@@ -582,7 +582,7 @@ The visual companion is the **default and preferred** rendering method. Always a
 > You should only reach this section if Step 1 failed (server could not start on any port) or the user explicitly passed `--no-visual`. If the visual companion is running, do NOT use this fallback.
 
 **INVOKE NOW** -- Task tool call:
-Task tool - `ui-mockup-generator` subagent
+Task tool - `maister-ui-mockup-generator` subagent
 
 **Context to pass**: task_path, spec sections from Phase 6, design context from Phase 1, selected approach from Phase 5
 

@@ -89,7 +89,7 @@ Use for:
 
 **Purpose**: Comprehensive analysis of current system before migration, followed by scope/requirements clarification
 **Execute**:
-1. Skill tool - `codebase-analyzer`
+1. Skill tool - `maister-codebase-analyzer`
 2. Update state with analysis results
 3. Direct - use question for max 5 critical clarifying questions about migration scope, target system, and constraints
 4. Save clarifications to `analysis/clarifications.md`
@@ -103,7 +103,7 @@ Use for:
 ### Phase 2: Target State Planning & Gap Analysis
 
 **Purpose**: Define target system and identify migration gaps
-**Execute**: Task tool - `gap-analyzer` subagent
+**Execute**: Task tool - `maister-gap-analyzer` subagent
 **Output**: `analysis/target-state-plan.md`
 **State**: Update `migration_context.migration_type`, `target_system`, `risk_level`, `breaking_changes`
 
@@ -138,7 +138,7 @@ question - Display executive summary before asking. Extract from gap analysis: c
 2. Save gathered requirements to `analysis/requirements.md`
 
 **Part B — Specification Creation (subagent)**:
-3. Task tool - `specification-creator` subagent
+3. Task tool - `maister-specification-creator` subagent
 
 **Context to pass to subagent**: task_path, task_type (migration), task_description, requirements_path (analysis/requirements.md), project_context_paths, migration_type, current_system, target_system, risk_level, breaking_changes, phase_summaries (current_state_analysis, gap_analysis)
 
@@ -156,7 +156,7 @@ question - Display executive summary before asking. Read `implementation/spec.md
 > **Phase gate**: Requires `question` confirmation from Phase 3 before executing.
 
 **Purpose**: Break migration into task groups with rollback steps
-**Execute**: Task tool - `implementation-planner` subagent
+**Execute**: Task tool - `maister-implementation-planner` subagent
 **Output**: `implementation/implementation-plan.md` with rollback procedures
 **State**: Update task groups and dependencies
 
@@ -180,13 +180,13 @@ question - Display executive summary before asking. Read `implementation/impleme
 
 **INVOKE NOW** — Skill tool call:
 
-**Execute**: Skill tool - `implementation-plan-executor`
+**Execute**: Skill tool - `maister-implementation-plan-executor`
 **Output**: Implemented migration changes, `implementation/work-log.md`
 **State**: Update implementation progress, extract phase_summaries.implementation
 
 📋 **Standards Reminder**: Review `.maister/docs/INDEX.md` before implementing.
 
-**SELF-CHECK**: Did you just invoke the Skill tool with `implementation-plan-executor`? Or did you start writing migration code yourself? If the latter, STOP immediately and invoke the Skill tool instead.
+**SELF-CHECK**: Did you just invoke the Skill tool with `maister-implementation-plan-executor`? Or did you start writing migration code yourself? If the latter, STOP immediately and invoke the Skill tool instead.
 
 **⚠️ POST-IMPLEMENTATION CONTINUATION** — After the skill completes and returns control:
 1. Read `orchestrator-state.yml` to confirm you are the orchestrator
@@ -204,7 +204,7 @@ question - Display executive summary before asking. Extract from `phase_summarie
 > **Phase gate**: Requires `question` confirmation from Phase 5 before executing.
 
 **Purpose**: Verify migration success with compatibility and rollback testing
-**Execute**: Skill tool - `implementation-verifier`
+**Execute**: Skill tool - `maister-implementation-verifier`
 **Output**: `verification/implementation-verification.md`, `verification/compatibility-test-results.md`
 **State**: Update verification results
 
@@ -242,7 +242,7 @@ question - Display executive summary before asking. Extract from verification re
 3. question — "Which issues should I fix?" with options: "Fix all fixable issues" / "Let me choose specific issues" / "Skip fixes, proceed as-is"
 4. Fix selected issues
 5. question — "Re-run verification to check fixes?" with options: "Yes, re-run verification" / "No, proceed to next phase"
-6. If re-run → re-invoke `implementation-verifier` → return to Step 1
+6. If re-run → re-invoke `maister-implementation-verifier` → return to Step 1
 7. Max 3 iterations
 
 **Data Safety Critical**: HALT on any data integrity issue - never auto-fix data problems. Always present data issues to user with rollback option.
@@ -263,7 +263,7 @@ question - Display executive summary: total issues found, issues fixed, issues r
 > **Phase gate**: Requires `question` confirmation from the preceding phase before executing.
 
 **Purpose**: Create migration guide for end users
-**Execute**: Task tool - `user-docs-generator` subagent
+**Execute**: Task tool - `maister-user-docs-generator` subagent
 **Output**: `documentation/migration-guide.md`
 **State**: Set documentation complete
 
