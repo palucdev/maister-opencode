@@ -31,7 +31,7 @@ You are performing automated code analysis to identify quality, security, and pe
 
 ```
 Use Task tool:
-  subagent_type: "maister-code-reviewer"
+  subagent_type: "code-reviewer"
   description: "Code quality review"
   prompt: |
     Analyze code at: [path from user or from question]

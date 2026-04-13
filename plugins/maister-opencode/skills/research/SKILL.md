@@ -123,7 +123,7 @@ This phase executes 4 sequential steps. On resume, check existing artifacts to s
 
 **Read `references/research-methodologies.md` NOW using the Read tool** — research type classification, methodology selection, gathering strategies
 
-**INVOKE NOW**: Use Task tool with `subagent_type: maister-research-planner`
+**INVOKE NOW**: Use Task tool with `subagent_type: research-planner`
 
 **Context to pass**: task_path, research_brief_path, research_type, research_question, scope
 
@@ -154,7 +154,7 @@ For each category in strategy:
 **Artifacts**: `analysis/synthesis.md`, `outputs/research-report.md`
 **Resume check**: If `analysis/synthesis.md` AND `outputs/research-report.md` exist, skip (Phase 1 complete)
 
-**INVOKE NOW**: Use Task tool with `subagent_type: maister-research-synthesizer`
+**INVOKE NOW**: Use Task tool with `subagent_type: research-synthesizer`
 
 **Context to pass**: task_path, findings_directory_path, research_question, research_type, methodology
 
@@ -222,7 +222,7 @@ question - "Research foundation complete (initialized, planned, gathered, synthe
 
 > **ANTI-PATTERN**: Do NOT generate solution alternatives inline. The solution-brainstormer agent has specialized multi-perspective analysis capabilities.
 
-**INVOKE NOW**: Use Task tool with `subagent_type: maister-solution-brainstormer`
+**INVOKE NOW**: Use Task tool with `subagent_type: solution-brainstormer`
 
 **Context to pass** (Pattern 7):
 - `task_path`, `synthesis_path`, `research_report_path`
@@ -296,7 +296,7 @@ question - "Brainstorming complete. Continue to high-level design?"
 
 > **ANTI-PATTERN**: Do NOT generate C4 architecture diagrams or ADRs inline. The solution-designer agent has specialized architecture and MADR documentation capabilities.
 
-**INVOKE NOW**: Use Task tool with `subagent_type: maister-solution-designer`
+**INVOKE NOW**: Use Task tool with `subagent_type: solution-designer`
 
 **Context to pass** (Pattern 7):
 - `task_path`, `synthesis_path`, `research_report_path`
