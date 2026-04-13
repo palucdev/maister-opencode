@@ -5,7 +5,7 @@ description: Independent specification audit to verify completeness and clarity 
 
 **ACTION REQUIRED**: This command delegates to a different skill. The `<command-name>` tag refers to THIS command, not the target. Call the Task tool with subagent_type="maister-spec-auditor" NOW. Pass the spec path in the prompt. Do not read files, explore code, or execute workflow steps yourself.
 
-You are running an independent specification audit using the `spec-auditor` agent.
+You are running an independent specification audit using the `maister-spec-auditor` agent.
 
 ## Your Task
 
@@ -25,11 +25,11 @@ You are performing senior auditor review of specifications to verify completenes
 
 ## Your Instructions
 
-**Invoke the spec-auditor agent NOW using the Task tool:**
+**Invoke the maister-spec-auditor agent NOW using the Task tool:**
 
 ```
 Task Tool:
-- subagent_type: spec-auditor
+- subagent_type: maister-spec-auditor
 - description: Specification audit
 - prompt: |
     You are the spec-auditor agent. Audit the specification at: [spec-path]
@@ -57,7 +57,7 @@ Task Tool:
 
 **Wait for the agent to complete before proceeding.**
 
-The spec-auditor agent will:
+The maister-spec-auditor agent will:
 1. Thoroughly read and understand specification
 2. Identify ambiguities, unclear sections, missing details
 3. (If post-impl) Independently examine actual implementation
@@ -86,7 +86,7 @@ User: /maister-reviews-spec-audit spec.md --focus=ambiguity
 
 ## What to Expect
 
-The spec-auditor will provide:
+The maister-spec-auditor will provide:
 - Specification completeness assessment
 - Ambiguities and unclear sections identified
 - (If post-impl) Gaps between spec and implementation (Missing/Incomplete/Incorrect/Extra)
