@@ -26,24 +26,24 @@ rm -rf "$OUT/.claude-plugin"
 
 # 3. Strip plugin prefix from command names: "maister:foo" → "foo"
 #    OpenCode namespaces commands automatically from the package name
-find "$OUT/commands" -name "*.md" | while read f; do
+find "$OUT/commands" -name "*.md" | while IFS= read -r f; do
   sedi 's/^name: maister:/name: /' "$f"
 done
 
 # 4. Strip plugin prefix from skill names: "maister:foo" → "foo"
 #    OpenCode skill names must be lowercase alphanumeric with hyphens only
-find "$OUT/skills" -name "*.md" | while read f; do
+find "$OUT/skills" -name "*.md" | while IFS= read -r f; do
   sedi 's/^name: maister:/name: /' "$f"
 done
 
 # 5. Replace maister: prefix with maister- for cross-references in content
 #    Run AFTER name: transforms so frontmatter name lines are already clean
-find "$OUT" -name "*.md" | while read f; do
+find "$OUT" -name "*.md" | while IFS= read -r f; do
   sedi 's/maister:/maister-/g' "$f"
 done
 
 # 6. Replace CLAUDE.md references with AGENTS.md (OpenCode's native rules file)
-find "$OUT" -name "*.md" | while read f; do
+find "$OUT" -name "*.md" | while IFS= read -r f; do
   sedi 's/CLAUDE\.md/AGENTS.md/g' "$f"
 done
 
