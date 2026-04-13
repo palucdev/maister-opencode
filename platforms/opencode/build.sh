@@ -80,12 +80,11 @@ cp "$SCRIPT_DIR/hooks-template.js" "$OUT/.opencode/plugins/hooks.js"
 # 10. Extract version from source plugin.json and write ROOT-LEVEL package.json
 #     This enables: "plugin": ["maister-opencode@git+https://github.com/palucdev/maister-opencode.git"]
 #     Bun resolves the git URL to the repo root, finds package.json, and loads the main entry point.
-if command -v jq >/dev/null 2>&1; then
-  VERSION=$(jq -r '.version' "$CORE/.claude-plugin/plugin.json")
-elif command -v python3 >/dev/null 2>&1; then
-  VERSION=$(python3 -c "import json,sys; print(json.load(open('$CORE/.claude-plugin/plugin.json'))['version'])")
-else
-  VERSION=$(node -e "console.log(require('$CORE/.claude-plugin/plugin.json').version)")
+VERSION=$(awk -F'"' '/"version"[[:space:]]*:/ { print $4; exit }' "$CORE/.claude-plugin/plugin.json")
+
+if [ -z "$VERSION" ]; then
+  echo "Error: Could not extract version from $CORE/.claude-plugin/plugin.json" >&2
+  exit 1
 fi
 
 cat > "$ROOT/package.json" << EOF
