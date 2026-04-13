@@ -1,0 +1,6 @@
+{
+  "name": "maister-opencode",
+  "version": "2.1.4",
+  "type": "module",
+  "main": "plugins/maister-opencode/.opencode/plugins/hooks.js"
+}
