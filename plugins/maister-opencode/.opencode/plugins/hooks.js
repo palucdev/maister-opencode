@@ -14,8 +14,9 @@ const PLUGIN_ROOT = path.resolve(__dirname, '../..')
 
 // Simple frontmatter parser — no external dependencies
 function parseFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/)
-  if (!match) return { data: {}, content: content.trim() }
+  const normalized = content.replace(/\r\n?/g, '\n')
+  const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/)
+  if (!match) return { data: {}, content: normalized.trim() }
 
   const data = {}
   for (const line of match[1].split('\n')) {
