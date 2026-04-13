@@ -5,7 +5,7 @@ description: Comprehensive reality assessment of completed work to verify it act
 
 **ACTION REQUIRED**: This command delegates to a different skill. The `<command-name>` tag refers to THIS command, not the target. Call the Task tool with subagent_type="maister-reality-assessor" NOW. Pass the task path in the prompt. Do not read files, explore code, or execute workflow steps yourself.
 
-You are running a comprehensive reality check using the `reality-assessor` agent.
+You are running a comprehensive reality check using the `maister-reality-assessor` agent.
 
 ## Your Task
 
@@ -21,14 +21,14 @@ You are performing no-nonsense reality assessment to determine if completed work
 
 ## Your Instructions
 
-**Invoke the reality-assessor agent NOW using the Task tool:**
+**Invoke the maister-reality-assessor agent NOW using the Task tool:**
 
 ```
 Task Tool:
-- subagent_type: reality-assessor
+- subagent_type: maister-reality-assessor
 - description: Reality assessment
 - prompt: |
-    You are the reality-assessor agent. Assess the reality of completion for: [task-path]
+    You are the maister-reality-assessor agent. Assess the reality of completion for: [task-path]
 
     Your task:
     1. Load all available verification reports (implementation-verifier, pragmatic-review.md, code-review-report.md, spec-audit.md)
@@ -52,7 +52,7 @@ Task Tool:
 
 **Wait for the agent to complete before proceeding.**
 
-The reality-assessor agent will:
+The maister-reality-assessor agent will:
 1. Review all available verification reports
 2. Validate claimed completions through independent testing
 3. Test end-to-end functionality (not just isolated tests)
@@ -81,7 +81,7 @@ User: /maister-reviews-reality-check .maister/tasks/development/2025-11-17-user-
 
 ## What to Expect
 
-The reality-assessor will provide:
+The maister-reality-assessor will provide:
 - Reality vs claims gap analysis
 - Critical gaps preventing deployment (Critical severity)
 - Quality gaps affecting reliability (High/Medium severity)
