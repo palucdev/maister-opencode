@@ -57,6 +57,93 @@ find "$OUT" -name "*.md" | while read f; do
   sedi 's/AskUserQuestion/question/g' "$f"
 done
 
+# 7.5. Auto-generate commands for user-invocable skills
+echo "Generating commands for user-invocable skills..."
+
+for skill_dir in "$OUT/skills"/*; do
+  if [ ! -d "$skill_dir" ]; then
+    continue
+  fi
+  
+  skill_md="$skill_dir/SKILL.md"
+  if [ ! -f "$skill_md" ]; then
+    continue
+  fi
+  
+  # Check if user-invocable: true (using grep for CRLF compatibility)
+  if grep -q "^user-invocable:[[:space:]]*true" "$skill_md"; then
+    skill_name=$(basename "$skill_dir")
+    echo "  Generating command for skill: $skill_name"
+    
+    # Extract metadata from frontmatter using sed (handles CRLF)
+    name=$(sed -n 's/^name:[[:space:]]*//p' "$skill_md" | tr -d '\r' | head -1)
+    
+    # Extract description (may span multiple lines)
+    description=$(sed -n '/^description:/,/^[a-z-]*:/{/^description:/s/^description:[[:space:]]*//p;/^[a-z-]*:/!p}' "$skill_md" | tr -d '\r' | head -1)
+    
+    # Extract argument hint
+    argument_hint=$(sed -n 's/^argument-hint:[[:space:]]*//p' "$skill_md" | tr -d '\r' | head -1)
+    
+    # Default argument hint if not provided
+    if [ -z "$argument_hint" ]; then
+      argument_hint="[task description]"
+    fi
+    
+    # Capitalize first letter for title
+    title=$(echo "$skill_name" | awk '{ for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)) }1' | sed 's/-/ /g')
+    
+    # Generate command file
+    cat > "$OUT/commands/${skill_name}.md" <<EOF
+---
+name: ${skill_name}
+description: ${description}
+generated-from-skill: true
+---
+
+<!-- AUTO-GENERATED from skills/${skill_name}/SKILL.md - DO NOT EDIT MANUALLY -->
+
+# ${title} Workflow
+
+${description}
+
+## Usage
+
+\`\`\`bash
+/maister-${skill_name} ${argument_hint}
+\`\`\`
+
+## Workflow
+
+**When this command is invoked:**
+
+1. **Invoke the skill** via the Skill tool as your FIRST action:
+   \`\`\`
+   Use Skill tool:
+     skill: "${skill_name}"
+     prompt: [user provided arguments and flags]
+   \`\`\`
+
+2. **Follow skill instructions**: The skill orchestrates the complete workflow including:
+   - Task directory creation and state management
+   - Phase execution with interactive gates
+   - Subagent delegation for specialized work
+   - Pause/resume capability
+
+3. **All orchestration logic lives in the skill**: See \`skills/${skill_name}/SKILL.md\` for:
+   - Complete phase descriptions
+   - Configuration flags and options
+   - Resume instructions (\`--from=PHASE\`, \`--reset-attempts\`)
+   - Examples and use cases
+
+---
+
+**Note**: This is a thin command wrapper. The skill file is the single source of truth for workflow logic.
+EOF
+  fi
+done
+
+echo "Generated commands for user-invocable skills"
+
 # 8. Rename CLAUDE.md → AGENTS.md and append platform note
 mv "$OUT/CLAUDE.md" "$OUT/AGENTS.md"
 
