@@ -12,6 +12,42 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // Plugin root is:    plugins/maister-opencode/
 const PLUGIN_ROOT = path.resolve(__dirname, '../..')
 
+/**
+ * Resolves model aliases to the configured small_model value.
+ * Maps common small/fast model aliases to OpenCode's small_model config.
+ * 
+ * @param {string} modelValue - The model value from agent frontmatter
+ * @param {string} smallModel - The small_model from OpenCode config
+ * @returns {string|undefined} - Resolved model value or undefined
+ */
+function resolveModelAlias(modelValue, smallModel) {
+  // Aliases that should map to small_model
+  const SMALL_MODEL_ALIASES = [
+    'haiku',           // Claude Code alias
+    'gpt-4o-mini',     // OpenAI small model
+    'small',           // Generic alias
+    'fast',            // Generic alias
+  ];
+  
+  // If no model specified or it's 'inherit', return undefined (let OpenCode decide)
+  if (!modelValue || modelValue === 'inherit') {
+    return undefined;
+  }
+  
+  // If it's a small model alias and we have a configured small_model, use it
+  if (SMALL_MODEL_ALIASES.includes(modelValue.toLowerCase())) {
+    if (smallModel) {
+      return smallModel;
+    }
+    // If no small_model configured, return undefined (inherit)
+    console.warn(`[Maister] Agent uses '${modelValue}' but no small_model configured in opencode.json - falling back to inherit`);
+    return undefined;
+  }
+  
+  // Otherwise, pass through the original value
+  return modelValue;
+}
+
 // Simple frontmatter parser — no external dependencies
 function parseFrontmatter(content) {
   const normalized = content.replace(/\r\n?/g, '\n')
@@ -51,6 +87,31 @@ export const MaisterPlugin = async ({ $, directory }) => {
      * them without requiring manual config file edits.
      */
     config: async (config) => {
+      // Get small_model config for alias resolution
+      // Try from config parameter first, fallback to reading opencode.json
+      let smallModel = config.small_model;
+      
+      if (!smallModel) {
+        try {
+          // Check project-level opencode.json
+          const projectConfigPath = path.join(directory, 'opencode.json');
+          if (fs.existsSync(projectConfigPath)) {
+            const rawConfig = fs.readFileSync(projectConfigPath, 'utf8');
+            const opencodeConfig = JSON.parse(rawConfig);
+            smallModel = opencodeConfig.small_model;
+          }
+        } catch (error) {
+          // Couldn't read or parse config - small_model remains undefined
+        }
+      }
+      
+      // Debug logging (can be removed after confirming functionality)
+      if (process.env.MAISTER_DEBUG_MODELS) {
+        console.log('[Maister] Model resolution debug:');
+        console.log('  config.small_model:', config.small_model);
+        console.log('  resolved small_model:', smallModel);
+      }
+      
       // --- Skills ---
       config.skills = config.skills || {}
       config.skills.paths = config.skills.paths || []
@@ -87,7 +148,11 @@ export const MaisterPlugin = async ({ $, directory }) => {
         config.agent[name] = {
           prompt: content,
           ...(data.description && { description: data.description }),
-          ...(data.model && data.model !== 'inherit' && { model: data.model }),
+          // Resolve model aliases (haiku, gpt-4o-mini, etc.) to small_model
+          ...(() => {
+            const resolvedModel = resolveModelAlias(data.model, smallModel);
+            return resolvedModel ? { model: resolvedModel } : {};
+          })(),
           ...(data.color && { color: data.color }),
           ...(data.mode && { mode: data.mode }),
         }
