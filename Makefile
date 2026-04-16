@@ -62,6 +62,22 @@ validate-opencode:
 	@test -f package.json || (echo "FAIL: root package.json missing" && exit 1)
 	@grep -q '"main".*"plugins/maister-opencode/.opencode/plugins/hooks.js"' package.json || \
 		(echo "FAIL: package.json main field incorrect" && exit 1)
+	@echo "Checking generated commands match user-invocable skills..."
+	@SKILL_COUNT=$$(grep -l "user-invocable: true" plugins/maister-opencode/skills/*/SKILL.md 2>/dev/null | wc -l | tr -d ' '); \
+	CMD_COUNT=$$(grep -l "generated-from-skill: true" plugins/maister-opencode/commands/*.md 2>/dev/null | wc -l | tr -d ' '); \
+	if [ "$$SKILL_COUNT" -ne "$$CMD_COUNT" ]; then \
+		echo "FAIL: Mismatch between user-invocable skills ($$SKILL_COUNT) and generated commands ($$CMD_COUNT)"; \
+		exit 1; \
+	fi
+	@echo "Checking all generated commands have AUTO-GENERATED marker..."
+	@for f in plugins/maister-opencode/commands/*.md; do \
+		if grep -q "generated-from-skill: true" "$$f" 2>/dev/null; then \
+			if ! grep -q "AUTO-GENERATED" "$$f" 2>/dev/null; then \
+				echo "FAIL: $$f missing AUTO-GENERATED comment"; \
+				exit 1; \
+			fi; \
+		fi; \
+	done
 	@echo "All OpenCode checks passed"
 
 clean-opencode:

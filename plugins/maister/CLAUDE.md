@@ -540,6 +540,34 @@ Research context flows through ALL phases without skipping any. Research artifac
 
 **See**: Individual `commands/` and `skills/*/skill.md` files for detailed documentation.
 
+### Auto-Generated Commands (OpenCode)
+
+For the OpenCode platform, commands are automatically generated during the build process for all skills marked with `user-invocable: true` in their SKILL.md frontmatter. These commands serve as thin wrappers that:
+
+- Provide discoverable slash commands (e.g., `/maister:development`)
+- Extract usage hints and descriptions from skill metadata
+- Delegate all orchestration logic to the underlying skill
+- Stay automatically synchronized with skills on every build
+
+**Currently auto-generated commands:**
+- `development` - Unified workflow for all development tasks (bugs, features, enhancements)
+- `migration` - Code/data/architecture migration workflows
+- `performance` - Performance optimization with bottleneck detection
+- `product-design` - Interactive product/feature design with visual prototyping
+- `research` - Comprehensive research with synthesis and solution brainstorming
+
+**Key characteristics:**
+- **Thin wrappers**: Commands contain only usage examples and skill invocation instructions
+- **Single source of truth**: All workflow logic lives in the skill's SKILL.md file
+- **Auto-maintained**: Regenerated on every `make build-opencode` run
+- **Marked as generated**: Include `generated-from-skill: true` frontmatter and `<!-- AUTO-GENERATED -->` comment
+
+**Customization**: To modify auto-generated commands, edit the source skill's SKILL.md frontmatter (name, description, argument-hint). The command will be automatically regenerated on the next build.
+
+**Manual commands**: The `work`, `quick-*`, and `reviews-*` commands are manually maintained in the `commands/` directory and are NOT auto-generated.
+
+**Platform note**: This auto-generation only applies to OpenCode. The Copilot CLI variant does not generate these commands as it supports direct skill invocation.
+
 ## Available Subagents
 
 Subagents are specialized AI agents invoked by skills and orchestrators. All agents are read-only unless specified.
