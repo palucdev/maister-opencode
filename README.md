@@ -31,6 +31,26 @@ Describe what you want to build, and the plugin handles the rest - from specific
 
 After installing, restart Claude Code (`/exit` and relaunch) to ensure the plugin is fully loaded.
 
+#### Opencode installation
+
+Add maister-opencode to the `plugin` array in your `opencode.json` (global or project-level):
+
+```json
+{
+  "plugin": ["maister-opencode@git+https://github.com/palucdev/maister-opencode.git"]
+}
+```
+
+Restart OpenCode. That's it — the plugin auto-installs and registers all skills.
+
+To fix on specific version use: `#<release-name>`
+
+```json
+{
+  "plugin": ["maister-opencode@git+https://github.com/palucdev/maister-opencode.git#v1.0.0"]
+}
+```
+
 ### Initial project setup
 
 Initialize your project to auto-detect coding standards and generate project documentation:
