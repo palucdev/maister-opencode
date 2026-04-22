@@ -57,7 +57,69 @@ find "$OUT" -name "*.md" | while read f; do
   sedi 's/AskUserQuestion/question/g' "$f"
 done
 
-# 7.5. Auto-generate commands for user-invocable skills
+# 7.5. Add model: inherit to agents without model property (for OpenCode)
+if [ -d "$OUT/agents" ]; then
+  echo "Adding model: inherit to agents without model property..."
+  find "$OUT/agents" -name "*.md" | while IFS= read -r f; do
+    # Use awk to add model: inherit at end of frontmatter if not present
+    awk '
+      BEGIN { 
+        in_frontmatter = 0
+        has_model = 0
+        frontmatter_count = 0
+      }
+      /^---/ {
+        frontmatter_count++
+        if (frontmatter_count == 1) {
+          # Opening frontmatter delimiter
+          in_frontmatter = 1
+          print
+          next
+        } else if (frontmatter_count == 2) {
+          # Closing frontmatter delimiter - insert model: inherit if needed
+          if (!has_model) {
+            print "model: inherit"
+          }
+          print
+          in_frontmatter = 0
+          next
+        }
+      }
+      in_frontmatter && /^model:/ {
+        has_model = 1
+      }
+      { print }
+    ' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+  done
+  echo "Added model: inherit to agents"
+fi
+
+# 7.6. Add mode: subagent and hidden: true to agent frontmatter (for OpenCode)
+if [ -d "$OUT/agents" ]; then
+  echo "Adding subagent metadata to agents..."
+  find "$OUT/agents" -name "*.md" | while IFS= read -r f; do
+    # Use awk to add mode and hidden properties at end of frontmatter
+    awk '
+      BEGIN { 
+        frontmatter_count = 0
+      }
+      /^---/ {
+        frontmatter_count++
+        if (frontmatter_count == 2) {
+          # Closing frontmatter delimiter - insert mode and hidden before it
+          print "mode: subagent"
+          print "hidden: true"
+        }
+        print
+        next
+      }
+      { print }
+    ' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+  done
+  echo "Added subagent metadata to agent files"
+fi
+
+# 7.7. Auto-generate commands for user-invocable skills
 echo "Generating commands for user-invocable skills..."
 
 for skill_dir in "$OUT/skills"/*; do
