@@ -41,6 +41,25 @@ done
 sedi 's/^name: init\r\{0,1\}$/name: maister-init/' "$OUT/skills/init/SKILL.md"
 mv "$OUT/skills/init" "$OUT/skills/maister-init"
 
+# 4c. Add user-invocable: true to maister-init skill
+echo "Adding user-invocable: true to maister-init skill..."
+awk '
+  BEGIN { 
+    frontmatter_count = 0
+  }
+  /^---/ {
+    frontmatter_count++
+    if (frontmatter_count == 2) {
+      # Closing frontmatter delimiter - insert user-invocable before it
+      print "user-invocable: true"
+    }
+    print
+    next
+  }
+  { print }
+' "$OUT/skills/maister-init/SKILL.md" > "$OUT/skills/maister-init/SKILL.md.tmp" && mv "$OUT/skills/maister-init/SKILL.md.tmp" "$OUT/skills/maister-init/SKILL.md"
+echo "Added user-invocable: true to maister-init skill"
+
 # 5. Replace maister: prefix with maister- for cross-references in content
 #    Run AFTER name: transforms so frontmatter name lines are already clean
 find "$OUT" -name "*.md" | while IFS= read -r f; do
