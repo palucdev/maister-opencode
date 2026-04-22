@@ -50,14 +50,26 @@ function resolveModelAlias(modelValue, smallModel) {
   return modelValue;
 }
 
-// Simple frontmatter parser — no external dependencies
+// Simple frontmatter parser — handles arrays and simple key-value pairs
 function parseFrontmatter(content) {
   const normalized = content.replace(/\r\n?/g, "\n");
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!match) return { data: {}, content: normalized.trim() };
 
   const data = {};
-  for (const line of match[1].split("\n")) {
+  const lines = match[1].split("\n");
+  let currentArray = null;
+
+  for (const line of lines) {
+    // Check for array item
+    if (line.trim().startsWith("-") && currentArray) {
+      const value = line.trim().slice(1).trim();
+      if (value) {
+        currentArray.push(value);
+      }
+      continue;
+    }
+
     const colonIdx = line.indexOf(":");
     if (colonIdx > 0) {
       const key = line.slice(0, colonIdx).trim();
@@ -65,7 +77,15 @@ function parseFrontmatter(content) {
         .slice(colonIdx + 1)
         .trim()
         .replace(/^["']|["']$/g, "");
-      data[key] = value;
+
+      // If value is empty, might be start of array
+      if (!value) {
+        currentArray = [];
+        data[key] = currentArray;
+      } else {
+        data[key] = value;
+        currentArray = null;
+      }
     }
   }
   return { data, content: match[2].trim() };
@@ -155,17 +175,28 @@ export const MaisterPlugin = async ({ $, directory }) => {
         if (!name) continue;
         // Don't overwrite agents the user has explicitly configured
         if (config.agent[name]) continue;
-        config.agent[name] = {
-          prompt: content,
-          ...(data.description && { description: data.description }),
-          // Resolve model aliases (haiku, gpt-4o-mini, etc.) to small_model
-          ...(() => {
-            const resolvedModel = resolveModelAlias(data.model, smallModel);
-            return resolvedModel ? { model: resolvedModel } : {};
-          })(),
-          ...(data.color && { color: data.color }),
-          ...(data.mode && { mode: data.mode }),
-        };
+
+        try {
+          config.agent[name] = {
+            prompt: content,
+            ...(data.description && { description: data.description }),
+            // Resolve model aliases (haiku, gpt-4o-mini, etc.) to small_model
+            ...(() => {
+              const resolvedModel = resolveModelAlias(data.model, smallModel);
+              return resolvedModel ? { model: resolvedModel } : {};
+            })(),
+            ...(data.color && { color: data.color }),
+            ...(data.mode && { mode: data.mode }),
+            // Add skills array if present
+            ...(data.skills &&
+              Array.isArray(data.skills) && { skills: data.skills }),
+            ...(data.hidden === "true" && { hidden: true }),
+          };
+        } catch (error) {
+          console.warn(
+            `[Maister] Failed to register agent '${name}': ${error.message}`,
+          );
+        }
       }
     },
 
