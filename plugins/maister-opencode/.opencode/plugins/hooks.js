@@ -58,7 +58,6 @@ function parseFrontmatter(content) {
 
   const data = {};
   const lines = match[1].split("\n");
-  let currentKey = null;
   let currentArray = null;
 
   for (const line of lines) {
@@ -81,12 +80,10 @@ function parseFrontmatter(content) {
 
       // If value is empty, might be start of array
       if (!value) {
-        currentKey = key;
         currentArray = [];
         data[key] = currentArray;
       } else {
         data[key] = value;
-        currentKey = null;
         currentArray = null;
       }
     }
@@ -193,6 +190,7 @@ export const MaisterPlugin = async ({ $, directory }) => {
             // Add skills array if present
             ...(data.skills &&
               Array.isArray(data.skills) && { skills: data.skills }),
+            ...(data.hidden === "true" && { hidden: true }),
           };
         } catch (error) {
           console.warn(

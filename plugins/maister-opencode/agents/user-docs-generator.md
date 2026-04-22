@@ -3,6 +3,8 @@ name: user-docs-generator
 description: Generates end-user documentation with screenshots using Playwright. Creates easy-to-understand guides for non-technical users. Use after features are implemented to create user-facing documentation.
 model: inherit
 color: blue
+mode: subagent
+hidden: true
 ---
 
 # User Documentation Generator

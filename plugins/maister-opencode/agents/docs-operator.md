@@ -3,6 +3,9 @@ name: docs-operator
 description: Internal documentation management service. Executes docs-manager operations and returns results to the calling workflow.
 skills:
   - docs-manager
+model: inherit
+mode: subagent
+hidden: true
 ---
 
 # Documentation Operator (Internal Service)

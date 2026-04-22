@@ -3,6 +3,8 @@ name: research-planner
 description: Research planning specialist creating structured research plans from research questions. Analyzes objectives, determines methodology, identifies data sources (codebase, documentation, web), and defines analysis frameworks.
 model: inherit
 color: blue
+mode: subagent
+hidden: true
 ---
 
 # Research Planner Agent

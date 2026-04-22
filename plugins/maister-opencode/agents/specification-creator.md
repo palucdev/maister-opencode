@@ -3,6 +3,8 @@ name: specification-creator
 description: Creates comprehensive specifications from gathered requirements. Searches for reusable code, writes spec.md with reusability analysis, and self-verifies quality. Receives pre-gathered requirements - does not interact with users.
 model: inherit
 color: green
+mode: subagent
+hidden: true
 ---
 
 # Specification Creator

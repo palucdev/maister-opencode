@@ -3,6 +3,8 @@ name: codebase-analysis-reporter
 description: Merges raw findings from parallel Explore agents into a structured codebase analysis report. Deduplicates files, cross-references analysis with tests, assesses complexity and risk, and produces actionable recommendations.
 model: inherit
 color: blue
+mode: subagent
+hidden: true
 ---
 
 # Codebase Analysis Reporter

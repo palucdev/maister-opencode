@@ -3,6 +3,8 @@ name: ui-mockup-generator
 description: Generates ASCII mockups showing UI layout and integration with existing components. Analyzes codebase to identify current layout patterns, reusable components, and navigation structure. Creates annotated diagrams showing where new UI elements fit. Use for UI-heavy features and enhancements.
 model: inherit
 color: cyan
+mode: subagent
+hidden: true
 ---
 
 # UI Mockup Generator
