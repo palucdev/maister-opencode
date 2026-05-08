@@ -6,39 +6,31 @@ generated-from-skill: true
 
 <!-- AUTO-GENERATED from skills/research/SKILL.md - DO NOT EDIT MANUALLY -->
 
-# Research Workflow
+CRITICAL INSTRUCTION: You MUST invoke the research skill immediately as your FIRST action.
 
-Orchestrates comprehensive research workflows from question definition through findings documentation. Handles technical, requirements, literature, and mixed research types with adaptive methodology, multi-source gathering, pattern synthesis, and evidence-based reporting. Supports standalone research tasks and embedded research phase in other workflows.
+Use the Skill tool with these exact parameters:
+  name: "research"
+  prompt: "$ARGUMENTS"
 
-## Usage
+DO NOT:
+- Analyze the task before invoking the skill
+- Decide the task is "straightforward" and skip the skill
+- Substitute your own approach or workflow
+- Execute any part of the workflow yourself
 
-```bash
-/maister-research [task description]
-```
-
-## Workflow
-
-**When this command is invoked:**
-
-1. **Invoke the skill** via the Skill tool as your FIRST action:
-   ```
-   Use Skill tool:
-     skill: "research"
-     prompt: [user provided arguments and flags]
-   ```
-
-2. **Follow skill instructions**: The skill orchestrates the complete workflow including:
-   - Task directory creation and state management
-   - Phase execution with interactive gates
-   - Subagent delegation for specialized work
-   - Pause/resume capability
-
-3. **All orchestration logic lives in the skill**: See `skills/research/SKILL.md` for:
-   - Complete phase descriptions
-   - Configuration flags and options
-   - Resume instructions (`--from=PHASE`, `--reset-attempts`)
-   - Examples and use cases
+WHY: The user explicitly chose this workflow by using /maister-research. 
+Invoke the skill now and let it orchestrate the complete workflow.
 
 ---
 
-**Note**: This is a thin command wrapper. The skill file is the single source of truth for workflow logic.
+## About This Workflow
+
+Orchestrates comprehensive research workflows from question definition through findings documentation. Handles technical, requirements, literature, and mixed research types with adaptive methodology, multi-source gathering, pattern synthesis, and evidence-based reporting. Supports standalone research tasks and embedded research phase in other workflows.
+
+The skill handles:
+- Task directory creation and state management
+- Phase execution with interactive gates
+- Subagent delegation for specialized work
+- Pause/resume capability
+
+See `skills/research/SKILL.md` for complete workflow documentation.
