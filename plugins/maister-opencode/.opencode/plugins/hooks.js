@@ -106,6 +106,22 @@ function loadMarkdownDir(dir) {
   }
 }
 
+function prepareAgent(data, content, smallModel) {
+  return {
+    prompt: content,
+    ...(data.description && { description: data.description }),
+    // Resolve model aliases (haiku, gpt-4o-mini, etc.) to small_model
+    ...(() => {
+      const resolvedModel = resolveModelAlias(data.model, smallModel);
+      return resolvedModel ? { model: resolvedModel } : {};
+    })(),
+    ...(data.mode && { mode: data.mode }),
+    // Add skills array if present
+    ...(data.skills && Array.isArray(data.skills) && { skills: data.skills }),
+    ...(data.hidden === "true" && { hidden: true }),
+  };
+}
+
 export const MaisterPlugin = async ({ $, directory }) => {
   const agentBySession = new Map();
   return {
@@ -132,13 +148,6 @@ export const MaisterPlugin = async ({ $, directory }) => {
             `Couldn't read or parse opencode.json config - small_model remains undefined`,
           );
         }
-      }
-
-      // Debug logging (can be removed after confirming functionality)
-      if (process.env.MAISTER_DEBUG_MODELS) {
-        console.log("[Maister] Model resolution debug:");
-        console.log("  config.small_model:", config.small_model);
-        console.log("  resolved small_model:", smallModel);
       }
 
       // --- Skills ---
@@ -178,21 +187,7 @@ export const MaisterPlugin = async ({ $, directory }) => {
         if (config.agent[name]) continue;
 
         try {
-          config.agent[name] = {
-            prompt: content,
-            ...(data.description && { description: data.description }),
-            // Resolve model aliases (haiku, gpt-4o-mini, etc.) to small_model
-            ...(() => {
-              const resolvedModel = resolveModelAlias(data.model, smallModel);
-              return resolvedModel ? { model: resolvedModel } : {};
-            })(),
-            ...(data.color && { color: data.color }),
-            ...(data.mode && { mode: data.mode }),
-            // Add skills array if present
-            ...(data.skills &&
-              Array.isArray(data.skills) && { skills: data.skills }),
-            ...(data.hidden === "true" && { hidden: true }),
-          };
+          config.agent[name] = prepareAgent(data, content, smallModel);
         } catch (error) {
           console.warn(
             `[Maister] Failed to register agent '${name}': ${error.message}`,
