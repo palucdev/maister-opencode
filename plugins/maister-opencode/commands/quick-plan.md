@@ -10,15 +10,15 @@ Enter Claude Code's planning mode for a task, with automatic discovery of projec
 ## Usage
 
 ```bash
-/maister-quick-plan [task description]
+/quick-plan [task description]
 ```
 
 ## Examples
 
 ```bash
-/maister-quick-plan "Add user authentication with email/password"
-/maister-quick-plan "Refactor the payment processing module"
-/maister-quick-plan
+/quick-plan "Add user authentication with email/password"
+/quick-plan "Refactor the payment processing module"
+/quick-plan
 ```
 
 ---
@@ -75,7 +75,7 @@ The planning mode will:
 
 **BLOCKING: Do NOT call `ExitPlanMode` until the plan file contains these sections:**
 
-1. **"## Applicable Standards"** — list each standard file that was read, with key guidelines extracted from each. If no standards exist, state: "No AI SDLC standards found. Consider running `/maister-init`."
+1. **"## Applicable Standards"** — list each standard file that was read, with key guidelines extracted from each. If no standards exist, state: "No AI SDLC standards found. Consider running `/flow-init`."
 
 2. **"## Standards Compliance Checklist"** — checkboxes for each applicable standard guideline that implementation must follow. Example:
    ```markdown
@@ -93,7 +93,7 @@ If these sections are missing from the plan file, add them before calling ExitPl
 Continue with planning mode normally. The "Applicable Standards" section in the plan should note:
 
 ```
-No AI SDLC standards found. Consider running `/maister-init` to initialize
+No AI SDLC standards found. Consider running `/flow-init` to initialize
 project documentation and coding standards for better consistency.
 ```
 

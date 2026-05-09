@@ -1,5 +1,5 @@
 ---
-name: maister-init
+name: flow-init
 description: Initialize AI SDLC framework with intelligent project analysis and documentation generation
 argument-hint: [--standards-from=PATH]
 user-invocable: true
@@ -9,7 +9,7 @@ user-invocable: true
 
 Initialize `.maister/docs/` with intelligent project analysis and meaningful documentation generation based on actual codebase inspection.
 
-**NOTE**: This skill invokes other skills and subagents at specific phases. Use the **Task tool with `docs-operator` subagent** (subagent_type: `maister-docs-operator`) for all docs-manager operations, and **Task tool** for project-analyzer. Use the **Skill tool** only for standards-discover (Phase 8, last phase). The Task tool returns control to this skill after completion; the Skill tool does not.
+**NOTE**: This skill invokes other skills and subagents at specific phases. Use the **Task tool with `docs-operator` subagent** (subagent_type: `docs-operator`) for all docs-manager operations, and **Task tool** for project-analyzer. Use the **Skill tool** only for standards-discover (Phase 8, last phase). The Task tool returns control to this skill after completion; the Skill tool does not.
 
 ## Phase Configuration
 
@@ -110,7 +110,7 @@ Store selection for Phase 5.
 
 ## PHASE 5: Initialize Documentation Structure
 
-**Invoke `docs-operator` subagent** via Task tool (subagent_type: `maister-docs-operator`) with prompt:
+**Invoke `docs-operator` subagent** via Task tool (subagent_type: `docs-operator`) with prompt:
 
 > "Initialize documentation structure. Standards selection: [array from Phase 4]. [If --standards-from was provided: Standards source path: [resolved path]/.maister/docs/standards/. Copy standards from this external path instead of built-in defaults.] Only copy selected standard categories. Do NOT copy project templates — only create the project/ directory. Project documentation will be generated in Phase 6 with real content from project analysis. Create placeholder sections in INDEX.md for skipped categories."
 
@@ -139,7 +139,7 @@ Write each file to `.maister/docs/project/`.
 
 ## PHASE 7: Validate
 
-**Step 1**: Invoke `docs-operator` subagent via Task tool (subagent_type: `maister-docs-operator`) with prompt:
+**Step 1**: Invoke `docs-operator` subagent via Task tool (subagent_type: `docs-operator`) with prompt:
 
 > "Regenerate INDEX.md to include all newly created project documentation. Then verify AGENTS.md is properly integrated with .maister/docs/ documentation."
 
@@ -160,7 +160,7 @@ Wait for docs-operator to complete, then immediately continue with Step 2.
 - Next steps:
   1. Review generated documentation
   2. Customize for your team
-  3. Start development with `/maister-work`
+  3. Start development with `/work`
   4. Keep documentation current
 
 ---

@@ -457,7 +457,7 @@ Skills are automatically invoked by Claude when appropriate. Details live in eac
 | `implementation-verifier` | Read-only QA orchestrator: delegates completeness checks, test execution, code review, and production readiness to specialized subagents; compiles results into verification report | `skills/implementation-verifier/SKILL.md` |
 | `standards-discover` | Parallel multi-source standards discovery (config, code, docs, PRs/CI) with confidence scoring | `skills/standards-discover/SKILL.md` |
 | `docs-manager` | Internal engine for doc file operations, INDEX.md generation, AGENTS.md integration. Not user-invocable — accessed via `docs-operator` agent (Task tool) by init, standards-update, standards-discover | `skills/docs-manager/skill.md` |
-| `maister-init` | Initialize `.maister/docs/` with project analysis, documentation generation, and baseline standards | `skills/init/SKILL.md` |
+| `flow-init` | Initialize `.maister/docs/` with project analysis, documentation generation, and baseline standards | `skills/flow-init/SKILL.md` |
 | `standards-update` | Update or create standards from conversation context or explicit input | `skills/standards-update/SKILL.md` |
 | `quick-bugfix` | Quick TDD-driven bug fix with complexity escalation to full development workflow | `skills/quick-bugfix/SKILL.md` |
 
@@ -492,11 +492,11 @@ Commands invoke orchestrators and utilities. All orchestrators support `--from=p
 
 | Command | Usage | Purpose |
 |---------|-------|---------|
-| `/maister-init` | `/maister-init [--standards-from=PATH]` | Initialize framework with project analysis and smart defaults for docs/standards. Optionally copy standards from another project's `.maister/docs/standards/` instead of built-in defaults. |
-| `/maister-standards-update` | `/maister-standards-update [description] [--from=PATH]` | Update/create standards from conversation context, or sync from another project |
-| `/maister-standards-discover` | `/maister-standards-discover [--scope=SCOPE]` | Discover standards from config files and code patterns |
+| `/flow-init` | `/flow-init [--standards-from=PATH]` | Initialize framework with project analysis and smart defaults for docs/standards. Optionally copy standards from another project's `.maister/docs/standards/` instead of built-in defaults. |
+| `/standards-update` | `/standards-update [description] [--from=PATH]` | Update/create standards from conversation context, or sync from another project |
+| `/standards-discover` | `/standards-discover [--scope=SCOPE]` | Discover standards from config files and code patterns |
 
-> **Note**: These are all skills (not commands). `/maister-init`, `/maister-standards-update`, and `/maister-standards-discover` invoke their respective skills which delegate file operations to the internal `docs-manager` skill.
+> **Note**: These are all skills (not commands). `/flow-init`, `/standards-update`, and `/standards-discover` invoke their respective skills which delegate file operations to the internal `docs-manager` skill.
 
 ### Workflow Commands
 
@@ -504,19 +504,19 @@ Each workflow skill handles both new tasks and resuming existing ones. Pass a ta
 
 | Command | Usage | Task Directory |
 |---------|-------|----------------|
-| `/maister-development` | `[desc] [--e2e] [--user-docs] [--research=PATH]` (new) / `[task-path] [--from=PHASE] [--reset-attempts]` (resume) | `.maister/tasks/development/` |
-| `/maister-performance` | `[desc]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/performance/` |
-| `/maister-migration` | `[desc] [--type=TYPE]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/migrations/` |
-| `/maister-research` | `[question] [--type=TYPE] [--brainstorm] [--no-brainstorm] [--design] [--no-design]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/research/` |
-| `/maister-product-design` | `[desc] [--research=PATH] [--no-visual]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/product-design/` |
+| `/development` | `[desc] [--e2e] [--user-docs] [--research=PATH]` (new) / `[task-path] [--from=PHASE] [--reset-attempts]` (resume) | `.maister/tasks/development/` |
+| `/performance` | `[desc]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/performance/` |
+| `/migration` | `[desc] [--type=TYPE]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/migrations/` |
+| `/research` | `[question] [--type=TYPE] [--brainstorm] [--no-brainstorm] [--design] [--no-design]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/research/` |
+| `/product-design` | `[desc] [--research=PATH] [--no-visual]` (new) / `[task-path] [--from=PHASE]` (resume) | `.maister/tasks/product-design/` |
 
 **Research-Based Development**: Start development informed by a completed research workflow:
 ```bash
 # Auto-detect research folder (recommended)
-/maister-development .maister/tasks/research/2026-01-12-oauth-research
+/development .maister/tasks/research/2026-01-12-oauth-research
 
 # Explicit --research flag
-/maister-development "Implement OAuth" --research=.maister/tasks/research/2026-01-12-oauth-research
+/development "Implement OAuth" --research=.maister/tasks/research/2026-01-12-oauth-research
 ```
 Research context flows through ALL phases without skipping any. Research artifacts are copied to `analysis/research-context/` and summaries pass to every subagent via Pattern 7.
 
@@ -524,19 +524,19 @@ Research context flows through ALL phases without skipping any. Research artifac
 
 | Command | Usage | Purpose |
 |---------|-------|---------|
-| `/maister-reviews-code` | `[path] [--scope=SCOPE]` | Automated code quality, security, performance analysis |
-| `/maister-reviews-pragmatic` | `[path]` | Detect over-engineering, ensure code matches project scale |
-| `/maister-reviews-spec-audit` | `[spec-path]` | Independent spec audit for completeness and clarity |
-| `/maister-reviews-reality-check` | `[task-path]` | Validate work actually solves the problem |
-| `/maister-reviews-production-readiness` | `[path] [--target=ENV]` | Pre-deployment verification with GO/NO-GO recommendation |
+| `/reviews-code` | `[path] [--scope=SCOPE]` | Automated code quality, security, performance analysis |
+| `/reviews-pragmatic` | `[path]` | Detect over-engineering, ensure code matches project scale |
+| `/reviews-spec-audit` | `[spec-path]` | Independent spec audit for completeness and clarity |
+| `/reviews-reality-check` | `[task-path]` | Validate work actually solves the problem |
+| `/reviews-production-readiness` | `[path] [--target=ENV]` | Pre-deployment verification with GO/NO-GO recommendation |
 
 ### Quick Commands
 
 | Command | Usage | Purpose |
 |---------|-------|---------|
-| `/maister-quick-plan` | `[task description]` | Enter planning mode with standards awareness from INDEX.md |
-| `/maister-quick-dev` | `[task description]` | Implement directly with standards awareness (no planning) |
-| `/maister-quick-bugfix` | `[bug description]` | Quick bug fix with TDD red/green gates and complexity escalation |
+| `/quick-plan` | `[task description]` | Enter planning mode with standards awareness from INDEX.md |
+| `/quick-dev` | `[task description]` | Implement directly with standards awareness (no planning) |
+| `/quick-bugfix` | `[bug description]` | Quick bug fix with TDD red/green gates and complexity escalation |
 
 **See**: Individual `commands/` and `skills/*/skill.md` files for detailed documentation.
 
@@ -544,7 +544,7 @@ Research context flows through ALL phases without skipping any. Research artifac
 
 For the OpenCode platform, commands are automatically generated during the build process for all skills marked with `user-invocable: true` in their SKILL.md frontmatter. These commands serve as thin wrappers that:
 
-- Provide discoverable slash commands (e.g., `/maister-development`)
+- Provide discoverable slash commands (e.g., `/development`)
 - Extract usage hints and descriptions from skill metadata
 - Delegate all orchestration logic to the underlying skill
 - Stay automatically synchronized with skills on every build
@@ -576,7 +576,7 @@ Subagents are specialized AI agents invoked by skills and orchestrators. All age
 
 | Agent | Purpose | Invoked By | Details |
 |-------|---------|------------|---------|
-| `project-analyzer` | Deep codebase analysis for tech stack, architecture, conventions | `/maister-init` | `agents/project-analyzer.md` |
+| `project-analyzer` | Deep codebase analysis for tech stack, architecture, conventions | `/flow-init` | `agents/project-analyzer.md` |
 | `docs-operator` | Internal service agent: executes docs-manager operations mid-workflow via Task tool. Has docs-manager skill preloaded. **Special case**: companion agent pattern only works here because docs-manager does NOT spawn subagents (only file operations). Do not use this pattern for skills that spawn subagents. | init, standards-update, standards-discover | `agents/docs-operator.md` |
 | `task-classifier` | Classifies task descriptions into workflow types with confidence scoring | `/work` command | `agents/task-classifier.md` |
 | `gap-analyzer` | Compares current vs desired state with characteristic-detection-based analysis modules | development orchestrator | `agents/gap-analyzer.md` |
@@ -722,7 +722,7 @@ When implementing or modifying plugin features:
 
 This is the OpenCode variant of maister. Key differences from Claude Code:
 - **Project instructions file**: `AGENTS.md` (this file).
-- **Skill invocation rule**: When any `/maister-*` command is used, you MUST
+- **Skill invocation rule**: When a skill command is invoked (e.g., `/development`, `/flow-init`), you MUST
   invoke it via the `skill` tool as your FIRST action. No exceptions. Do not
   analyze the task first, do not decide it's "straightforward", do not substitute
   your own approach. The user chose this workflow intentionally.

@@ -23,6 +23,7 @@ cp -r "$CORE" "$OUT"
 # 2. Remove Claude Code-only directories
 rm -rf "$OUT/hooks"
 rm -rf "$OUT/.claude-plugin"
+rm -f "$OUT/.mcp.json"
 
 # 3. Strip plugin prefix from command names: "maister:foo" → "foo"
 #    OpenCode namespaces commands automatically from the package name
@@ -36,13 +37,14 @@ find "$OUT/skills" -name "*.md" | while IFS= read -r f; do
   sedi 's/^name: maister:/name: /' "$f"
 done
 
-# 4b. Rename init skill to maister-init (avoids overriding OpenCode's built-in /init)
+# 4b. Rename init skill to flow-init (avoids overriding OpenCode's built-in /init,
+#     and uses a clean name without the maister- prefix)
 #     Handle both LF and CRLF line endings (source files may have CRLF)
-sedi 's/^name: init\r\{0,1\}$/name: maister-init/' "$OUT/skills/init/SKILL.md"
-mv "$OUT/skills/init" "$OUT/skills/maister-init"
+sedi 's/^name: init\r\{0,1\}$/name: flow-init/' "$OUT/skills/init/SKILL.md"
+mv "$OUT/skills/init" "$OUT/skills/flow-init"
 
-# 4c. Add user-invocable: true to maister-init skill
-echo "Adding user-invocable: true to maister-init skill..."
+# 4c. Add user-invocable: true to flow-init skill
+echo "Adding user-invocable: true to flow-init skill..."
 awk '
   BEGIN { 
     frontmatter_count = 0
@@ -57,13 +59,25 @@ awk '
     next
   }
   { print }
-' "$OUT/skills/maister-init/SKILL.md" > "$OUT/skills/maister-init/SKILL.md.tmp" && mv "$OUT/skills/maister-init/SKILL.md.tmp" "$OUT/skills/maister-init/SKILL.md"
-echo "Added user-invocable: true to maister-init skill"
+' "$OUT/skills/flow-init/SKILL.md" > "$OUT/skills/flow-init/SKILL.md.tmp" && mv "$OUT/skills/flow-init/SKILL.md.tmp" "$OUT/skills/flow-init/SKILL.md"
+echo "Added user-invocable: true to flow-init skill"
 
-# 5. Replace maister: prefix with maister- for cross-references in content
-#    Run AFTER name: transforms so frontmatter name lines are already clean
+# 4d. Replace maister:init references with flow-init in content
+#     Run BEFORE step 5 so step 5's maister: strip doesn't turn it into bare 'init'
 find "$OUT" -name "*.md" | while IFS= read -r f; do
-  sedi 's/maister:/maister-/g' "$f"
+  sedi 's/maister:init/flow-init/g' "$f"
+done
+
+# 4e. Update path references from skills/init/ to skills/flow-init/
+find "$OUT" -name "*.md" | while IFS= read -r f; do
+  sedi 's|skills/init/SKILL\.md|skills/flow-init/SKILL.md|g' "$f"
+done
+
+# 5. Strip maister: prefix from cross-references in content (produces bare names matching actual agent names)
+#    Run AFTER name: transforms (step 3/4) and maister:init → flow-init (step 4d)
+#    so frontmatter is already clean and flow-init is already substituted
+find "$OUT" -name "*.md" | while IFS= read -r f; do
+  sedi 's/maister://g' "$f"
 done
 
 # 6. Replace CLAUDE.md references with AGENTS.md (OpenCode's native rules file)
@@ -118,19 +132,32 @@ if [ -d "$OUT/agents" ]; then
   echo "Adding subagent metadata to agents..."
   find "$OUT/agents" -name "*.md" | while IFS= read -r f; do
     # Use awk to add mode and hidden properties at end of frontmatter
+    # Guards prevent duplicate injection if source agent already has mode: or hidden:
     awk '
       BEGIN { 
         frontmatter_count = 0
+        has_mode = 0
+        has_hidden = 0
       }
       /^---/ {
         frontmatter_count++
         if (frontmatter_count == 2) {
-          # Closing frontmatter delimiter - insert mode and hidden before it
-          print "mode: subagent"
-          print "hidden: true"
+          # Closing frontmatter delimiter - insert mode and hidden before it if not present
+          if (!has_mode) {
+            print "mode: subagent"
+          }
+          if (!has_hidden) {
+            print "hidden: true"
+          }
         }
         print
         next
+      }
+      frontmatter_count == 1 && /^mode:/ {
+        has_mode = 1
+      }
+      frontmatter_count == 1 && /^hidden:/ {
+        has_hidden = 1
       }
       { print }
     ' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
@@ -170,55 +197,45 @@ for skill_dir in "$OUT/skills"/*; do
       argument_hint="[task description]"
     fi
     
-    # Capitalize first letter for title
-    title=$(echo "$skill_name" | awk '{ for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)) }1' | sed 's/-/ /g')
-    
     # Generate command file
     cat > "$OUT/commands/${skill_name}.md" <<EOF
 ---
 name: ${skill_name}
 description: ${description}
+argument-hint: ${argument_hint}
 generated-from-skill: true
 ---
 
 <!-- AUTO-GENERATED from skills/${skill_name}/SKILL.md - DO NOT EDIT MANUALLY -->
 
-# ${title} Workflow
+CRITICAL INSTRUCTION: You MUST invoke the ${skill_name} skill immediately as your FIRST action.
 
-${description}
+Use the Skill tool with these exact parameters:
+  name: "${skill_name}"
+  prompt: "\$ARGUMENTS"
 
-## Usage
+DO NOT:
+- Analyze the task before invoking the skill
+- Decide the task is "straightforward" and skip the skill
+- Substitute your own approach or workflow
+- Execute any part of the workflow yourself
 
-\`\`\`bash
-/maister-${skill_name} ${argument_hint}
-\`\`\`
-
-## Workflow
-
-**When this command is invoked:**
-
-1. **Invoke the skill** via the Skill tool as your FIRST action:
-   \`\`\`
-   Use Skill tool:
-     skill: "${skill_name}"
-     prompt: [user provided arguments and flags]
-   \`\`\`
-
-2. **Follow skill instructions**: The skill orchestrates the complete workflow including:
-   - Task directory creation and state management
-   - Phase execution with interactive gates
-   - Subagent delegation for specialized work
-   - Pause/resume capability
-
-3. **All orchestration logic lives in the skill**: See \`skills/${skill_name}/SKILL.md\` for:
-   - Complete phase descriptions
-   - Configuration flags and options
-   - Resume instructions (\`--from=PHASE\`, \`--reset-attempts\`)
-   - Examples and use cases
+WHY: The user explicitly chose this workflow by using /${skill_name}. 
+Invoke the skill now and let it orchestrate the complete workflow.
 
 ---
 
-**Note**: This is a thin command wrapper. The skill file is the single source of truth for workflow logic.
+## About This Workflow
+
+${description}
+
+The skill handles:
+- Task directory creation and state management
+- Phase execution with interactive gates
+- Subagent delegation for specialized work
+- Pause/resume capability
+
+See \`skills/${skill_name}/SKILL.md\` for complete workflow documentation.
 EOF
   fi
 done
@@ -234,7 +251,7 @@ cat >> "$OUT/AGENTS.md" << 'EOF'
 
 This is the OpenCode variant of maister. Key differences from Claude Code:
 - **Project instructions file**: `AGENTS.md` (this file).
-- **Skill invocation rule**: When any `/maister-*` command is used, you MUST
+- **Skill invocation rule**: When a skill command is invoked (e.g., `/development`, `/flow-init`), you MUST
   invoke it via the `skill` tool as your FIRST action. No exceptions. Do not
   analyze the task first, do not decide it's "straightforward", do not substitute
   your own approach. The user chose this workflow intentionally.
