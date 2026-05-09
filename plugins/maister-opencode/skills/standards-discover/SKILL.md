@@ -1,7 +1,6 @@
 ---
 name: standards-discover
 description: Discover coding standards from project configuration files, code patterns, documentation, and external sources (PRs, CI/CD)
-argument-hint: "[--scope=SCOPE]"
 user-invocable: true
 ---
 
@@ -21,25 +20,25 @@ Analyzes multiple project sources in parallel to discover coding standards, conv
 
 ## Input Parameters
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `--scope` | `full` | Discovery scope: `full`, `quick`, or any category name (baseline: `global`, `frontend`, `backend`, `testing`; custom categories also supported) |
-| `--confidence` | `60` | Minimum confidence threshold (0-100) for displaying findings |
-| `--auto-apply` | `false` | Auto-apply standards with confidence >= 90% without asking |
-| `--skip-external` | `false` | Skip GitHub PR analysis and CI/CD sources |
-| `--pr-count` | `20` | Number of recent merged PRs to analyze |
+| Parameter         | Default | Description                                                                                                                                     |
+| ----------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--scope`         | `full`  | Discovery scope: `full`, `quick`, or any category name (baseline: `global`, `frontend`, `backend`, `testing`; custom categories also supported) |
+| `--confidence`    | `60`    | Minimum confidence threshold (0-100) for displaying findings                                                                                    |
+| `--auto-apply`    | `false` | Auto-apply standards with confidence >= 90% without asking                                                                                      |
+| `--skip-external` | `false` | Skip GitHub PR analysis and CI/CD sources                                                                                                       |
+| `--pr-count`      | `20`    | Number of recent merged PRs to analyze                                                                                                          |
 
 **Scope determines which phases run:**
 
-| Scope | Config (P1) | Code (P2) | Docs (P3) | External (P4) |
-|-------|-------------|-----------|-----------|----------------|
-| `full` | Yes | Yes | Yes | Yes |
-| `global` | Yes | Yes (limited) | Yes | Yes |
-| `frontend` | FE configs | FE files | Yes | Yes |
-| `backend` | BE configs | BE files | Yes | Yes |
-| `testing` | Test configs | Test files | Yes | Yes |
-| `quick` | Yes | No | No | No |
-| `[custom]` | Relevant configs | Filtered files | Yes | Yes |
+| Scope      | Config (P1)      | Code (P2)      | Docs (P3) | External (P4) |
+| ---------- | ---------------- | -------------- | --------- | ------------- |
+| `full`     | Yes              | Yes            | Yes       | Yes           |
+| `global`   | Yes              | Yes (limited)  | Yes       | Yes           |
+| `frontend` | FE configs       | FE files       | Yes       | Yes           |
+| `backend`  | BE configs       | BE files       | Yes       | Yes           |
+| `testing`  | Test configs     | Test files     | Yes       | Yes           |
+| `quick`    | Yes              | No             | No        | No            |
+| `[custom]` | Relevant configs | Filtered files | Yes       | Yes           |
 
 Custom scope values are matched against existing `.maister/docs/standards/*/` directories and filter analysis to relevant files.
 
@@ -47,17 +46,17 @@ Custom scope values are matched against existing `.maister/docs/standards/*/` di
 
 ## Phase Configuration
 
-| Phase | Subject | activeForm |
-|-------|---------|------------|
-| 1 | Plan discovery scope | Planning discovery scope |
-| 2 | Analyze configuration files | Analyzing configuration files |
-| 3 | Mine code patterns | Mining code patterns |
-| 4 | Extract documentation standards | Extracting documentation standards |
-| 5 | Analyze external sources | Analyzing external sources |
-| 6 | Aggregate & deduplicate findings | Aggregating findings |
-| 7 | Review findings with user | Reviewing findings |
-| 8 | Apply approved standards | Applying standards |
-| 9 | Generate summary report | Generating summary |
+| Phase | Subject                          | activeForm                         |
+| ----- | -------------------------------- | ---------------------------------- |
+| 1     | Plan discovery scope             | Planning discovery scope           |
+| 2     | Analyze configuration files      | Analyzing configuration files      |
+| 3     | Mine code patterns               | Mining code patterns               |
+| 4     | Extract documentation standards  | Extracting documentation standards |
+| 5     | Analyze external sources         | Analyzing external sources         |
+| 6     | Aggregate & deduplicate findings | Aggregating findings               |
+| 7     | Review findings with user        | Reviewing findings                 |
+| 8     | Apply approved standards         | Applying standards                 |
+| 9     | Generate summary report          | Generating summary                 |
 
 **Task Tracking**: At start of Phase 1, use `TaskCreate` for all phases above (pending). Set dependencies: Phases 2-5 blocked by Phase 1 (they run in parallel after planning). Phase 6 blocked by Phases 2-5. Phases 7-9 sequential. At each phase start: `TaskUpdate` to `in_progress`. At each phase end: `TaskUpdate` to `completed`. For phases skipped due to scope (e.g., Phases 3-4 when `--scope=quick`), mark `completed` with `metadata: {skipped: true, reason: "scope=quick"}`.
 
@@ -89,11 +88,11 @@ Custom scope values are matched against existing `.maister/docs/standards/*/` di
 
 Use the Read tool to load ONLY the reference files for phases you will execute:
 
-| Phase | Condition | Read This File |
-|-------|-----------|----------------|
-| 2: Config Analysis | Always | `references/config-analyzer-prompt.md` |
-| 3: Code Patterns | scope != `quick` | `references/code-pattern-prompt.md` |
-| 4: Documentation | scope != `quick` | `references/docs-extractor-prompt.md` |
+| Phase               | Condition                 | Read This File                           |
+| ------------------- | ------------------------- | ---------------------------------------- |
+| 2: Config Analysis  | Always                    | `references/config-analyzer-prompt.md`   |
+| 3: Code Patterns    | scope != `quick`          | `references/code-pattern-prompt.md`      |
+| 4: Documentation    | scope != `quick`          | `references/docs-extractor-prompt.md`    |
 | 5: External Sources | `--skip-external` not set | `references/external-analyzer-prompt.md` |
 
 **SELF-CHECK**: Did you read the template files with the Read tool? If not, go back and read them now.
@@ -185,6 +184,7 @@ Display application summary: created count, updated count, total active.
 ### Phase 9: Summary Report
 
 Display final results:
+
 - Sources analyzed (config files, code files sampled, docs parsed, PRs reviewed)
 - Standards applied (created/updated counts by category)
 - Standards skipped (low confidence, user declined)
@@ -194,25 +194,25 @@ Display final results:
 
 ## Error Handling
 
-| Situation | Strategy |
-|-----------|----------|
-| `.maister/docs/` missing | Offer `/flow-init`, abort if declined |
-| gh CLI unavailable | Skip PR analysis, continue with other sources |
-| GitHub API rate limit | Skip PR analysis, note in report |
-| Config file parse error | Skip that file, log warning, continue |
-| No standards found | Suggest lowering threshold or checking specific scope |
-| docs-manager fails | Offer retry/skip/cancel per standard |
-| Subagent returns empty | Note in report, proceed with available findings |
+| Situation                | Strategy                                              |
+| ------------------------ | ----------------------------------------------------- |
+| `.maister/docs/` missing | Offer `/flow-init`, abort if declined              |
+| gh CLI unavailable       | Skip PR analysis, continue with other sources         |
+| GitHub API rate limit    | Skip PR analysis, note in report                      |
+| Config file parse error  | Skip that file, log warning, continue                 |
+| No standards found       | Suggest lowering threshold or checking specific scope |
+| docs-manager fails       | Offer retry/skip/cancel per standard                  |
+| Subagent returns empty   | Note in report, proceed with available findings       |
 
 ---
 
 ## Integration
 
-| Integrates With | How |
-|-----------------|-----|
-| `docs-manager` skill | Creates/updates standard files, regenerates INDEX.md |
-| `implementation-plan-executor` skill | Discovered standards immediately available via INDEX.md |
-| `standards-update` command | Complementary: discover = automated bulk, update = manual single |
+| Integrates With                      | How                                                              |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| `docs-manager` skill                 | Creates/updates standard files, regenerates INDEX.md             |
+| `implementation-plan-executor` skill | Discovered standards immediately available via INDEX.md          |
+| `standards-update` command           | Complementary: discover = automated bulk, update = manual single |
 
 ---
 

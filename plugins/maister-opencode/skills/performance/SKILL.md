@@ -2,7 +2,6 @@
 name: performance
 description: Orchestrates performance optimization workflows using static code analysis to identify bottlenecks (N+1 queries, missing indexes, O(n^2) algorithms, blocking I/O, memory leaks). Accepts optional user-provided profiling data. Reuses standard specification, planning, implementation, and verification phases.
 user-invocable: true
-argument-hint: "[description] | [task-path] [--from=PHASE]"
 ---
 
 # Performance Orchestrator
@@ -25,6 +24,7 @@ Static-analysis-first performance optimization workflow. Identifies bottlenecks 
 2. **Create Task Directory**: `.maister/tasks/performance/YYYY-MM-DD-task-name/`
 3. **Create Subdirectories**: `analysis/`, `analysis/user-profiling-data/`, `implementation/`, `verification/`
 4. **Initialize State**: Create `orchestrator-state.yml` with performance context
+5. **Discover project documentation**: Read `.maister/docs/INDEX.md` (if exists), extract ALL file paths from the "Project Documentation" section — includes predefined docs AND any user-added project docs. Store as `project_context.project_doc_paths` in state.
 
 **Output**:
 ```
@@ -158,7 +158,7 @@ question - "Performance analysis complete. [N] bottlenecks identified ([P0 count
 
 4. Task tool - `specification-creator` subagent
 
-**Context to pass**: task_path, task_type="performance", task_description, requirements_path (analysis/requirements.md), project_context_paths (INDEX.md, vision.md, roadmap.md, tech-stack.md), phase_summaries (codebase_analysis, bottleneck_analysis)
+**Context to pass**: task_path, task_type="performance", task_description, requirements_path (analysis/requirements.md), project_context_paths (INDEX.md + project_doc_paths from state — all discovered project docs), phase_summaries (codebase_analysis, bottleneck_analysis)
 
 **SELF-CHECK**: Did you just invoke the Task tool with `specification-creator`? Or did you start writing spec.md yourself? If the latter, STOP and invoke the Task tool.
 

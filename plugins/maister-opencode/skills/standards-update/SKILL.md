@@ -46,6 +46,7 @@ When `--from=PATH` is provided, the skill switches to **sync mode** — importin
 ### SYNC STEP 3: Apply Selected Standards
 
 For each selected standard:
+
 - **Missing locally**: Copy the file from source. Create category directory if needed.
 - **Differs**: Show a brief diff summary and use question per file:
   - "Replace with source version" — overwrite local file
@@ -55,6 +56,7 @@ For each selected standard:
 ### SYNC STEP 4: Update INDEX.md
 
 Invoke `docs-operator` subagent via Task tool (subagent_type: `docs-operator`):
+
 > "Regenerate INDEX.md to include all newly added/updated standards. Verify AGENTS.md integration."
 
 Wait for docs-operator to complete, then immediately proceed to SYNC STEP 5.
@@ -74,6 +76,7 @@ When `--from` is NOT provided, the skill uses the standard detect-and-update flo
 ## PHASE 1: Detect Standard
 
 **Step 1: Gather input**
+
 - **If argument provided**: Use the description as primary input. Also scan last 15-20 messages for additional context, examples, or related conventions.
 - **If no argument**: Scan last 15-20 messages for convention discussions. Look for patterns like "we should always...", "our convention is...", "prefer X over Y", "never use...", code examples showing patterns.
 
@@ -84,6 +87,7 @@ Scan `.maister/docs/standards/*/` to find all existing categories and standard f
 **Step 3: Match to category and file**
 
 Based on the topic detected, suggest the best-matching existing category and file. Consider:
+
 - File names and their content (read existing files if topic is close)
 - Whether the convention fits an existing file or needs a new one
 
@@ -98,6 +102,7 @@ Based on the topic detected, suggest the best-matching existing category and fil
 ## PHASE 2: Determine Action
 
 Check if the target file exists:
+
 - **Exists** → update mode
 - **Doesn't exist** → create mode (if new category, create the directory too)
 
@@ -129,9 +134,11 @@ No user prompt needed — just inform: "Updating existing standard: [name]" or "
 **Invoke `docs-operator` subagent** via Task tool (subagent_type: `docs-operator`) with context:
 
 For **updates**:
+
 > "Update documentation file: standards/[category]/[name].md. Current content: [content]. Add/change: [new conventions]. Integrate new practices, maintain markdown formatting, organize logically, preserve existing unless conflicts. Update INDEX.md entry with practice-specific description (enumerate actual practices, not generic category)."
 
 For **creates**:
+
 > "Create documentation file: standards/[category]/[name].md. Category: [category]. Content: [conventions]. Create with proper markdown, organized sections, code examples. Add to INDEX.md with practice-specific description. Verify AGENTS.md integration."
 
 Wait for docs-operator to complete, then immediately proceed to Phase 5.

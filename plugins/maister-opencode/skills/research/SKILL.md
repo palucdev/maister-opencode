@@ -2,7 +2,6 @@
 name: research
 description: Orchestrates comprehensive research workflows from question definition through findings documentation. Handles technical, requirements, literature, and mixed research types with adaptive methodology, multi-source gathering, pattern synthesis, and evidence-based reporting. Supports standalone research tasks and embedded research phase in other workflows.
 user-invocable: true
-argument-hint: "[question] [--type=TYPE] [--brainstorm] [--design]"
 ---
 
 # Research Orchestrator
@@ -116,6 +115,7 @@ This phase executes 4 sequential steps. On resume, check existing artifacts to s
 4. Define success criteria
 5. Create research brief
 6. Update state: set `research_context.research_type`, `research_question`, `scope`
+7. **Discover project documentation**: Read `.maister/docs/INDEX.md` (if exists), extract ALL file paths from the "Project Documentation" section — includes predefined docs AND any user-added project docs. Store as `research_context.project_doc_paths` in state.
 
 #### Step 2: Plan (Subagent)
 
@@ -126,7 +126,7 @@ This phase executes 4 sequential steps. On resume, check existing artifacts to s
 
 **INVOKE NOW**: Use Task tool with `subagent_type: research-planner`
 
-**Context to pass**: task_path, research_brief_path, research_type, research_question, scope
+**Context to pass**: task_path, research_brief_path, research_type, research_question, scope, project_doc_paths (from state)
 
 Update state: `research_context.methodology`, `sources`
 
@@ -229,6 +229,7 @@ question - "Research foundation complete (initialized, planned, gathered, synthe
 - `task_path`, `synthesis_path`, `research_report_path`
 - `output_path`: `outputs/solution-exploration.md` — brainstormer MUST write to this exact path
 - Accumulated context: `research_type`, `research_question`, `confidence_level`, `phase_summaries` (Phase 1)
+- `project_doc_paths` (from state)
 
 > **SELF-CHECK**: After Task tool returns, verify `outputs/solution-exploration.md` exists and contains alternatives. If missing: **STOP. Do NOT proceed to Phase 4 or Phase 5.** Re-invoke the brainstormer with corrected context (ensure `output_path` is `outputs/solution-exploration.md`). If second attempt also fails, use question to report the failure and ask whether to retry or skip brainstorming.
 
@@ -305,6 +306,7 @@ question - "Brainstorming complete. Continue to high-level design?"
 - `selected_approach` (from Phase 4 convergence if ran, or from research report recommendations)
 - `design_preferences` (from Part A)
 - Accumulated context: `research_type`, `research_question`, `confidence_level`, `phase_summaries`
+- `project_doc_paths` (from state)
 
 > **SELF-CHECK**: After Task tool returns, verify both `outputs/high-level-design.md` and `outputs/decision-log.md` exist. If missing: **STOP. Do NOT proceed to Part C.** Re-invoke the designer with corrected context. If second attempt also fails, use question to report the failure and ask whether to retry or skip design.
 
