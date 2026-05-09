@@ -2,7 +2,6 @@
 name: implementation-planner
 description: Creates detailed implementation plans from specifications. Breaks work into task groups by specialty (database, API, frontend, testing), creates implementation steps with test-driven approach (2-8 tests per group), sets dependencies, and defines acceptance criteria. Does not interact with users.
 model: inherit
-color: blue
 mode: subagent
 hidden: true
 ---
@@ -27,18 +26,20 @@ Create `implementation/implementation-plan.md` from an approved specification. B
 
 The Task prompt MUST include:
 
-| Input | Source | Purpose |
-|-------|--------|---------|
-| `task_path` | Orchestrator | Absolute path to task directory |
+| Input                  | Source             | Purpose                                    |
+| ---------------------- | ------------------ | ------------------------------------------ |
+| `task_path`            | Orchestrator       | Absolute path to task directory            |
 | `task_characteristics` | Orchestrator state | Detected characteristics from gap-analyzer |
-| `task_description` | User input | What's being built |
+| `task_description`     | User input         | What's being built                         |
 
 **Accumulated Context** (Pattern 7):
+
 - `phase_summaries`: Prior phase summaries (specification, gap analysis, codebase analysis)
 - `research_context`: Research findings path (if research-informed development)
 - Migration-specific: `migration_type`, `current_system`, `target_system` (if migration)
 
 **Required File** (must exist on disk):
+
 - `{task_path}/implementation/spec.md` — the specification to plan from
 
 ---
@@ -48,6 +49,7 @@ The Task prompt MUST include:
 ### Phase 1: Analyze Specification
 
 Read `implementation/spec.md` and extract:
+
 - Technical layers needed (database, API, frontend)
 - Special requirements (email, background jobs, file storage, auth, payment)
 - Reusable components from spec
@@ -60,34 +62,36 @@ Read `implementation/spec.md` and extract:
 
 #### Layer Detection
 
-| Spec Mentions | Add Task Group |
-|--------------|----------------|
-| Data storage, models, migrations | Database Layer |
-| API, endpoints, backend logic | API/Backend Layer |
-| UI, interface, components, pages | Frontend/UI Layer |
-| Email, notify, alert | Email/Notifications Layer |
-| Async, queue, background, scheduled | Background Jobs Layer |
-| Upload, download, file | File Storage Layer |
-| Login, auth, permission | Authentication Layer |
-| Payment, billing, checkout | Payment Processing Layer |
-| Migrate existing data | Data Migration Layer |
+| Spec Mentions                       | Add Task Group            |
+| ----------------------------------- | ------------------------- |
+| Data storage, models, migrations    | Database Layer            |
+| API, endpoints, backend logic       | API/Backend Layer         |
+| UI, interface, components, pages    | Frontend/UI Layer         |
+| Email, notify, alert                | Email/Notifications Layer |
+| Async, queue, background, scheduled | Background Jobs Layer     |
+| Upload, download, file              | File Storage Layer        |
+| Login, auth, permission             | Authentication Layer      |
+| Payment, billing, checkout          | Payment Processing Layer  |
+| Migrate existing data               | Data Migration Layer      |
 
 #### Complexity Adaptation
 
-| Scope | Groups | Example |
-|-------|--------|---------|
-| Small (1-3 files) | 1-2 | Fix + Testing |
-| Medium (4-8 files) | 3-4 | Database, API, Frontend, Testing |
-| Large (9+ files) | 5-6 | + Email, Background Jobs, etc. |
+| Scope              | Groups | Example                          |
+| ------------------ | ------ | -------------------------------- |
+| Small (1-3 files)  | 1-2    | Fix + Testing                    |
+| Medium (4-8 files) | 3-4    | Database, API, Frontend, Testing |
+| Large (9+ files)   | 5-6    | + Email, Background Jobs, etc.   |
 
 #### Testing Group
 
 IF total implementation groups >= 3:
+
 - ADD: Test Review & Gap Analysis (as final group)
 
 #### Dependencies
 
 Common patterns:
+
 - Database → API → Frontend
 - API → Background Jobs, Email
 - All implementation → Testing
@@ -100,6 +104,7 @@ Common patterns:
 
 ```markdown
 ### Task Group N: [Layer Name]
+
 **Dependencies:** [group numbers or "None"]
 **Estimated Steps:** [count]
 
@@ -117,6 +122,7 @@ Common patterns:
     - Do NOT run entire test suite
 
 **Acceptance Criteria:**
+
 - The 2-8 tests pass
 - [Specific completion markers]
 ```
@@ -125,6 +131,7 @@ Common patterns:
 
 ```markdown
 ### Task Group N: Test Review & Gap Analysis
+
 **Dependencies:** All previous groups
 
 - [ ] N.0 Review and fill critical gaps
@@ -134,6 +141,7 @@ Common patterns:
   - [ ] N.4 Run feature-specific tests only (expect 16-34 total)
 
 **Acceptance Criteria:**
+
 - All feature tests pass (~16-34 total)
 - No more than 10 additional tests added
 ```
@@ -148,6 +156,7 @@ Create `implementation/implementation-plan.md`:
 # Implementation Plan: [Task Name]
 
 ## Overview
+
 Total Steps: [count]
 Task Groups: [count]
 Expected Tests: [calculation]
@@ -160,11 +169,12 @@ Expected Tests: [calculation]
 
 1. [Group 1] ([N] steps)
 2. [Group 2] ([N] steps, depends on 1)
-...
+   ...
 
 ## Standards Compliance
 
 Follow standards from `.maister/docs/standards/`:
+
 - global/ - Always applicable
 - [area]/ - Area-specific
 
@@ -192,6 +202,7 @@ After writing the implementation plan file, create structured task items for gro
    - All implementation groups → Test Review & Gap Analysis (if present)
 
 **Why both markdown AND Task system?**
+
 - Markdown checkboxes = step-level tracking (N.1, N.2, etc.) + resume source of truth
 - Task system = group-level visibility with dependencies, timing, ownership
 - They complement each other at different granularity levels
@@ -200,11 +211,11 @@ After writing the implementation plan file, create structured task items for gro
 
 ## Test Limits (Strict)
 
-| Scope | Tests |
-|-------|-------|
-| Per implementation group | 2-8 |
+| Scope                      | Tests  |
+| -------------------------- | ------ |
+| Per implementation group   | 2-8    |
 | Testing group (additional) | Max 10 |
-| Total per feature | ~16-34 |
+| Total per feature          | ~16-34 |
 
 **Critical**: Run only new tests after each group, NOT entire suite.
 
@@ -222,6 +233,7 @@ After writing the implementation plan file, create structured task items for gro
 ## Validation Checklist
 
 Before completing, verify:
+
 - All groups have parent task (X.0)
 - All groups start with tests (X.1)
 - All groups end with test verification (X.n)
@@ -236,8 +248,8 @@ Before completing, verify:
 
 ### Files Created
 
-| File | Content |
-|------|---------|
+| File                                    | Content                      |
+| --------------------------------------- | ---------------------------- |
 | `implementation/implementation-plan.md` | Complete implementation plan |
 
 ### Task Items Created
@@ -272,6 +284,7 @@ groups:
 **Invoked by**: development orchestrator (Phase 7), migration orchestrator (Phase 3)
 
 **Prerequisites**:
+
 - Task directory exists with `implementation/` subdirectory
 - `implementation/spec.md` exists (created by specification-creator)
 

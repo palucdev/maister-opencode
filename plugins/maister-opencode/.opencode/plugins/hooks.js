@@ -107,6 +107,7 @@ function loadMarkdownDir(dir) {
 }
 
 export const MaisterPlugin = async ({ $, directory }) => {
+  const agentBySession = new Map();
   return {
     /**
      * Register maister's skills, commands, and agents so OpenCode discovers
@@ -215,6 +216,51 @@ orchestrator-state.yml in that task's directory to verify completed_phases
 and determine the next phase. Use the question tool at Phase Gates.`);
       } catch {
         // No .maister/tasks directory — not a maister project, skip injection
+      }
+    },
+
+    "command.execute.before": async (input, output) => {
+      try {
+        if (!input.command?.startsWith("maister:")) return;
+        const REMINDER =
+          "⚠️ MAISTER PLUGIN RULE: When any /maister:* command appears in the user's prompt, you MUST invoke it via the skill tool as your FIRST action. No exceptions. Do not analyze the task first, do not decide it's \"straightforward\", do not substitute your own approach. The user chose this workflow intentionally. Complexity assessment is the workflow's job, not yours.";
+        output.parts.push({ type: "text", text: REMINDER });
+      } catch {
+        // ignore
+      }
+    },
+
+    "chat.message": async (input, _output) => {
+      try {
+        agentBySession.set(input.sessionID, input.agent ?? "main");
+      } catch {
+        // ignore
+      }
+    },
+
+    "tool.execute.before": async (input, output) => {
+      try {
+        if (input.tool !== "bash") return;
+        const agentName = agentBySession.get(input.sessionID) ?? "main";
+        const WHITELIST = [
+          "task-group-implementer",
+          "test-suite-runner",
+          "e2e-test-verifier",
+          "user-docs-generator",
+          "docs-operator",
+        ];
+        if (WHITELIST.includes(agentName)) return;
+        const cmd = output?.args?.command ?? "";
+        const DESTRUCTIVE =
+          /git\s+stash|git\s+reset\s+--hard|git\s+checkout\s+--\s+\.|git\s+checkout\s+\.\s*(?:$|\s)|git\s+clean|git\s+push\s+(?:--force|-f)|rm\s+-[rf]{2}/i;
+        if (DESTRUCTIVE.test(cmd)) {
+          throw new Error(
+            `Blocked: destructive command not permitted for agent "${agentName}"`,
+          );
+        }
+      } catch (e) {
+        // Re-throw only intentional blocks; swallow unexpected errors
+        if (e.message?.startsWith("Blocked:")) throw e;
       }
     },
   };

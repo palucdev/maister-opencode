@@ -666,68 +666,27 @@ See individual orchestrator `skill.md` files for phase-specific task tables.
 
 ## Hooks
 
-The plugin includes hooks that fire at specific Claude Code lifecycle events.
+The plugin implements OpenCode hooks in `.opencode/plugins/hooks.js`.
 
-### Post-Compaction State Reminder
+### Skill Invocation Reminder (`command.execute.before`)
 
-**Hook**: `SessionStart` (matcher: `compact`)
-**Location**: `hooks/post-compact-reminder.sh`
+Fires when any `/maister:*` command is executed. Injects a reminder that the `skill` tool must be invoked as the first action — no analysis-before-invocation, no substitution.
 
-This hook fires after context compaction and injects a reminder into Claude's context to check the `orchestrator-state.yml` file for the active workflow.
+### Agent Identity Tracking (`chat.message`)
 
-**Purpose**: Reminds Claude to check `orchestrator-state.yml` for completed phases and use question at phase gates after compaction, regardless of any "continue without asking" instructions in the compacted context.
+Tracks `sessionID → agentName` in an in-memory Map. Provides agent context to the `tool.execute.before` hook.
 
-**See**: `hooks/hooks.json` for hook configuration (auto-discovered by Claude Code).
+### Destructive Command Protection (`tool.execute.before`)
 
-### Destructive Command Protection
+Blocks destructive bash commands (`git stash`, `git reset --hard`, `git checkout .`, `git clean`, `git push --force`, `rm -rf`) for non-whitelisted agents.
 
-**Hook**: `PreToolUse` (matcher: `Bash`)
-**Location**: `hooks/block-destructive-commands.sh`
+**Whitelisted agents** (bypass protection): `task-group-implementer`, `test-suite-runner`, `e2e-test-verifier`, `user-docs-generator`, `docs-operator`
 
-Blocks destructive shell commands (`git stash`, `git reset --hard`, `git checkout .`, `git clean`, `git push --force`, `rm -rf`) from subagents that should not perform such operations. Uses a whitelist approach — only explicitly trusted execution agents bypass the check:
+All other agents — including the main agent — are checked against destructive patterns.
 
-**Unprotected agents** (full Bash access): `task-group-implementer`, `test-suite-runner`, `e2e-test-verifier`, `user-docs-generator`, `docs-operator`
+### Post-Compaction State Reminder (`experimental.session.compacting`)
 
-All other agents and the main agent pass through normally. When adding a new agent that needs full Bash access, add it to the `case` statement in the hook script.
-
-## Claude Code Documentation
-
-**IMPORTANT**: Always consult the latest Claude Code documentation when working with plugins and skills. The documentation is regularly updated with new features, best practices, and implementation details.
-
-### Essential Reading
-
-Before working with this plugin, read the following up-to-date documentation:
-
-1. **Plugins Overview**: https://code.claude.com/docs/en/plugins
-   - Understanding plugin architecture and capabilities
-   - How plugins extend Claude Code functionality
-   - Plugin installation and configuration
-
-2. **Skills Documentation**: https://code.claude.com/docs/en/skills
-   - How to create and use skills effectively
-   - Skill best practices and patterns
-   - Skill discovery and invocation
-
-3. **Plugins Reference**: https://code.claude.com/docs/en/plugins-reference
-   - Complete plugin API reference
-   - Plugin structure and requirements
-   - Available plugin features and hooks
-
-4. **Sub-agents/Agents documentation**: https://code.claude.com/docs/en/sub-agents https://code.claude.com/docs/en/plugins-reference#agents
-   - Sub-agent architecture and capabilities
-   - Agent definition and tool access
-
-5. **Built-in tools** available for usage: https://gist.github.com/bgauryy/0cdb9aa337d01ae5bd0c803943aa36bd
-
-### Documentation Priority
-
-When implementing or modifying plugin features:
-1. **Current official documentation** (links above) - Always check for latest updates
-2. **Project-specific documentation** (this file and .maister/docs/)
-3. **Code patterns** in this plugin's codebase
-4. **General best practices**
-
-**Note**: Claude Code is actively developed. Always verify implementation details against the current documentation before making changes.
+Fires after context compaction. Injects a reminder to re-read `orchestrator-state.yml` and use `question` at phase gates.
 
 ## Platform: OpenCode
 
