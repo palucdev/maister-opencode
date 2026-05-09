@@ -2,6 +2,7 @@
 name: quick-bugfix
 description: Quick bug fix with TDD red/green gates and complexity escalation
 argument-hint: "[bug description]"
+user-invocable: true
 ---
 
 # Quick Bug Fix
@@ -21,11 +22,13 @@ For complex bugs that grow beyond a quick fix, suggests escalating to the full d
 ## When to Use
 
 **Use `/quick-bugfix` when:**
+
 - Bug is reasonably scoped and reproducible
 - You have a clear description of expected vs actual behavior
 - Fix likely touches a small number of files
 
 **Use `/development` instead when:**
+
 - Bug requires architectural changes
 - Multiple subsystems are involved
 - You need formal specification and planning
@@ -52,6 +55,7 @@ For complex bugs that grow beyond a quick fix, suggests escalating to the full d
 **Check if `.maister/docs/INDEX.md` exists:**
 
 **If exists:**
+
 1. Read INDEX.md to discover available documentation and standards
 2. Identify which standards are relevant based on:
    - The categories and files listed in INDEX.md
@@ -60,6 +64,7 @@ For complex bugs that grow beyond a quick fix, suggests escalating to the full d
 3. **READ the applicable standard files** (see Standards Reading Enforcement below)
 
 **If not exists:**
+
 - Note that no standards are available
 - Suggest running `/flow-init` in completion message
 
@@ -68,6 +73,7 @@ For complex bugs that grow beyond a quick fix, suggests escalating to the full d
 **BLOCKING**: Reading INDEX.md alone is NOT sufficient. You MUST read actual standard files.
 
 **Enforcement Process**:
+
 1. Read INDEX.md to discover available standards
 2. Identify which standards apply based on the bug area
 3. **READ each applicable standard file** using Read tool (not just note it exists)
@@ -75,6 +81,7 @@ For complex bugs that grow beyond a quick fix, suggests escalating to the full d
 5. List applied standards in completion summary
 
 **Examples of standard discovery**:
+
 - Bug in API handler → Read API and error-handling standards
 - Bug in form validation → Read validation and frontend standards
 - Bug in database query → Read database and backend standards
@@ -92,17 +99,18 @@ For complex bugs that grow beyond a quick fix, suggests escalating to the full d
 
 Assess whether this bug exceeds quick-fix scope. If **2 or more** of these signals are detected, suggest escalation:
 
-| Signal | Example |
-|--------|---------|
-| Changes span 5+ files across multiple modules | Bug in shared utility affects API, frontend, and background jobs |
-| Requires database schema or data model changes | Missing column, wrong relationship, migration needed |
-| Multiple valid fix approaches with architectural trade-offs | Could fix at API layer, middleware layer, or client layer |
-| Security-sensitive code | Auth, crypto, permissions, input sanitization |
-| Root cause unclear after initial analysis | Symptoms don't point to a single location |
+| Signal                                                      | Example                                                          |
+| ----------------------------------------------------------- | ---------------------------------------------------------------- |
+| Changes span 5+ files across multiple modules               | Bug in shared utility affects API, frontend, and background jobs |
+| Requires database schema or data model changes              | Missing column, wrong relationship, migration needed             |
+| Multiple valid fix approaches with architectural trade-offs | Could fix at API layer, middleware layer, or client layer        |
+| Security-sensitive code                                     | Auth, crypto, permissions, input sanitization                    |
+| Root cause unclear after initial analysis                   | Symptoms don't point to a single location                        |
 
 **If escalation triggered:**
 
 Use question:
+
 - Question: "This bug appears more complex than a quick fix — [describe why]. How would you like to proceed?"
 - Options:
   1. "Continue with quick fix" — proceed, accepting the complexity
@@ -169,6 +177,7 @@ If any section is missing, add it before calling ExitPlanMode.
 **The test MUST fail.** This proves the bug is real and reproducible.
 
 **If the test passes:**
+
 - The bug may not be what we think, or it's already fixed
 - Investigate further — re-read the bug description, check if conditions are correct
 - Use question: "The reproduction test passes — the expected behavior already works under these conditions. Is the bug description accurate, or are there additional conditions?"
@@ -183,12 +192,14 @@ If any section is missing, add it before calling ExitPlanMode.
 4. Run the full test file and related test files to check for regressions
 
 **If tests fail after fix:**
+
 - Analyze the failure
 - Adjust the fix
 - Re-run tests
 - Maximum 3 fix-and-verify iterations
 
 **If still failing after 3 attempts:**
+
 - Stop and present findings to the user
 - Suggest escalating to `/development` for a more thorough approach
 
