@@ -1,6 +1,7 @@
 ---
 name: product-design
 description: Interactive product/feature design orchestrator. Transforms fuzzy ideas into structured product briefs through collaborative exploration, iterative refinement, and visual prototyping. Adaptive phases detect design complexity and adjust depth.
+argument-hint: "[description] [--no-visual] [--research=PATH] | [task-path] [--from=PHASE]"
 generated-from-skill: true
 ---
 
@@ -18,7 +19,7 @@ DO NOT:
 - Substitute your own approach or workflow
 - Execute any part of the workflow yourself
 
-WHY: The user explicitly chose this workflow by using /maister-product-design. 
+WHY: The user explicitly chose this workflow by using /product-design. 
 Invoke the skill now and let it orchestrate the complete workflow.
 
 ---

@@ -2,30 +2,31 @@
 name: quick-bugfix
 description: Quick bug fix with TDD red/green gates and complexity escalation
 argument-hint: "[bug description]"
+user-invocable: true
 ---
 
 # Quick Bug Fix
 
 Lightweight TDD-driven bug fix workflow with planning mode. Analyze the bug, present a fix plan for approval, then reproduce with a failing test, fix, and verify. No orchestrator state, no task directory, no subagents.
 
-For complex bugs that grow beyond a quick fix, suggests escalating to the full development workflow (`/maister-development`).
+For complex bugs that grow beyond a quick fix, suggests escalating to the full development workflow (`/development`).
 
 ## Usage
 
 ```bash
-/maister-quick-bugfix "Login form submits twice on slow connections"
-/maister-quick-bugfix "API returns 500 when email contains special characters"
-/maister-quick-bugfix "Dark mode toggle doesn't persist after refresh"
+/quick-bugfix "Login form submits twice on slow connections"
+/quick-bugfix "API returns 500 when email contains special characters"
+/quick-bugfix "Dark mode toggle doesn't persist after refresh"
 ```
 
 ## When to Use
 
-**Use `/maister-quick-bugfix` when:**
+**Use `/quick-bugfix` when:**
 - Bug is reasonably scoped and reproducible
 - You have a clear description of expected vs actual behavior
 - Fix likely touches a small number of files
 
-**Use `/maister-development` instead when:**
+**Use `/development` instead when:**
 - Bug requires architectural changes
 - Multiple subsystems are involved
 - You need formal specification and planning
@@ -61,7 +62,7 @@ For complex bugs that grow beyond a quick fix, suggests escalating to the full d
 
 **If not exists:**
 - Note that no standards are available
-- Suggest running `/maister-init` in completion message
+- Suggest running `/flow-init` in completion message
 
 ### Standards Reading Enforcement (MANDATORY)
 
@@ -106,7 +107,7 @@ Use question:
 - Question: "This bug appears more complex than a quick fix — [describe why]. How would you like to proceed?"
 - Options:
   1. "Continue with quick fix" — proceed, accepting the complexity
-  2. "Switch to full development workflow" — stop here and suggest running `/maister-development` with the bug description and analysis context
+  2. "Switch to full development workflow" — stop here and suggest running `/development` with the bug description and analysis context
 
 **If no escalation needed or user chooses to continue:** proceed to Step 4.
 
@@ -135,7 +136,7 @@ Standards context from Step 2 and analysis from Step 3 MUST inform the plan.
 ## Applicable Standards
 
 [List each standard file read, with key guidelines extracted from each.
-If no standards exist: "No AI SDLC standards found. Consider running `/maister-init`."]
+If no standards exist: "No AI SDLC standards found. Consider running `/flow-init`."]
 
 ## Standards Compliance Checklist
 
@@ -190,7 +191,7 @@ If any section is missing, add it before calling ExitPlanMode.
 
 **If still failing after 3 attempts:**
 - Stop and present findings to the user
-- Suggest escalating to `/maister-development` for a more thorough approach
+- Suggest escalating to `/development` for a more thorough approach
 
 ### Step 7: Summary
 
@@ -225,6 +226,6 @@ If any section is missing, add it before calling ExitPlanMode.
 Proceed with the bug fix normally, then note:
 
 ```
-"No AI SDLC standards found. Consider running `/maister-init` to initialize
+"No AI SDLC standards found. Consider running `/flow-init` to initialize
 project documentation and coding standards for better consistency."
 ```

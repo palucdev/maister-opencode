@@ -1,15 +1,16 @@
 ---
-name: maister-init
-description: Initialize AI SDLC framework with intelligent project analysis and documentation generation
+name: quick-bugfix
+description: Quick bug fix with TDD red/green gates and complexity escalation
+argument-hint: "[bug description]"
 generated-from-skill: true
 ---
 
-<!-- AUTO-GENERATED from skills/maister-init/SKILL.md - DO NOT EDIT MANUALLY -->
+<!-- AUTO-GENERATED from skills/quick-bugfix/SKILL.md - DO NOT EDIT MANUALLY -->
 
-CRITICAL INSTRUCTION: You MUST invoke the maister-init skill immediately as your FIRST action.
+CRITICAL INSTRUCTION: You MUST invoke the quick-bugfix skill immediately as your FIRST action.
 
 Use the Skill tool with these exact parameters:
-  name: "maister-init"
+  name: "quick-bugfix"
   prompt: "$ARGUMENTS"
 
 DO NOT:
@@ -18,14 +19,14 @@ DO NOT:
 - Substitute your own approach or workflow
 - Execute any part of the workflow yourself
 
-WHY: The user explicitly chose this workflow by using /maister-maister-init. 
+WHY: The user explicitly chose this workflow by using /quick-bugfix. 
 Invoke the skill now and let it orchestrate the complete workflow.
 
 ---
 
 ## About This Workflow
 
-Initialize AI SDLC framework with intelligent project analysis and documentation generation
+Quick bug fix with TDD red/green gates and complexity escalation
 
 The skill handles:
 - Task directory creation and state management
@@ -33,4 +34,4 @@ The skill handles:
 - Subagent delegation for specialized work
 - Pause/resume capability
 
-See `skills/maister-init/SKILL.md` for complete workflow documentation.
+See `skills/quick-bugfix/SKILL.md` for complete workflow documentation.

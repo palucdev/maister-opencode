@@ -1,6 +1,7 @@
 ---
 name: development
 description: Unified orchestrator for all development tasks. ALWAYS execute when invoked — never skip for 'straightforward' tasks. Phases adapt based on detected task characteristics rather than predetermined types. Use for any development work that modifies code.
+argument-hint: "[task description] [--e2e] [--user-docs] [--research=PATH] | [task-path] [--from=PHASE]"
 generated-from-skill: true
 ---
 
@@ -18,7 +19,7 @@ DO NOT:
 - Substitute your own approach or workflow
 - Execute any part of the workflow yourself
 
-WHY: The user explicitly chose this workflow by using /maister-development. 
+WHY: The user explicitly chose this workflow by using /development. 
 Invoke the skill now and let it orchestrate the complete workflow.
 
 ---
