@@ -651,6 +651,17 @@ This hook fires after context compaction and injects a reminder into Claude's co
 
 **See**: `hooks/hooks.json` for hook configuration (auto-discovered by Claude Code).
 
+### Destructive Command Protection
+
+**Hook**: `PreToolUse` (matcher: `Bash`)
+**Location**: `hooks/block-destructive-commands.sh`
+
+Blocks destructive shell commands (`git stash`, `git reset --hard`, `git checkout .`, `git clean`, `git push --force`, `rm -rf`) from subagents that should not perform such operations. Uses a whitelist approach — only explicitly trusted execution agents bypass the check:
+
+**Unprotected agents** (full Bash access): `task-group-implementer`, `test-suite-runner`, `e2e-test-verifier`, `user-docs-generator`, `docs-operator`
+
+All other agents and the main agent pass through normally. When adding a new agent that needs full Bash access, add it to the `case` statement in the hook script.
+
 ## Claude Code Documentation
 
 **IMPORTANT**: Always consult the latest Claude Code documentation when working with plugins and skills. The documentation is regularly updated with new features, best practices, and implementation details.

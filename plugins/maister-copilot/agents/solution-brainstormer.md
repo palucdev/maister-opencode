@@ -61,6 +61,7 @@ The Task prompt MUST include:
 | `task_path` | Orchestrator | Absolute path to research task directory |
 | `synthesis_path` | Orchestrator | Path to `analysis/synthesis.md` |
 | `research_report_path` | Orchestrator | Path to `outputs/research-report.md` |
+| `project_doc_paths` | Orchestrator | Paths to project docs from INDEX.md (if available) |
 
 **Accumulated Context** (Pattern 7):
 - `research_type`: technical, requirements, literature, mixed
@@ -77,7 +78,8 @@ The Task prompt MUST include:
 1. **Read `analysis/synthesis.md`** - patterns, cross-references, key insights, gaps
 2. **Read `outputs/research-report.md`** - comprehensive findings, recommendations, evidence
 3. **Parse accumulated context** - research type, question, phase summaries
-4. **Identify key decision areas** - where multiple viable approaches exist based on evidence
+4. **Read project documentation** (if `project_doc_paths` provided) — read ALL listed project docs. These include predefined docs (vision, roadmap, tech-stack) AND user-added docs that provide project-specific context. Ground alternatives in the project's strategic direction, tech constraints, and domain knowledge.
+5. **Identify key decision areas** - where multiple viable approaches exist based on evidence
 5. **Generate HMW questions internally** - transform research findings into opportunity statements (not user-validated, used to structure your own exploration)
 
 ### Phase 2: Generate Alternatives

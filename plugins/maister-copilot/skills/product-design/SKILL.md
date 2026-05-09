@@ -178,6 +178,7 @@ digraph product_design_orchestrator {
 **Execute**: Direct, interactive
 
 1. Create task directory structure (see Task Structure section)
+1b. **Discover project documentation**: Read `.maister/docs/INDEX.md` (if exists), extract ALL file paths from the "Project Documentation" section — includes predefined docs AND any user-added project docs. Read discovered project docs. Store paths in `design_context.project_doc_paths` and brief summary in `design_context.project_context_summary`.
 2. **Read `references/characteristic-detection.md` NOW** using the Read tool
 3. Analyze user's description to detect the 6 design characteristics: `is_greenfield`, `is_enhancement`, `is_ui_focused`, `is_backend`, `is_complex`, `is_simple`
 4. Derive `complexity_level` from characteristics: "simple" (if `is_simple`), "complex" (if `is_complex` or `is_greenfield`), "standard" (otherwise)
@@ -251,6 +252,7 @@ ask_user — "I detected these design characteristics. Please confirm or correct
    **SELF-CHECK**: Did you invoke the Task tool with information-gatherer for each research topic? Or did you start searching yourself? If the latter, STOP and invoke the Task tool.
 
 5. **Synthesize ALL sources** into `analysis/design-context.md`:
+   - Project documentation: vision, roadmap, tech stack, architecture, and any user-added project docs (from `design_context.project_doc_paths` discovered in Phase 0)
    - Codebase summary (if enhancement): tech stack, UI patterns, existing features, data models
    - User-supplied context summary: key takeaways from each file/link
    - Mini-research findings: relevant discoveries from web research
@@ -387,6 +389,7 @@ Task tool - `maister-solution-brainstormer` subagent
 - `personas` (from Phase 3, if available)
 - `design_context_summary` (from Phase 1)
 - Accumulated context: `complexity_level`, `design_characteristics`, `phase_summaries` (Phases 0-3)
+- `project_doc_paths` (from `design_context.project_doc_paths` in state)
 
 **ARTIFACTS TO READ** (instruct brainstormer to read these for full context):
 - `analysis/design-context.md` (unified context)

@@ -23,6 +23,7 @@ Systematic migration workflow from current state analysis to verified migration 
 1. **Create Task Items**: Use `TaskCreate` for all phases (see Phase Configuration), then set dependencies with `TaskUpdate addBlockedBy`
 2. **Create Task Directory**: `.maister/tasks/migrations/YYYY-MM-DD-task-name/`
 3. **Initialize State**: Create `orchestrator-state.yml` with migration context
+4. **Discover project documentation**: Read `.maister/docs/INDEX.md` (if exists), extract ALL file paths from the "Project Documentation" section — includes predefined docs AND any user-added project docs. Store as `project_context.project_doc_paths` in state.
 
 **Output**:
 ```
@@ -140,7 +141,7 @@ ask_user - Display executive summary before asking. Extract from gap analysis: c
 **Part B — Specification Creation (subagent)**:
 3. Task tool - `maister-specification-creator` subagent
 
-**Context to pass to subagent**: task_path, task_type (migration), task_description, requirements_path (analysis/requirements.md), project_context_paths, migration_type, current_system, target_system, risk_level, breaking_changes, phase_summaries (current_state_analysis, gap_analysis)
+**Context to pass to subagent**: task_path, task_type (migration), task_description, requirements_path (analysis/requirements.md), project_context_paths (INDEX.md + project_doc_paths from state — all discovered project docs), migration_type, current_system, target_system, risk_level, breaking_changes, phase_summaries (current_state_analysis, gap_analysis)
 
 **Output**: `analysis/requirements.md`, `implementation/spec.md`, `analysis/rollback-plan.md`, optionally `analysis/dual-run-plan.md`
 **State**: Update `rollback_plan_created`, `dual_run_configured`

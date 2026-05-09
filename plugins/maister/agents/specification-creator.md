@@ -49,7 +49,7 @@ The Task prompt MUST include:
 | `task_characteristics` | Gap-analyzer output | Detected characteristics (has_reproducible_defect, modifies_existing_code, creates_new_entities, etc.) |
 | `task_description` | User input | What needs to be built |
 | `requirements_path` | Orchestrator | Path to `analysis/requirements.md` |
-| `project_context_paths` | Orchestrator | Paths to INDEX.md, vision.md, roadmap.md, tech-stack.md |
+| `project_context_paths` | Orchestrator | Paths to INDEX.md and all project docs discovered from INDEX.md |
 
 **Accumulated Context** (Pattern 7):
 - `risk_level`: low/medium/high
@@ -65,11 +65,9 @@ The Task prompt MUST include:
 ### Phase 1: Read Context
 
 1. **Read `analysis/requirements.md`** — gathered user requirements, Q&A, scope boundaries
-2. **Read project context**:
-   - `.maister/docs/INDEX.md` — project standards index
-   - `.maister/docs/project/vision.md` — project goals
-   - `.maister/docs/project/roadmap.md` — development roadmap
-   - `.maister/docs/project/tech-stack.md` — technology choices
+2. **Read project context** from `project_context_paths`:
+   - `.maister/docs/INDEX.md` — project documentation and standards index
+   - **ALL** project docs from paths provided — this includes predefined docs (vision.md, roadmap.md, tech-stack.md, architecture.md) AND any user-added project documentation. Do NOT skip files you don't recognize — users add custom project docs that are equally important.
    - Standards files referenced in INDEX.md (relevant to this task)
 3. **Read prior analysis** (paths from accumulated context):
    - `analysis/codebase-analysis.md` — codebase structure and patterns

@@ -175,6 +175,8 @@ Layer 3 (User Access):
    - What entities/features are involved?
    - What behavior is expected?
 
+1b. **Read project documentation** from `project_doc_paths` (if provided) — read ALL listed files, not just predefined ones. Users may add custom project docs (e.g., deployment strategy, API conventions, domain model) that provide critical context for gap assessment. Use project vision, roadmap, and architecture to assess strategic alignment of proposed changes.
+
 2. **Detect task characteristics** (see Characteristic Detection above):
    - Scan for defect signals (errors, crashes, broken behavior)
    - Check codebase analysis for existing implementations

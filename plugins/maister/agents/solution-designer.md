@@ -67,6 +67,7 @@ The Task prompt MUST include:
 | `research_report_path` | Orchestrator | Path to `outputs/research-report.md` |
 | `selected_approach` | Orchestrator (Phase 4: Solution Convergence) | Which alternative was chosen |
 | `design_preferences` | Orchestrator (Phase 5 Part A) | User's design preferences/constraints |
+| `project_doc_paths` | Orchestrator | Paths to project docs from INDEX.md (if available) |
 
 **Accumulated Context** (Pattern 7):
 - `research_type`: technical, requirements, literature, mixed
@@ -87,7 +88,8 @@ The Task prompt MUST include:
 2. **Read `analysis/synthesis.md`** - patterns, cross-references, technical details
 3. **Read `outputs/research-report.md`** - comprehensive findings, recommendations
 4. **Parse accumulated context** - phase summaries, selected approach, design preferences
-5. **Identify design scope** - what the chosen approach requires architecturally
+5. **Read project documentation** (if `project_doc_paths` provided) — read ALL listed project docs. Align architecture design with project vision, tech stack, existing architecture, and any user-documented domain knowledge.
+6. **Identify design scope** - what the chosen approach requires architecturally
 6. **Synthesize Design Overview** - draft a concise, scannable executive summary (aim for ~150 words total). Use bold terms and bullet lists — avoid dense prose. Structure:
    - **Business context** (2-3 sentences): What problem, why now, who benefits
    - **Chosen approach** (3-5 sentences): Solution direction, architectural style, key pattern. Bold the most important terms

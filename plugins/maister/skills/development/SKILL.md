@@ -35,6 +35,7 @@ Unified workflow for all development tasks — bug fixes, enhancements, and new 
 1. **Create Task Items**: Use `TaskCreate` for all phases (see Phase Configuration), then set dependencies with `TaskUpdate addBlockedBy`
 2. **Create Task Directory**: `.maister/tasks/development/YYYY-MM-DD-task-name/`
 3. **Initialize State**: Create `orchestrator-state.yml` with task info and research reference
+4. **Discover project documentation**: Read `.maister/docs/INDEX.md` (if exists), extract ALL file paths from the "Project Documentation" section. This includes predefined docs (vision, roadmap, tech-stack, architecture) AND any user-added project docs (e.g., deployment.md, api-strategy.md). Store complete list as `project_context.project_doc_paths` in state.
 
 **Output**:
 ```
@@ -123,7 +124,7 @@ Use for **all development tasks**: bug fixes, enhancements, new features, and an
 **Output**: `analysis/gap-analysis.md`, `analysis/scope-clarifications.md` (conditional)
 **State**: Update `task_context.task_characteristics`, `task_context.scope_expanded`, `options.e2e_enabled`, `options.user_docs_enabled`, `phase_summaries.gap_analysis`
 
-**Context to pass**: Risk level, codebase summary, key files, clarifications
+**Context to pass**: Risk level, codebase summary, key files, clarifications, project_doc_paths (from state)
 
 → Pause (when decisions exist), otherwise Conditional
 
@@ -219,7 +220,7 @@ AskUserQuestion - "UI mockups complete. Continue to Phase 5?"
 
 6. Task tool - `maister:specification-creator` subagent
 
-**Context to pass to subagent**: task_path, task_description, task_characteristics, requirements_path (analysis/requirements.md), project_context_paths (INDEX.md, vision.md, roadmap.md, tech-stack.md), risk_level, phase_summaries (codebase_analysis, gap_analysis, clarifications, scope_clarifications, ui_mockups), research_context (if any)
+**Context to pass to subagent**: task_path, task_description, task_characteristics, requirements_path (analysis/requirements.md), project_context_paths (INDEX.md + project_doc_paths from state — all discovered project docs), risk_level, phase_summaries (codebase_analysis, gap_analysis, clarifications, scope_clarifications, ui_mockups), research_context (if any)
 
 **SELF-CHECK**: Did you just invoke the Task tool with `maister:specification-creator`? Or did you start writing spec.md yourself? If the latter, STOP immediately and invoke the Task tool instead.
 
