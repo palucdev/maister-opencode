@@ -1,7 +1,7 @@
 ---
 name: product-design
 description: Interactive product/feature design orchestrator. Transforms fuzzy ideas into structured product briefs through collaborative exploration, iterative refinement, and visual prototyping. Adaptive phases detect design complexity and adjust depth.
-argument-hint: "[description] [--no-visual] [--research=PATH] | [task-path] [--from=PHASE]"
+argument-hint: [task description]
 generated-from-skill: true
 ---
 

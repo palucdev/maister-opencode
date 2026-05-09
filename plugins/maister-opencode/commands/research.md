@@ -1,7 +1,7 @@
 ---
 name: research
 description: Orchestrates comprehensive research workflows from question definition through findings documentation. Handles technical, requirements, literature, and mixed research types with adaptive methodology, multi-source gathering, pattern synthesis, and evidence-based reporting. Supports standalone research tasks and embedded research phase in other workflows.
-argument-hint: "[question] [--type=TYPE] [--brainstorm] [--design]"
+argument-hint: [task description]
 generated-from-skill: true
 ---
 

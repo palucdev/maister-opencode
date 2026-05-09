@@ -1,8 +1,6 @@
 ---
 name: standards-discover
 description: Discover coding standards from project configuration files, code patterns, documentation, and external sources (PRs, CI/CD)
-argument-hint: "[--scope=SCOPE]"
-user-invocable: true
 ---
 
 # Standards Discovery Skill
